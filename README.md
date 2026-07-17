@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# George Okello | Research Showcase
 
-# Run and deploy your AI Studio app
+This is a personal research portfolio website built with **React**, **Vite**, and **Tailwind CSS**.
 
-This contains everything you need to run your app locally.
+## Deployment to Vercel
 
-View your app in AI Studio: https://ai.studio/apps/b3ba168c-4b42-44d8-99e4-562baf8a0c55
+Vercel provides a seamless, zero-config deployment experience for Vite-based React applications.
 
-## Run Locally
+### Prerequisites
 
-**Prerequisites:**  Node.js
+1.  Push your code to a GitHub repository.
+2.  Have a [Vercel account](https://vercel.com).
 
+### Deployment Steps
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  Log in to your Vercel Dashboard.
+2.  Click **"Add New..."** and select **"Project"**.
+3.  Import your GitHub repository.
+4.  Vercel will automatically detect the framework as **Vite**.
+5.  Ensure the **Build Command** is set to `npm run build`.
+6.  Ensure the **Output Directory** is set to `dist` (default for Vite).
+7.  Click **Deploy**.
+
+Vercel will then build your site and provide you with a live URL.
+
+## Local Development
+
+To run the project locally:
+
+```bash
+npm install
+npm run dev
+```
