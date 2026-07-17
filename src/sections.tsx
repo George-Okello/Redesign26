@@ -154,7 +154,7 @@ export function About() {
           <div className="md:w-1/4 text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] pt-2 transition-colors group-hover:text-[#1a1a1a]">Principle I</div>
           <div className="md:w-3/4 text-[#1a1a1a]">
             <h3 className="text-2xl font-serif italic mb-3">Intelligence is Collective</h3>
-            <p className="text-sm text-[#4a4a4a] leading-relaxed">Cognition does not exist in a vacuum. It is fundamentally networked—emerging from the dynamic interplay between agents, environments, and information streams.</p>
+            <p className="text-sm text-[#4a4a4a] leading-relaxed">Cognition does not exist in a vacuum. It is fundamentally networked, emerging from the dynamic interplay between agents, environments, and information streams.</p>
           </div>
         </motion.div>
         
@@ -233,23 +233,24 @@ export function SwarmSection() {
 export function Publications() {
   const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
   const sectionRef = useRef<HTMLElement>(null);
-  const isFirstRender = useRef(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const isMobileOrTablet = useMobileDevice();
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const publicationsPerPage = 5;
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentPage]);
 
   const indexOfLastPublication = currentPage * publicationsPerPage;
   const indexOfFirstPublication = indexOfLastPublication - publicationsPerPage;
   const currentPublications = publications.slice(indexOfFirstPublication, indexOfLastPublication);
   const totalPages = Math.ceil(publications.length / publicationsPerPage);
+
+  useEffect(() => {
+    if (currentPage > 1) {
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentPage]);
+
+  const toggleExpand = (id: number) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   return (
     <motion.section 
@@ -258,53 +259,78 @@ export function Publications() {
       className="py-24 max-w-4xl"
       {...revealProps}
     >
-      <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-12 uppercase tracking-[0.3em]">
-        <SuperTextReveal text="Selected Publications" />
-      </h2>
-      <div className="space-y-6">
+      <div className="mb-20">
+        <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-8 uppercase tracking-[0.3em]">
+          <SuperTextReveal text="Research Journey" />
+        </h2>
+      </div>
+      
+      <div className="space-y-12">
         {currentPublications.map((pub, i) => {
-          const slideOffset = (i % 2 !== 0) ? 40 : -40;
-          const cardAnim = isMobileOrTablet ? {
-            initial: { opacity: 0, x: slideOffset, filter: "blur(6px)" },
-            whileInView: { opacity: 1, x: 0, filter: "blur(0px)" },
-            viewport: { once: false, amount: 0.1 },
-            transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
-          } : { variants: fadeUp };
+          const isExpanded = expandedId === i;
           return (
-            <motion.a 
+            <motion.div 
               key={i} 
-              href={pub.link || "#"}
-              target={pub.link ? "_blank" : undefined}
-              rel={pub.link ? "noopener noreferrer" : undefined}
-              className={`group relative flex flex-col gap-2 pt-6 border-t border-[#1a1a1a]/10 hover:border-orange-highlight/30 hover:bg-orange-highlight/[0.02] transition-all duration-300 -mx-6 px-6 ${pub.link ? 'cursor-pointer' : 'cursor-default'}`}
-              {...cardAnim}
+              className="group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: i * 0.1 }}
             >
-              <div className="flex items-start justify-between gap-4 mb-2">
-                <h3 className="text-xl md:text-2xl font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300 flex items-center gap-2">
-                  <span>{pub.title}</span>
-                  {pub.link && <ArrowUpRight className="w-4 h-4 flex-shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />}
+              <div 
+                className="cursor-pointer"
+                onClick={() => toggleExpand(i)}
+              >
+                <h3 className="text-2xl font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
+                  {pub.title}
                 </h3>
-                <span className="text-[10px] uppercase tracking-widest bg-[#1a1a1a] group-hover:bg-orange-highlight text-white px-2 py-0.5 mt-1 whitespace-nowrap transition-colors duration-300">
-                  {pub.status}
-                </span>
-              </div>
-              {pub.summary && (
-                <p className="text-sm text-[#4a4a4a] leading-relaxed mb-2">
+                <p className="text-[10px] uppercase tracking-widest text-[#8a817c] font-bold mt-2">
+                  {pub.authors} • {pub.status} • {pub.year}
+                </p>
+                <p className="text-base text-[#4a4a4a] leading-relaxed mt-2">
                   {pub.summary}
                 </p>
-              )}
-              <div className="flex items-center gap-4 text-[11px] text-[#6a6a6a] pb-6">
-                <span>{pub.authors}</span>
-                <span>—</span>
-                <span>{pub.year}</span>
+                <div className="flex gap-4 mt-4 text-[10px] uppercase tracking-widest font-bold text-orange-highlight">
+                  <span>{isExpanded ? "Hide Story" : "Read Story"}</span>
+                </div>
               </div>
-            </motion.a>
+              
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-6 pb-2 border-t border-[#1a1a1a]/10 mt-6">
+                      <p className="text-base text-[#4a4a4a] leading-relaxed italic border-l-2 border-orange-highlight pl-6">
+                        "{pub.personalStory}"
+                      </p>
+                      <div className="flex items-center gap-6 mt-6">
+                        {pub.link && (
+                          <a 
+                            href={pub.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight transition-colors"
+                          >
+                            Read paper →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           );
         })}
       </div>
       
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 mt-12">
+        <div className="flex items-center justify-center gap-4 mt-24">
           <button 
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}

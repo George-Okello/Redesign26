@@ -9,6 +9,7 @@ export interface Publication {
   status: string;
   year: string;
   summary: string;
+  personalStory: string;
   link: string;
 }
 
@@ -34,7 +35,8 @@ export const publications: Publication[] = [
     authors: "Betsy Muriithi, Alvin Mugwe, George O. Ouma",
     status: "Under Review",
     year: "2026",
-    summary: "I designed a framework that combines a Version Memory Buffer, Hessian-approximated drift correction, and two-parameter polynomial damping to address the infrastructure exclusion problem in federated learning across sub-Saharan Africa. This work has been submitted to Deep Learning Indaba 2026.",
+    summary: "A framework for improving asynchronous federated learning in resource-constrained healthcare environments.",
+    personalStory: "I still remember the nights spent simulating loadshedding patterns based on actual data from rural Kenyan health posts. It felt crucial to ensure that the AI model wasn't just working in an ideal lab environment, but was actually robust enough to serve the clinics facing the most difficult conditions.",
     link: ""
   },
   {
@@ -42,7 +44,8 @@ export const publications: Publication[] = [
     authors: "George O. Ouma",
     status: "Published",
     year: "2026",
-    summary: "This paper highlights the methodological gap between multimodal fusion research and deployment engineering. I proposed constraint-aware evaluation (measuring accuracy as a function of deployment constraints) to bridge this divide.",
+    summary: "A methodological framework proposing constraint-aware evaluation to bridge the gap between multimodal fusion research and real-world deployment.",
+    personalStory: "This paper came from a genuine frustration of seeing state-of-the-art models fail the moment they left the clean benchmark. I wanted to shift the conversation from just 'higher accuracy' to 'accuracy under real conditions', and reporting curves rather than a single point was the simplest way to prove why.",
     link: "https://doi.org/10.5281/zenodo.21331051"
   },
   {
@@ -50,7 +53,8 @@ export const publications: Publication[] = [
     authors: "George O. Ouma",
     status: "Published",
     year: "2026",
-    summary: "I explored the fusion of neural-network learning architectures and symbolic logic frameworks. This paper addresses verifiable correctness and compliance with ethical guidelines in high-stakes public systems.",
+    summary: "A review of neuro-symbolic AI for high-stakes domains, advocating for fairness and verification to be built in by design.",
+    personalStory: "Reviewing this literature was a stark reminder of the gap between theoretical AI safety and the messiness of real-world deployment. I wanted to outline a future where safety isn't an afterthought, but an integral part of the architecture itself.",
     link: "https://doi.org/10.5281/zenodo.21324933"
   },
   {
@@ -58,7 +62,8 @@ export const publications: Publication[] = [
     authors: "George O. Ouma",
     status: "Published",
     year: "2026",
-    summary: "I examined the application of Large Language Models (LLMs) to indigenous cultural preservation using the Bano traditional board game of Kenya. I developed and evaluated Simba, an LLM-based chatbot designed to preserve knowledge of Bano gameplay mechanics and cultural context.",
+    summary: "An application of LLMs to indigenous cultural preservation, developing a chatbot to preserve knowledge of the Kenyan game Bano.",
+    personalStory: "Bano is more than just a game; it's a piece of living history. Seeing Simba, the chatbot I designed, interact with people and preserve those mechanics was incredibly moving. It was a perfect intersection of technical engineering and deep, human cultural heritage.",
     link: "https://doi.org/10.5281/zenodo.21337996"
   }
 ];
