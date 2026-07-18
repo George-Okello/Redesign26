@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 import { NetworkBackground } from './components/NetworkBackground';
-import { Hero, About, InteractiveLab, Publications, Projects, KaggleSection, Notes, SwarmSection, Contact } from './sections';
+import { ScrollToTop } from './components/ScrollToTop';
+import { FooterGlobe } from './components/FooterGlobe';
+import { Hero, About, InteractiveLab, Publications, Projects, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
 
 const RESEARCH_QUESTIONS = [
   "Can AI Be Human in Thought?",
@@ -216,7 +218,95 @@ function Header() {
   );
 }
 
+function NoiseOverlay() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[200] h-full w-full opacity-[0.035] mix-blend-overlay">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 h-full w-full">
+        <filter id="noiseFilter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+      </svg>
+    </div>
+  );
+}
+
+function InitialLoader({ onComplete }: { onComplete: () => void }) {
+  const [subText, setSubText] = useState("Translating brain signals...");
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    
+    const t1 = setTimeout(() => setSubText("Establishing neural links..."), 1200);
+    const t2 = setTimeout(() => setSubText("Calibrating network weights..."), 2400);
+    const t3 = setTimeout(() => setSubText("Accessing complex systems..."), 3600);
+
+    const timer = setTimeout(() => {
+      document.body.style.overflow = 'unset';
+      onComplete();
+    }, 4500);
+    
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(timer);
+      document.body.style.overflow = 'unset';
+    };
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.2, delay: 4.2, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-none"
+    >
+      <div className="overflow-hidden mb-6">
+        <motion.div
+          initial={{ y: "100%", opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          className="text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold text-[#1a1a1a] flex items-center gap-3"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            className="w-3 h-3 border-2 border-[#1a1a1a]/20 border-t-orange-highlight rounded-full"
+          />
+          Initializing
+        </motion.div>
+      </div>
+      <div className="w-48 md:w-64 h-[1px] bg-[#1a1a1a]/10 relative overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 h-full bg-orange-highlight"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 3.5, delay: 0.5, ease: "easeInOut" }}
+        />
+      </div>
+      <div className="mt-6 h-4 overflow-hidden flex justify-center items-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={subText}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="text-[9px] uppercase tracking-widest text-[#8a817c] italic font-serif"
+          >
+            {subText}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // Revert/cleanup dark mode completely
     const root = window.document.documentElement;
@@ -234,6 +324,12 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#fcfaf7] selection:bg-[#1a1a1a]/10 overflow-x-hidden text-[#1a1a1a]">
+      <NoiseOverlay />
+      
+      <AnimatePresence>
+        {loading && <InitialLoader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
       <motion.div 
         className="fixed top-0 left-0 right-0 h-[3px] bg-orange-highlight origin-left z-[100]" 
         style={{ scaleX }} 
@@ -248,16 +344,33 @@ export default function App() {
         <Projects />
         <KaggleSection />
         <Notes />
+        <ArchivedFieldNotes />
         <SwarmSection />
         <Contact />
       </main>
 
-      <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-8 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.4em] mt-24">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-          <span>© {new Date().getFullYear()} George Okello. Nairobi, Kenya.</span>
-          <span className="opacity-50">Explorations in Complex Systems</span>
+      <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left relative">
+          <div className="flex flex-col md:flex-row items-center gap-12 z-10">
+            <div className="-my-12">
+              <FooterGlobe />
+            </div>
+            <div className="flex flex-col gap-4">
+              <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#8a817c] leading-relaxed lowercase tracking-widest text-[8px]">
+                  network science <span className="mx-2 text-orange-highlight/40">•</span> multi-agent systems <span className="mx-2 text-orange-highlight/40">•</span> complex systems
+                </span>
+                <span className="text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
+                  nodes: nairobi [-1.29, 36.82] // south bend [41.70, -86.24] // kuala lumpur [3.14, 101.69] // vienna [48.21, 16.37]
+                </span>
+              </div>
+            </div>
+          </div>
+          <span className="opacity-50 z-10">Explorations in Complex Systems</span>
         </div>
       </footer>
+      <ScrollToTop />
     </div>
   );
 }

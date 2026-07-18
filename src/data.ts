@@ -9,7 +9,9 @@ export interface Publication {
   status: string;
   year: string;
   summary: string;
-  personalStory: string;
+  hookQuestion: string;
+  behindThePaper: string;
+  unanswered: string;
   link: string;
 }
 
@@ -36,7 +38,20 @@ export const publications: Publication[] = [
     status: "Under Review",
     year: "2026",
     summary: "A framework for improving asynchronous federated learning in resource-constrained healthcare environments.",
-    personalStory: "I still remember the nights spent simulating loadshedding patterns based on actual data from rural Kenyan health posts. It felt crucial to ensure that the AI model wasn't just working in an ideal lab environment, but was actually robust enough to serve the clinics facing the most difficult conditions.",
+    hookQuestion: "What happens to federated learning when the power grid fails?",
+    behindThePaper: "I still remember the nights spent simulating loadshedding patterns based on actual data from rural Kenyan health posts. It felt crucial to ensure that the AI model wasn't just working in an ideal lab environment, but was actually robust enough to serve the clinics facing the most difficult conditions.",
+    unanswered: "What happens when intermittent connectivity is weaponized? If we can correct gradient drift for delayed nodes, we open the door to adversarial delay. The next frontier is Byzantine-robust asynchronous aggregation that doesn't just penalize slow nodes, but actively authenticates their temporal drift.",
+    link: ""
+  },
+  {
+    title: "Computational Modelling of Social Hierarchies & Trust Dynamics Using Multiagent Reinforcement Learning",
+    authors: "George O. Ouma",
+    status: "Master's Thesis",
+    year: "2026",
+    summary: "A multi-agent reinforcement learning framework that models the endogenous formation of hierarchy and trust through repeated interactions, validated against empirical networks like Bitcoin OTC and Stack Overflow.",
+    hookQuestion: "How do social hierarchies and trust naturally emerge in AI populations?",
+    behindThePaper: "In my recent work with multi-agent reinforcement learning, I wanted to see if artificial agents would naturally form social hierarchies. Surprisingly, when agents were given persistent status and bounded network visibility, clear hierarchical structures emerged purely from their interactions. It seems that inequality and trust dynamics aren't just human traits, they might be universal mathematical properties of complex learning systems.",
+    unanswered: "How can these emergent hierarchical dynamics be controlled or aligned with human values in large-scale AI deployments without hindering coordination efficiency?",
     link: ""
   },
   {
@@ -45,7 +60,9 @@ export const publications: Publication[] = [
     status: "Published",
     year: "2026",
     summary: "A methodological framework proposing constraint-aware evaluation to bridge the gap between multimodal fusion research and real-world deployment.",
-    personalStory: "This paper came from a genuine frustration of seeing state-of-the-art models fail the moment they left the clean benchmark. I wanted to shift the conversation from just 'higher accuracy' to 'accuracy under real conditions', and reporting curves rather than a single point was the simplest way to prove why.",
+    hookQuestion: "How can we trust a multimodal AI when sensors inevitably fail in the real world?",
+    behindThePaper: "This paper came from a genuine frustration of seeing state-of-the-art models fail the moment they left the clean benchmark. I wanted to shift the conversation from just 'higher accuracy' to 'accuracy under real conditions', and reporting curves rather than a single point was the simplest way to prove why.",
+    unanswered: "How do we dynamically synthesize missing modalities on the edge? If a clinical dataset is missing an MRI, generative completion can guess it, but how do we measure the epistemic uncertainty of that hallucinated modality before a clinician trusts it?",
     link: "https://doi.org/10.5281/zenodo.21331051"
   },
   {
@@ -54,7 +71,9 @@ export const publications: Publication[] = [
     status: "Published",
     year: "2026",
     summary: "A review of neuro-symbolic AI for high-stakes domains, advocating for fairness and verification to be built in by design.",
-    personalStory: "Reviewing this literature was a stark reminder of the gap between theoretical AI safety and the messiness of real-world deployment. I wanted to outline a future where safety isn't an afterthought, but an integral part of the architecture itself.",
+    hookQuestion: "Can we mathematically guarantee that an AI will make fair decisions before it's deployed?",
+    behindThePaper: "Reviewing this literature was a stark reminder of the gap between theoretical AI safety and the messiness of real-world deployment. I wanted to outline a future where safety isn't an afterthought, but an integral part of the architecture itself.",
+    unanswered: "Can we formally verify a neuro-symbolic system dynamically during inference? SMT solvers are computationally heavy. The unresolved challenge is creating differentiable logic layers that can backpropagate fairness constraints in real-time without freezing the system.",
     link: "https://doi.org/10.5281/zenodo.21324933"
   },
   {
@@ -63,7 +82,9 @@ export const publications: Publication[] = [
     status: "Published",
     year: "2026",
     summary: "An application of LLMs to indigenous cultural preservation, developing a chatbot to preserve knowledge of the Kenyan game Bano.",
-    personalStory: "Bano is more than just a game; it's a piece of living history. Seeing Simba, the chatbot I designed, interact with people and preserve those mechanics was incredibly moving. It was a perfect intersection of technical engineering and deep, human cultural heritage.",
+    hookQuestion: "How do we preserve the unspoken rules of indigenous culture in the age of large language models?",
+    behindThePaper: "Bano is more than just a game; it's a piece of living history. Seeing Simba, the chatbot I designed, interact with people and preserve those mechanics was incredibly moving. It was a perfect intersection of technical engineering and deep, human cultural heritage.",
+    unanswered: "How do we prevent LLMs from homogenizing indigenous knowledge? The current system preserves rules, but cultural nuances, dialects, and unspoken social cues get flattened into standardized text. We have yet to build an AI that can preserve the 'silences' in traditional knowledge transmission.",
     link: "https://doi.org/10.5281/zenodo.21337996"
   }
 ];

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle } from 'lucide-react';
+import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp } from 'lucide-react';
 import { publications, industryProjects } from './data';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import { SwarmSimulation } from './components/SwarmSimulation';
@@ -43,20 +43,69 @@ function useMobileDevice() {
 export function Hero() {
   const content = [
     {
-      question: "How do we efficiently decode cognitive load from neural signals?",
-      topics: ["Cognitive Neuroscience", "EEG Analysis", "Transformers"]
+      topPill: "Multi-Agent Systems",
+      question: "How do social hierarchies and trust naturally emerge in AI populations?",
+      subtitle: "Computational modelling of trust dynamics using multi-agent reinforcement learning.",
+      currentFocus: {
+        title: "Emergent Social Structures",
+        desc: "Decentralized interactions forming hierarchies"
+      },
+      selectedInquiry: {
+        title: "Network Constraints",
+        desc: "Role of sparsity and logarithmic growth"
+      }
     },
     {
-      question: "What are the simulated neural patterns of bilingual language switching?",
-      topics: ["Cognitive Control", "Multilingual NLP", "Neural Representations"]
+      topPill: "Federated Learning",
+      question: "How to make Federated Learning equitable in infrastructure-constrained environments?",
+      subtitle: "A framework for improving asynchronous federated learning in resource-constrained networks.",
+      currentFocus: {
+        title: "Infrastructure Resilience",
+        desc: "Addressing loadshedding in Sub-Saharan Africa"
+      },
+      selectedInquiry: {
+        title: "Drift-Corrected Aggregation",
+        desc: "Realigning stale gradients"
+      }
     },
     {
-      question: "How robust are recurrent reinforcement learning agents under noisy observations?",
-      topics: ["Reinforcement Learning", "Partial Observability", "Memory Architectures"]
+      topPill: "Multimodal Fusion",
+      question: "How does multimodal fusion accuracy hold up under deployment constraints?",
+      subtitle: "Proposing a reporting norm to bridge the gap between multimodal fusion research and MLOps.",
+      currentFocus: {
+        title: "Deployment Vacuum",
+        desc: "Bridging research benchmarks and MLOps"
+      },
+      selectedInquiry: {
+        title: "Constraint-Aware Evaluation",
+        desc: "Measuring accuracy against missing modalities"
+      }
     },
     {
-      question: "Can artificial intelligence simulate human cognitive biases?",
-      topics: ["Cognitive Biases", "Decision Making", "Multi-Armed Bandits"]
+      topPill: "Neuro-Symbolic AI",
+      question: "How to combine fairness and formal verification in neuro-symbolic AI?",
+      subtitle: "A review of neuro-symbolic architectures for verifiable decision-making in high-stakes domains.",
+      currentFocus: {
+        title: "Verifiable Decision-Making",
+        desc: "High-stakes domains like healthcare & finance"
+      },
+      selectedInquiry: {
+        title: "Fairness by Design",
+        desc: "Building safety into the architecture"
+      }
+    },
+    {
+      topPill: "Cultural Preservation",
+      question: "How to preserve indigenous cultural heritage using Large Language Models?",
+      subtitle: "Developing a CHAT-informed conversational agent to preserve the Kenyan traditional game Bano.",
+      currentFocus: {
+        title: "Digital Mediation",
+        desc: "Balancing embodied knowledge and AI"
+      },
+      selectedInquiry: {
+        title: "CHAT Framework",
+        desc: "Evaluating Cultural Preservation Effectiveness"
+      }
     }
   ];
 
@@ -79,51 +128,108 @@ export function Hero() {
       whileInView="visible"
       viewport={{ once: true }}
       variants={staggerContainer}
-      className="min-h-[80vh] flex flex-col justify-center max-w-4xl pt-20"
+      className="min-h-[100vh] flex flex-col items-center justify-center pt-20 relative w-full"
     >
-      <motion.div variants={fadeUp} className="flex flex-wrap gap-3 sm:gap-4 items-center mb-8 text-[10px] uppercase tracking-[0.3em] font-bold text-[#8a817c] min-h-[20px]">
-        <span className="flex items-center gap-2 shrink-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a] animate-pulse" />
-          CURRENT FOCUS
-        </span>
-        <span className="hidden sm:inline opacity-50 shrink-0">•</span>
+      <motion.div variants={fadeUp} className="mb-6">
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={currentIdx}
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(4px)" }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5 }}
-            className="hidden sm:flex flex-wrap gap-3 sm:gap-4 items-center"
+            className="flex items-center gap-2 bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 px-4 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-bold text-[#8a817c]"
           >
-            {content[currentIdx].topics.map((topic, i) => (
-              <span key={topic} className="flex gap-3 sm:gap-4 items-center">
-                <span className="whitespace-nowrap">{topic}</span>
-                {i < content[currentIdx].topics.length - 1 && <span className="opacity-50">•</span>}
-              </span>
-            ))}
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-highlight animate-pulse" />
+            {content[currentIdx].topPill}
           </motion.div>
         </AnimatePresence>
       </motion.div>
       
-      <div className="min-h-[160px] md:min-h-[220px] flex items-center mb-8">
+      <div className="min-h-[160px] md:min-h-[220px] flex flex-col items-center justify-center mb-8 max-w-5xl w-full">
         <AnimatePresence mode="wait">
           <motion.h1 
             key={currentIdx}
-            initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+            initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl md:text-7xl font-serif italic font-light tracking-tight leading-[1.1] text-[#1a1a1a]"
+            exit={{ opacity: 0, y: -15, filter: "blur(8px)" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl md:text-7xl lg:text-[5.5rem] font-serif italic font-light tracking-tight leading-[1.05] text-[#1a1a1a] text-center"
           >
             {content[currentIdx].question}
           </motion.h1>
         </AnimatePresence>
       </div>
       
-      <motion.p variants={fadeUp} className="text-sm text-[#4a4a4a] max-w-2xl leading-relaxed">
-        A digital research repository exploring complex systems, cognitive modeling, and artificial intelligence.
-      </motion.p>
+      <div className="min-h-[60px] max-w-2xl w-full mb-16 text-center">
+        <AnimatePresence mode="wait">
+          <motion.p 
+            key={currentIdx}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(4px)" }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-base md:text-lg text-[#4a4a4a] leading-relaxed font-light"
+          >
+            {content[currentIdx].subtitle}
+          </motion.p>
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom Cards */}
+      <div className="absolute -bottom-16 left-[50%] w-screen -translate-x-1/2 flex justify-between items-end pb-0 px-4 md:px-12 lg:px-20 pointer-events-none z-20">
+        {/* Current Focus - Left */}
+        <div className="hidden md:block w-72 lg:w-80 border border-[#1a1a1a]/5 rounded-xl p-8 bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] relative overflow-hidden text-left pointer-events-auto hover:shadow-[0_16px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1">
+          <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10" />
+          <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-orange-highlight mb-4">Current Focus</p>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIdx}
+              initial={{ opacity: 0, x: -15, filter: "blur(4px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: 15, filter: "blur(4px)" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h3 className="text-base font-bold text-[#1a1a1a] mb-2 leading-snug">{content[currentIdx].currentFocus.title}</h3>
+              <p className="text-sm text-[#8a817c] italic leading-relaxed">{content[currentIdx].currentFocus.desc}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8a817c] text-center w-full md:w-auto absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center">
+          <span className="mb-6 opacity-60">SCROLL</span>
+          <div className="w-[1px] h-24 bg-gradient-to-b from-[#1a1a1a]/0 via-[#1a1a1a]/10 to-[#1a1a1a]/0 relative overflow-hidden">
+            <motion.div
+              className="w-full h-[150%] bg-gradient-to-b from-orange-highlight/0 via-orange-highlight to-orange-highlight/0 absolute top-0 left-0"
+              initial={{ y: "-100%" }}
+              animate={{ y: "100%" }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Selected Inquiry - Right */}
+        <div className="hidden md:block w-72 lg:w-80 border border-[#1a1a1a]/5 rounded-xl p-8 bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] relative overflow-hidden text-right pointer-events-auto hover:shadow-[0_16px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1">
+          <div className="absolute right-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10" />
+          <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-orange-highlight mb-4">Selected Inquiry</p>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIdx}
+              initial={{ opacity: 0, x: 15, filter: "blur(4px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: -15, filter: "blur(4px)" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h3 className="text-base font-bold text-[#1a1a1a] mb-2 leading-snug">{content[currentIdx].selectedInquiry.title}</h3>
+              <p className="text-sm text-[#8a817c] italic leading-relaxed">{content[currentIdx].selectedInquiry.desc}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
     </motion.section>
   );
 }
@@ -133,7 +239,7 @@ export function About() {
   return (
     <motion.section 
       id="about"
-      className="py-24 max-w-4xl"
+      className="pt-56 pb-24 max-w-4xl"
       {...revealProps}
     >
       <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-8 uppercase tracking-[0.3em]">
@@ -281,17 +387,20 @@ export function Publications() {
                 className="cursor-pointer"
                 onClick={() => toggleExpand(i)}
               >
-                <h3 className="text-2xl font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
-                  {pub.title}
+                <h3 className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300 leading-tight">
+                  {pub.hookQuestion}
                 </h3>
-                <p className="text-[10px] uppercase tracking-widest text-[#8a817c] font-bold mt-2">
-                  {pub.authors} • {pub.status} • {pub.year}
-                </p>
-                <p className="text-base text-[#4a4a4a] leading-relaxed mt-2">
+                <div className="flex items-center gap-3 mt-5 mb-4">
+                  <div className="w-8 h-[1px] bg-orange-highlight/50"></div>
+                  <p className="text-[10px] uppercase tracking-widest text-[#8a817c] font-bold">
+                    By {pub.authors} • {pub.year}
+                  </p>
+                </div>
+                <p className="text-base md:text-lg text-[#4a4a4a] leading-relaxed font-serif">
                   {pub.summary}
                 </p>
-                <div className="flex gap-4 mt-4 text-[10px] uppercase tracking-widest font-bold text-orange-highlight">
-                  <span>{isExpanded ? "Hide Story" : "Read Story"}</span>
+                <div className="flex gap-4 mt-6 text-[10px] uppercase tracking-widest font-bold text-orange-highlight">
+                  <span>{isExpanded ? "Close Story" : "Read the Story & Open Questions →"}</span>
                 </div>
               </div>
               
@@ -304,20 +413,32 @@ export function Publications() {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-6 pb-2 border-t border-[#1a1a1a]/10 mt-6">
-                      <p className="text-base text-[#4a4a4a] leading-relaxed italic border-l-2 border-orange-highlight pl-6">
-                        "{pub.personalStory}"
-                      </p>
-                      <div className="flex items-center gap-6 mt-6">
+                    <div className="pt-8 pb-4 mt-8 border-t border-[#1a1a1a]/10 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                      <div className="md:col-span-7 space-y-4">
+                        <h4 className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c]">Behind the Paper</h4>
+                        <p className="text-base md:text-lg text-[#1a1a1a] font-serif leading-relaxed">
+                          <span className="float-left text-3xl mr-2 mt-1 font-bold text-orange-highlight leading-none">{pub.behindThePaper.charAt(0)}</span>
+                          {pub.behindThePaper.substring(1)}
+                        </p>
+                      </div>
+                      <div className="md:col-span-5 bg-orange-highlight/[0.03] p-6 rounded-sm border border-orange-highlight/10 flex flex-col justify-between">
+                        <div className="space-y-3">
+                          <h4 className="text-[10px] uppercase tracking-[0.2em] font-bold text-orange-highlight">The Unanswered Question</h4>
+                          <p className="text-sm text-[#4a4a4a] leading-relaxed italic">
+                            "{pub.unanswered}"
+                          </p>
+                        </div>
                         {pub.link && (
-                          <a 
-                            href={pub.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight transition-colors"
-                          >
-                            Read paper →
-                          </a>
+                          <div className="pt-4 mt-6 border-t border-orange-highlight/20">
+                            <a 
+                              href={pub.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight transition-colors"
+                            >
+                              Read the Full Paper →
+                            </a>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -769,6 +890,64 @@ export function Notes() {
   );
 }
 
+const fieldNotes = [
+  {
+    title: "On Modeling Human Irrationality",
+    date: "October 2025",
+    content: "What happens when you code an AI to hate losing more than it loves winning? By giving a standard reinforcement learning agent the human flaw of 'loss aversion' and dropping it into a multi-armed bandit problem, I expected a drop in performance. Surprisingly, the 'flawed' agent learned faster than the perfectly rational one. It turns out some of our cognitive biases aren't bugs, they're highly efficient heuristics for navigating uncertainty."
+  },
+  {
+    title: "The Neural Geography of Language",
+    date: "July 2025",
+    content: "Is language switching a sudden jump or a continuous glide? By plotting the neural trajectories of a multilingual transformer moving between English and Spanish, I found no discrete jumps. The model glided smoothly through intermediate, mixed-language representational states. It suggests that code-switching isn't about flipping a switch; it's about navigating a continuous semantic space."
+  },
+  {
+    title: "Cultural Blind Spots in Vision Models",
+    date: "July 2025",
+    content: "Facial expression recognition models boast 90%+ accuracy in the lab, but drop significantly when deployed across diverse populations. Training a CNN on a culturally balanced dataset revealed something critical: standard convolutional layers capture the pixels, but they miss the cultural nuance. Adding a spatial attention mechanism helped the model learn where different cultures express emotion, not just how."
+  }
+];
+
+export function ArchivedFieldNotes() {
+  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
+  return (
+    <motion.section 
+      className="py-12 max-w-6xl mb-12"
+      {...revealProps}
+    >
+      <div className="mb-12">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-[#1a1a1a] font-bold border-b border-[#1a1a1a]/10 pb-2">
+          <SuperTextReveal text="Archived Field Notes" />
+        </span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {fieldNotes.map((note, idx) => (
+          <motion.div 
+            key={idx}
+            variants={fadeUp}
+            className="border-t border-[#1a1a1a]/10 pt-6 group relative"
+          >
+            <div className="absolute inset-0 bg-[#1a1a1a]/[0.03] -m-4 p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-4">
+                <h4 className="text-lg font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
+                  {note.title}
+                </h4>
+              </div>
+              <p className="text-sm text-[#4a4a4a] leading-relaxed mb-6">
+                {note.content}
+              </p>
+              <p className="text-[10px] uppercase tracking-widest font-bold text-[#8a817c]">
+                {note.date}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
 export function Contact() {
   const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
   return (
@@ -783,18 +962,62 @@ export function Contact() {
       <h2 className="text-4xl md:text-5xl font-serif italic font-light tracking-tight text-[#1a1a1a] mb-8">
         <SuperTextReveal text="Let's explore questions together." delay={0.1} />
       </h2>
-      <p className="text-sm text-[#4a4a4a] leading-relaxed mb-12">
+      <p className="text-sm text-[#4a4a4a] leading-relaxed mb-8">
         <SuperParagraphReveal text="I am always open to discussing research, collaboration opportunities, or interesting problems in network science and multi-agent systems." delay={0.2} />
       </p>
-      <div className="flex items-center gap-8 text-[10px] uppercase tracking-widest font-bold">
-        <a href="mailto:georgeokelloouma@gmail.com" className="group flex items-center gap-2 text-[#1a1a1a] hover:text-orange-highlight hover:border-orange-highlight transition-colors duration-300 pb-1 border-b border-[#1a1a1a]/20">
-          <Mail className="w-4 h-4 text-[#8a817c] group-hover:text-orange-highlight transition-colors duration-300" />
-          <span>Email</span>
-        </a>
-        <a href="https://www.linkedin.com/in/georgeokelloouma" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-[#1a1a1a] hover:text-orange-highlight hover:border-orange-highlight transition-colors duration-300 pb-1 border-b border-[#1a1a1a]/20">
-          <Linkedin className="w-4 h-4 text-[#8a817c] group-hover:text-orange-highlight transition-colors duration-300" />
-          <span>LinkedIn</span>
-        </a>
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 mt-16">
+        <div className="flex flex-col gap-8 w-full md:w-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex items-center gap-3"
+          >
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-highlight opacity-40"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-highlight"></span>
+            </div>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">
+              Open to research collaborations
+            </span>
+          </motion.div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full">
+            <motion.a 
+              href="mailto:georgeokelloouma@gmail.com" 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#1a1a1a]/20 transition-all duration-300 w-full sm:w-auto"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-orange-highlight/10 transition-colors duration-300">
+                  <Mail className="w-4 h-4 text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300" />
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">Email</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-orange-highlight group-hover:-rotate-45 transition-all duration-300" />
+            </motion.a>
+
+            <motion.a 
+              href="https://www.linkedin.com/in/georgeokelloouma" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#1a1a1a]/20 transition-all duration-300 w-full sm:w-auto"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-[#0077b5]/10 transition-colors duration-300">
+                  <Linkedin className="w-4 h-4 text-[#1a1a1a] group-hover:text-[#0077b5] transition-colors duration-300" />
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">LinkedIn</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-[#0077b5] group-hover:-rotate-45 transition-all duration-300" />
+            </motion.a>
+          </div>
+        </div>
       </div>
     </motion.section>
   );
