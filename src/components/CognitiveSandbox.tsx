@@ -15,6 +15,10 @@ export function CognitiveSandbox() {
   // RL State
   const [rlBias, setRlBias] = useState('Loss-Averse');
 
+  // EEG State
+  const [eegTask, setEegTask] = useState('Resting State');
+  const [eegModel, setEegModel] = useState('TRANSFORMER');
+
   const tabs = [
     { id: 'EEG CLASSIFIER', icon: Brain, color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' },
     { id: 'SACC SWITCHING', icon: Activity, color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' },
@@ -64,16 +68,28 @@ export function CognitiveSandbox() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
         {/* Sidebar */}
-        <div className="lg:col-span-4 border-r border-white/10 p-6 md:p-8 flex flex-col gap-8 bg-white/[0.02]">
-          {activeTab === 'EEG CLASSIFIER' && <EEGLeft />}
+        <div className="lg:col-span-3 border-r border-white/10 p-6 md:p-8 flex flex-col gap-8 bg-white/[0.02]">
+          {activeTab === 'EEG CLASSIFIER' && (
+            <EEGLeft 
+              activeTask={eegTask} 
+              setActiveTask={setEegTask} 
+              activeModel={eegModel} 
+              setActiveModel={setEegModel} 
+            />
+          )}
           {activeTab === 'SACC SWITCHING' && <SACCLeft sample={saccSample} setSample={setSaccSample} />}
           {activeTab === 'MARL TRUST' && <MARLLeft noise={marlNoise} setNoise={setMarlNoise} arch={marlArch} setArch={setMarlArch} />}
           {activeTab === 'RL BIASES' && <RLLeft bias={rlBias} setBias={setRlBias} />}
         </div>
 
         {/* Main Display Area */}
-        <div className="lg:col-span-8 p-6 md:p-8 flex flex-col relative bg-gradient-to-br from-[#0d0f14] to-[#0a0c10]">
-          {activeTab === 'EEG CLASSIFIER' && <EEGRight />}
+        <div className="lg:col-span-9 p-6 md:p-8 flex flex-col relative bg-gradient-to-br from-[#0d0f14] to-[#0a0c10]">
+          {activeTab === 'EEG CLASSIFIER' && (
+            <EEGRight 
+              activeTask={eegTask} 
+              activeModel={eegModel} 
+            />
+          )}
           {activeTab === 'SACC SWITCHING' && <SACCRight sample={saccSample} />}
           {activeTab === 'MARL TRUST' && <MARLRight noise={marlNoise} arch={marlArch} />}
           {activeTab === 'RL BIASES' && <RLRight bias={rlBias} />}
@@ -84,10 +100,14 @@ export function CognitiveSandbox() {
 }
 
 // --- EEG CLASSIFIER ---
-function EEGLeft() {
-  const [activeTask, setActiveTask] = useState('Resting State');
-  const [activeModel, setActiveModel] = useState('TRANSFORMER');
+interface EEGLeftProps {
+  activeTask: string;
+  setActiveTask: (task: string) => void;
+  activeModel: string;
+  setActiveModel: (model: string) => void;
+}
 
+function EEGLeft({ activeTask, setActiveTask, activeModel, setActiveModel }: EEGLeftProps) {
   const tasks = [
     { id: 'Resting State', desc: 'MINIMAL COGNITIVE LOAD BASELINE' },
     { id: 'Cardiac LIME/SHAP', desc: 'ANALYZING EXPLAINABLE DECISION PATHS' },
@@ -136,16 +156,29 @@ function EEGLeft() {
   );
 }
 
-function EEGRight() {
+interface EEGRightProps {
+  activeTask: string;
+  activeModel: string;
+}
+
+function EEGRight({ activeTask, activeModel }: EEGRightProps) {
   const [isStimulating, setIsStimulating] = useState(false);
   const trigger = () => {
     setIsStimulating(true);
-    setTimeout(() => setIsStimulating(false), 2000);
+    setTimeout(() => setIsStimulating(false), 2500);
   };
+
+  const isHighLoad = activeTask !== 'Resting State' || isStimulating;
+  
+  // Realistically model power shift between Alpha and Beta waves
+  const alphaPower = isHighLoad ? 18 : 84;
+  const betaPower = isHighLoad ? 82 : 16;
+  const estimateLoadWidth = isHighLoad ? '88%' : '12%';
+  const estimateLoadText = isHighLoad ? 'High Task Load' : 'Minimal / Idle';
   
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-12">
+      <div className="flex justify-between items-center mb-10">
         <div className="text-[10px] font-mono tracking-widest uppercase text-white/40">Seed-Vig Experimentation Engine</div>
         <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-emerald-400">
           <span className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${isStimulating ? 'animate-pulse' : ''}`}></span>
@@ -153,50 +186,151 @@ function EEGRight() {
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-8">
-        <div className="relative aspect-square flex items-center justify-center border border-white/5 rounded-full p-8">
-          <div className="absolute top-4 left-4 text-[9px] font-mono tracking-widest text-white/30">FRONTAL (Fz)</div>
-          <div className="absolute bottom-4 right-4 text-[9px] font-mono tracking-widest text-white/30">OCCIPITAL (Oz)</div>
-          <svg viewBox="0 0 100 100" className="w-full h-full opacity-80">
-            <path d="M 50 10 C 30 10 15 25 15 45 C 15 60 25 70 35 85 C 40 92 45 95 50 95 C 55 95 60 92 65 85 C 75 70 85 60 85 45 C 85 25 70 10 50 10 Z" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-            <path d="M 50 10 L 50 95 M 20 40 L 80 40 M 25 60 L 75 60" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className={`w-12 h-12 border border-white/20 rounded bg-[#0a0c10] flex items-center justify-center transition-colors ${isStimulating ? 'border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.2)]' : ''}`}>
-              <div className={`w-4 h-4 rounded-sm transition-colors ${isStimulating ? 'bg-yellow-500' : 'bg-white/20'}`} />
+      <div className="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-10 items-start mb-8">
+        {/* Left Side: Electrode Map & Stimulation Trigger */}
+        <div className="flex flex-col gap-6 items-center">
+          <div className="relative w-full max-w-[240px] aspect-square flex items-center justify-center border border-white/5 rounded-full p-6 bg-white/[0.01]">
+            <div className="absolute top-4 left-4 text-[9px] font-mono tracking-widest text-white/30">FRONTAL (Fz)</div>
+            <div className="absolute bottom-4 right-4 text-[9px] font-mono tracking-widest text-white/30">OCCIPITAL (Oz)</div>
+            <svg viewBox="0 0 100 100" className="w-full h-full opacity-80">
+              <path d="M 50 10 C 30 10 15 25 15 45 C 15 60 25 70 35 85 C 40 92 45 95 50 95 C 55 95 60 92 65 85 C 75 70 85 60 85 45 C 85 25 70 10 50 10 Z" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+              <path d="M 50 10 L 50 95 M 20 40 L 80 40 M 25 60 L 75 60" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className={`w-12 h-12 border border-white/20 rounded bg-[#0a0c10] flex items-center justify-center transition-colors ${isStimulating ? 'border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.2)]' : ''}`}>
+                <div className={`w-4 h-4 rounded-sm transition-colors ${isStimulating ? 'bg-yellow-500 animate-pulse' : 'bg-white/20'}`} />
+              </div>
             </div>
           </div>
+
+          <button onClick={trigger} className="w-full max-w-[240px] py-3.5 flex items-center justify-center gap-2 rounded text-[10px] font-bold tracking-[0.2em] uppercase bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            <Play size={12} /> Trigger Cognitive Stimulus
+          </button>
         </div>
 
-        <div className="flex flex-col gap-8">
+        {/* Right Side: Interactive Explanations of Alpha and Beta waves */}
+        <div className="flex flex-col gap-6">
           <div>
             <div className="flex justify-between items-end mb-2">
               <div className="text-[10px] font-mono tracking-widest uppercase text-white/50">Cognitive Load Estimate</div>
-              <div className="text-[10px] font-mono tracking-widest text-white/50">Minimal</div>
+              <div className="text-[10px] font-mono tracking-widest text-white/50">{estimateLoadText}</div>
             </div>
             <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-              <motion.div className="h-full bg-white" animate={{ width: isStimulating ? '85%' : '15%' }} />
+              <motion.div className="h-full bg-white" animate={{ width: estimateLoadWidth }} />
+            </div>
+          </div>
+
+          {/* Spectral Wave Explainer */}
+          <div className="bg-[#0a0c10]/70 p-4 rounded-lg border border-white/5 space-y-4">
+            <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 border-b border-white/5 pb-2">
+              Spectral Band Analysis
+            </div>
+            
+            {/* Alpha Wave Section */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] font-mono">
+                <span className="text-yellow-500 font-bold uppercase tracking-wide flex items-center gap-1.5">
+                  Alpha Wave (8-12 Hz)
+                </span>
+                <span className="text-white/70 font-mono text-[9px]">{alphaPower}% Power</span>
+              </div>
+              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-yellow-500/80" 
+                  animate={{ width: `${alphaPower}%` }}
+                  transition={{ type: "spring", stiffness: 60 }}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-[8.5px] text-[#8a817c] leading-relaxed">
+                  <strong className="text-white/50">Rest & Idle State:</strong> Spikes during resting baselines. Represents internal cognitive focus and sensory gating.
+                </p>
+                {/* Slow Wave Visualizer */}
+                <svg className="h-3 w-16 overflow-visible opacity-40 shrink-0" viewBox="0 0 100 20">
+                  <motion.path
+                    d="M 0 10 Q 12.5 2, 25 10 T 50 10 T 75 10 T 100 10"
+                    fill="none"
+                    stroke="#eab308"
+                    strokeWidth="1.5"
+                    animate={{
+                      d: [
+                        "M 0 10 Q 12.5 2, 25 10 T 50 10 T 75 10 T 100 10",
+                        "M 0 10 Q 12.5 18, 25 10 T 50 10 T 75 10 T 100 10",
+                        "M 0 10 Q 12.5 2, 25 10 T 50 10 T 75 10 T 100 10"
+                      ]
+                    }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 2.8,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Beta Wave Section */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] font-mono">
+                <span className="text-orange-highlight font-bold uppercase tracking-wide flex items-center gap-1.5">
+                  Beta Wave (12-30 Hz)
+                </span>
+                <span className="text-white/70 font-mono text-[9px]">{betaPower}% Power</span>
+              </div>
+              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-orange-highlight" 
+                  animate={{ width: `${betaPower}%` }}
+                  transition={{ type: "spring", stiffness: 60 }}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-[8.5px] text-[#8a817c] leading-relaxed">
+                  <strong className="text-white/50">Active Cognition:</strong> Dominant during focus, language transitions, or analytical tasks.
+                </p>
+                {/* Fast Wave Visualizer */}
+                <svg className="h-3 w-16 overflow-visible opacity-40 shrink-0" viewBox="0 0 100 20">
+                  <motion.path
+                    d="M 0 10 Q 5 2, 10 10 T 20 10 T 30 10 T 40 10 T 50 10 T 60 10 T 70 10 T 80 10 T 90 10 T 100 10"
+                    fill="none"
+                    stroke="#ff5722"
+                    strokeWidth="1.5"
+                    animate={{
+                      d: [
+                        "M 0 10 Q 5 2, 10 10 T 20 10 T 30 10 T 40 10 T 50 10 T 60 10 T 70 10 T 80 10 T 90 10 T 100 10",
+                        "M 0 10 Q 5 18, 10 10 T 20 10 T 30 10 T 40 10 T 50 10 T 60 10 T 70 10 T 80 10 T 90 10 T 100 10",
+                        "M 0 10 Q 5 2, 10 10 T 20 10 T 30 10 T 40 10 T 50 10 T 60 10 T 70 10 T 80 10 T 90 10 T 100 10"
+                      ]
+                    }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 0.7,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </svg>
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-[#0a0c10] p-4 rounded-lg border border-white/5">
-              <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 mb-2">Model Confidence</div>
-              <div className="text-xl font-mono text-white">87.9%</div>
+              <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 mb-1">Model Confidence ({activeModel})</div>
+              <div className="text-lg font-mono text-white">
+                {activeModel === 'TRANSFORMER' ? '91.4%' : activeModel === 'LSTM' ? '84.2%' : '79.6%'}
+              </div>
             </div>
             <div className="bg-[#0a0c10] p-4 rounded-lg border border-white/5">
-              <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 mb-2">Feature Map Trust</div>
-              <div className="text-sm font-mono mt-1 text-emerald-400">EXCELLENT</div>
+              <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 mb-1">Feature Map Trust</div>
+              <div className={`text-xs font-mono mt-1 ${activeModel === 'TRANSFORMER' ? 'text-emerald-400' : 'text-yellow-500/80'}`}>
+                {activeModel === 'TRANSFORMER' ? 'EXCELLENT' : 'OPTIMAL'}
+              </div>
             </div>
           </div>
-
-          <button onClick={trigger} className="w-full py-4 mt-4 flex items-center justify-center gap-2 rounded text-[10px] font-bold tracking-[0.2em] uppercase bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-            <Play size={12} /> Trigger Cognitive Stimulus
-          </button>
         </div>
       </div>
       <div className="text-[9px] font-mono tracking-widest uppercase text-white/40 leading-relaxed mt-auto">
-        GEORGE'S FINDINGS: Transformers map attention directly onto temporal and frontal electrode groupings, verifying neural substrates for cognitive switching. Overperforms standard CNN/LSTM models by 7-12% on average.
+        GEORGE'S FINDINGS: {activeModel === 'TRANSFORMER' ? 'Transformer attention mechanisms' : `${activeModel} networks`} map spectral patterns directly onto frontal electrode groupings, verifying neural substrates for cognitive switching. Overperforms other models on {activeTask.toLowerCase()}.
       </div>
     </div>
   );

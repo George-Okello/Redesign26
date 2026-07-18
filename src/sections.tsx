@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp } from 'lucide-react';
 import { publications, industryProjects } from './data';
 import { useScrollReveal } from './hooks/useScrollReveal';
@@ -24,6 +24,68 @@ const staggerContainer = {
     transition: { staggerChildren: 0.15 }
   }
 };
+
+interface MagneticCardProps {
+  children: React.ReactNode;
+  className?: string;
+  maxRotate?: number;
+  maxTranslate?: number;
+  key?: React.Key;
+}
+
+function MagneticCard({ children, className = "", maxRotate = 4, maxTranslate = 8 }: MagneticCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 20 };
+  const smoothX = useSpring(x, springConfig);
+  const smoothY = useSpring(y, springConfig);
+  const smoothRotateX = useSpring(rotateX, springConfig);
+  const smoothRotateY = useSpring(rotateY, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+
+    x.set((mouseX / (width / 2)) * maxTranslate);
+    y.set((mouseY / (height / 2)) * maxTranslate);
+    rotateX.set(-(mouseY / (height / 2)) * maxRotate);
+    rotateY.set((mouseX / (width / 2)) * maxRotate);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        x: smoothX,
+        y: smoothY,
+        rotateX: smoothRotateX,
+        rotateY: smoothRotateY,
+        transformStyle: 'preserve-3d',
+        perspective: 1000,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function useMobileDevice() {
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
@@ -289,7 +351,7 @@ export function InteractiveLab() {
   return (
     <motion.section 
       id="lab"
-      className="py-24 max-w-[1200px] w-full mx-auto"
+      className="py-16 w-full mx-auto max-w-7xl xl:max-w-none"
       {...revealProps}
     >
       <div className="mb-12 text-center md:text-left">
@@ -483,6 +545,40 @@ export function Projects() {
   const [progress, setProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 20 };
+  const smoothX = useSpring(x, springConfig);
+  const smoothY = useSpring(y, springConfig);
+  const smoothRotateX = useSpring(rotateX, springConfig);
+  const smoothRotateY = useSpring(rotateY, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+
+    x.set((mouseX / (width / 2)) * 6); // subtle translate
+    y.set((mouseY / (height / 2)) * 6);
+    rotateX.set(-(mouseY / (height / 2)) * 3); // subtle rotate
+    rotateY.set((mouseX / (width / 2)) * 3);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const AUTOPLAY_DURATION = 8000; // 8 seconds per slide
@@ -644,10 +740,20 @@ export function Projects() {
       </div>
 
       {/* Active Project Slide Frame */}
-      <div 
+      <motion.div 
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          x: smoothX,
+          y: smoothY,
+          rotateX: smoothRotateX,
+          rotateY: smoothRotateY,
+          transformStyle: 'preserve-3d',
+          perspective: 1000,
+        }}
         className="relative overflow-hidden bg-[#f5f2ed] border border-[#1a1a1a]/10 hover:border-orange-highlight/20 transition-all duration-500 rounded-none shadow-sm min-h-[460px] flex flex-col justify-between"
         onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Delicate animated timer bar at top of card */}
         {isPlaying && (
@@ -783,7 +889,7 @@ export function Projects() {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.section>
   );
 }
@@ -796,51 +902,53 @@ export function KaggleSection() {
       className="py-16 max-w-5xl w-full mx-auto px-6 md:px-0"
       {...revealProps}
     >
-      <motion.div 
-        variants={fadeUp}
-        className="relative w-full overflow-hidden bg-[#1d1b18] border border-[#1a1a1a] p-8 md:p-12 group flex flex-col md:flex-row md:items-center justify-between gap-8 transition-shadow duration-300 hover:shadow-xl"
-      >
-        {/* Subtle decorative grid background for contrast */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#fcfaf7_1px,transparent_1px)] [background-size:16px_16px]" />
-        
-        {/* Left Side Content */}
-        <div className="relative z-10 flex-grow max-w-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#fcfaf7]/10 text-[#fcfaf7]/90 border border-[#fcfaf7]/10">
-              <Database className="w-5 h-5" />
+      <MagneticCard maxRotate={3} maxTranslate={6} className="w-full">
+        <motion.div 
+          variants={fadeUp}
+          className="relative w-full overflow-hidden bg-[#1d1b18] border border-[#1a1a1a] p-8 md:p-12 group flex flex-col md:flex-row md:items-center justify-between gap-8 transition-shadow duration-300 hover:shadow-xl"
+        >
+          {/* Subtle decorative grid background for contrast */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#fcfaf7_1px,transparent_1px)] [background-size:16px_16px]" />
+          
+          {/* Left Side Content */}
+          <div className="relative z-10 flex-grow max-w-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#fcfaf7]/10 text-[#fcfaf7]/90 border border-[#fcfaf7]/10">
+                <Database className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#c8c2bc] font-bold">
+                  More Explorations
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#c8c2bc] font-bold">
-                More Explorations
-              </p>
-            </div>
+
+            <h3 className="text-3xl md:text-4xl font-serif italic text-[#fcfaf7] mb-4 tracking-tight">
+              <SuperTextReveal text="Data Science & Competitions" />
+            </h3>
+            
+            <p className="text-[#c8c2bc] text-sm md:text-base leading-relaxed font-sans font-light">
+              <SuperParagraphReveal text="While my selected major works are detailed above, I also actively experiment with datasets, build predictive models, and share notebooks on Kaggle. Explore my other exploratory data analyses and competition entries." />
+            </p>
           </div>
 
-          <h3 className="text-3xl md:text-4xl font-serif italic text-[#fcfaf7] mb-4 tracking-tight">
-            <SuperTextReveal text="Data Science & Competitions" />
-          </h3>
-          
-          <p className="text-[#c8c2bc] text-sm md:text-base leading-relaxed font-sans font-light">
-            <SuperParagraphReveal text="While my selected major works are detailed above, I also actively experiment with datasets, build predictive models, and share notebooks on Kaggle. Explore my other exploratory data analyses and competition entries." />
-          </p>
-        </div>
-
-        {/* Right Side Button */}
-        <div className="relative z-10 flex-shrink-0 self-start md:self-center">
-          <motion.a
-            href="https://www.kaggle.com/georgeokello"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="group/btn inline-flex items-center gap-3 border border-[#fcfaf7]/20 bg-[#fcfaf7]/5 hover:bg-orange-highlight hover:border-orange-highlight text-[#fcfaf7] hover:text-white text-[10px] uppercase tracking-[0.2em] px-8 py-5 rounded-none font-bold transition-all duration-300"
-          >
-            <Database className="w-4 h-4 transition-transform duration-300 group-hover/btn:rotate-12" />
-            <span>Explore Kaggle Notebooks</span>
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-          </motion.a>
-        </div>
-      </motion.div>
+          {/* Right Side Button */}
+          <div className="relative z-10 flex-shrink-0 self-start md:self-center">
+            <motion.a
+              href="https://www.kaggle.com/georgeokello"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group/btn inline-flex items-center gap-3 border border-[#fcfaf7]/20 bg-[#fcfaf7]/5 hover:bg-orange-highlight hover:border-orange-highlight text-[#fcfaf7] hover:text-white text-[10px] uppercase tracking-[0.2em] px-8 py-5 rounded-none font-bold transition-all duration-300"
+            >
+              <Database className="w-4 h-4 transition-transform duration-300 group-hover/btn:rotate-12" />
+              <span>Explore Kaggle Notebooks</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+            </motion.a>
+          </div>
+        </motion.div>
+      </MagneticCard>
     </motion.section>
   );
 }
@@ -922,26 +1030,27 @@ export function ArchivedFieldNotes() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {fieldNotes.map((note, idx) => (
-          <motion.div 
-            key={idx}
-            variants={fadeUp}
-            className="border-t border-[#1a1a1a]/10 pt-6 group relative"
-          >
-            <div className="absolute inset-0 bg-[#1a1a1a]/[0.03] -m-4 p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
-            <div className="relative z-10">
-              <div className="flex justify-between items-start mb-4">
-                <h4 className="text-lg font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
-                  {note.title}
-                </h4>
+          <MagneticCard key={idx} maxRotate={4} maxTranslate={8} className="relative">
+            <motion.div 
+              variants={fadeUp}
+              className="border-t border-[#1a1a1a]/10 pt-6 group relative h-full"
+            >
+              <div className="absolute inset-0 bg-[#1a1a1a]/[0.03] -m-4 p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
+              <div className="relative z-10">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-lg font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
+                    {note.title}
+                  </h4>
+                </div>
+                <p className="text-sm text-[#4a4a4a] leading-relaxed mb-6">
+                  {note.content}
+                </p>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-[#8a817c]">
+                  {note.date}
+                </p>
               </div>
-              <p className="text-sm text-[#4a4a4a] leading-relaxed mb-6">
-                {note.content}
-              </p>
-              <p className="text-[10px] uppercase tracking-widest font-bold text-[#8a817c]">
-                {note.date}
-              </p>
-            </div>
-          </motion.div>
+            </motion.div>
+          </MagneticCard>
         ))}
       </div>
     </motion.section>

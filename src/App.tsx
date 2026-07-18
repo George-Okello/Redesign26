@@ -341,7 +341,7 @@ export default function App() {
         />
         <NetworkBackground />
         <Header />
-        <main className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-24 pt-32">
+        <main className="relative z-10 mx-auto max-w-7xl xl:max-w-[1360px] 2xl:max-w-[1536px] px-6 md:px-12 lg:px-24 pt-32">
           <Hero />
           <About />
           <InteractiveLab />
