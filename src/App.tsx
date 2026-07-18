@@ -258,10 +258,9 @@ function InitialLoader({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      animate={{ opacity: 0 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1.2, delay: 4.2, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-none"
+      transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-auto select-none"
     >
       <div className="overflow-hidden mb-6">
         <motion.div
@@ -330,47 +329,53 @@ export default function App() {
         {loading && <InitialLoader onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
-      <motion.div 
-        className="fixed top-0 left-0 right-0 h-[3px] bg-orange-highlight origin-left z-[100]" 
-        style={{ scaleX }} 
-      />
-      <NetworkBackground />
-      <Header />
-      <main className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-24 pt-32">
-        <Hero />
-        <About />
-        <InteractiveLab />
-        <Publications />
-        <Projects />
-        <KaggleSection />
-        <Notes />
-        <ArchivedFieldNotes />
-        <SwarmSection />
-        <Contact />
-      </main>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: loading ? 0 : 1 }}
+        transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.div 
+          className="fixed top-0 left-0 right-0 h-[3px] bg-orange-highlight origin-left z-[100]" 
+          style={{ scaleX }} 
+        />
+        <NetworkBackground />
+        <Header />
+        <main className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-24 pt-32">
+          <Hero />
+          <About />
+          <InteractiveLab />
+          <Publications />
+          <Projects />
+          <KaggleSection />
+          <Notes />
+          <ArchivedFieldNotes />
+          <SwarmSection />
+          <Contact />
+        </main>
 
-      <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left relative">
-          <div className="flex flex-col md:flex-row items-center gap-12 z-10">
-            <div className="-my-12">
-              <FooterGlobe />
-            </div>
-            <div className="flex flex-col gap-4">
-              <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
-              <div className="flex flex-col gap-2">
-                <span className="text-[#8a817c] leading-relaxed lowercase tracking-widest text-[8px]">
-                  network science <span className="mx-2 text-orange-highlight/40">•</span> multi-agent systems <span className="mx-2 text-orange-highlight/40">•</span> complex systems
-                </span>
-                <span className="text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
-                  nodes: nairobi [-1.29, 36.82] // south bend [41.70, -86.24] // kuala lumpur [3.14, 101.69] // vienna [48.21, 16.37]
-                </span>
+        <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left relative">
+            <div className="flex flex-col md:flex-row items-center gap-12 z-10">
+              <div className="-my-12">
+                <FooterGlobe />
+              </div>
+              <div className="flex flex-col gap-4">
+                <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
+                <div className="flex flex-col gap-2">
+                  <span className="text-[#8a817c] leading-relaxed lowercase tracking-widest text-[8px]">
+                    network science <span className="mx-2 text-orange-highlight/40">•</span> multi-agent systems <span className="mx-2 text-orange-highlight/40">•</span> complex systems
+                  </span>
+                  <span className="text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
+                    nodes: nairobi [-1.29, 36.82] // south bend [41.70, -86.24] // kuala lumpur [3.14, 101.69] // vienna [48.21, 16.37]
+                  </span>
+                </div>
               </div>
             </div>
+            <span className="opacity-50 z-10">Explorations in Complex Systems</span>
           </div>
-          <span className="opacity-50 z-10">Explorations in Complex Systems</span>
-        </div>
-      </footer>
-      <ScrollToTop />
+        </footer>
+        <ScrollToTop />
+      </motion.div>
     </div>
   );
 }
