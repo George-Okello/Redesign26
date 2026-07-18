@@ -305,6 +305,7 @@ function InitialLoader({ onComplete }: { onComplete: () => void }) {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [showCredentials, setShowCredentials] = useState(false);
 
   useEffect(() => {
     // Revert/cleanup dark mode completely
@@ -355,20 +356,96 @@ export default function App() {
 
         <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left relative">
-            <div className="flex flex-col md:flex-row items-center gap-12 z-10">
+            <div className="flex flex-col md:flex-row items-center gap-12 z-10 w-full md:w-auto">
               <div className="-my-12">
                 <FooterGlobe />
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 flex-grow">
                 <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
                 <div className="flex flex-col gap-2">
                   <span className="text-[#8a817c] leading-relaxed lowercase tracking-widest text-[8px]">
                     network science <span className="mx-2 text-orange-highlight/40">•</span> multi-agent systems <span className="mx-2 text-orange-highlight/40">•</span> complex systems
                   </span>
-                  <span className="text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
-                    nodes: nairobi [-1.29, 36.82] // south bend [41.70, -86.24] // kuala lumpur [3.14, 101.69] // vienna [48.21, 16.37]
-                  </span>
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 gap-y-1 text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
+                    <button 
+                      onClick={() => setShowCredentials(!showCredentials)}
+                      className="text-orange-highlight hover:opacity-80 transition-opacity font-bold tracking-wider cursor-pointer uppercase text-[7px]"
+                    >
+                      {showCredentials ? '[close_baselines.log]' : '[query_baselines.log]'}
+                    </button>
+                  </div>
                 </div>
+
+                <AnimatePresence>
+                  {showCredentials && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: 'auto', marginTop: 12 }}
+                      exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden w-full max-w-xl text-left"
+                    >
+                      <div className="bg-[#121110] text-[#fcfaf7] font-mono text-[9px] md:text-[10px] p-4 rounded-lg border border-white/5 space-y-2.5 shadow-2xl relative">
+                        <div className="absolute top-3 right-3 text-[7.5px] text-[#8a817c] tracking-widest uppercase">
+                          acc: verified
+                        </div>
+                        <div className="text-[#8a817c] flex items-center gap-2 uppercase tracking-widest text-[8px] mb-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-highlight animate-pulse" />
+                          SYS.ACCREDITATIONS // CROSS-DOMAIN BASELINES & EXPERIMENTATION LOGS
+                        </div>
+                        <div className="border-t border-white/10 my-2" />
+                        
+                        {[
+                          { 
+                            code: "HW-03", 
+                            title: "Certificate in Computer & Mobile Repair", 
+                            narrative: "A hardware hobby for low-level diagnostic experiments. Used to salvage bricked electronics—most notably turning a dead Nokia E3 from complete e-waste into a fully functional device.",
+                            link: { text: "view nokia e3 restore on youtube", url: "https://www.youtube.com/@georgeokello_" }
+                          },
+                          { 
+                            code: "SEC-02", 
+                            title: "Certificate in Cyber Security Analysis", 
+                            narrative: "Studied to build a fundamental understanding of systemic vulnerability, threat modeling, and analyzing high-dimensional communication topologies." 
+                          },
+                          { 
+                            code: "DS-01", 
+                            title: "Certificate in Data Science", 
+                            narrative: "The analytical substrate supporting every project on this site, translating raw simulation outputs into structured insights and visual logic." 
+                          }
+                        ].map((item, idx) => (
+                          <div 
+                            key={idx}
+                            className="p-3.5 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col gap-2"
+                          >
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-orange-highlight font-bold select-none text-[8.5px]">[{item.code}]</span>
+                                <span className="text-[#fcfaf7] font-semibold uppercase tracking-wider text-[8.5px]">{item.title}</span>
+                              </div>
+                              <span className="text-[#8a817c] text-[7px] uppercase tracking-widest font-bold">applied baseline</span>
+                            </div>
+                            <p className="text-[#8a817c] text-[8.5px] leading-relaxed lowercase normal-case tracking-normal">
+                              {item.narrative}
+                            </p>
+                            {item.link && (
+                              <div className="mt-1">
+                                <a 
+                                  href={item.link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 text-orange-highlight hover:underline font-bold text-[7.5px] uppercase tracking-widest"
+                                >
+                                  <span>↳ {item.link.text}</span>
+                                  <span className="text-[6.5px]">↗</span>
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
             <span className="opacity-50 z-10">Explorations in Complex Systems</span>
