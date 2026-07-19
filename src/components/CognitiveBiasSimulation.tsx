@@ -749,25 +749,25 @@ export function CognitiveBiasSimulation() {
       {/* Top micro glowing progress track */}
       <div className={`absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r ${currentModel.accentColor} opacity-80`}></div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] lg:min-h-[520px]">
+      <div className="grid grid-cols-1 md:grid-cols-12 min-h-[460px] md:min-h-[520px]">
         
         {/* Responsive Control Dock */}
-        <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-[#fcfaf7]/10 bg-[#090a0d] p-4 sm:p-5 lg:p-6 flex flex-col relative z-20 justify-between">
+        <div className="md:col-span-4 lg:col-span-3 xl:col-span-2 border-b md:border-b-0 md:border-r border-[#fcfaf7]/10 bg-[#090a0d] p-4 sm:p-5 md:p-6 flex flex-col relative z-20 justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4 lg:mb-6">
               <BrainCircuit className="w-5 h-5 text-sky-400 animate-pulse" />
               <h3 className="text-xs tracking-[0.2em] uppercase font-bold text-slate-300">Lab Console V2.6</h3>
             </div>
 
-            {/* Scrolling button array on mobile/iPad, stacked index sidebar on desktop */}
-            <div className="flex flex-row overflow-x-auto lg:flex-col gap-2 -mx-4 sm:-mx-5 px-4 sm:px-5 lg:mx-0 lg:px-0 mb-3 sm:mb-4 lg:mb-0 pb-2 sm:pb-3 lg:pb-0 scrollbar-none snap-x select-none">
+            {/* Responsive button array on mobile/iPad, stacked index sidebar on desktop */}
+            <div className="flex flex-row overflow-x-auto md:flex-col gap-2 -mx-4 sm:-mx-5 px-4 sm:px-5 md:mx-0 md:px-0 mb-3 sm:mb-4 md:mb-0 pb-2 sm:pb-3 md:pb-0 select-none scrollbar-none snap-x touch-pan-x">
               {Object.entries(models).map(([key, model]) => {
                 const isActive = activeBias === key;
                 return (
                   <button
                     key={key}
                     onClick={() => setActiveBias(key as ModelType)}
-                    className={`flex-shrink-0 lg:w-full text-left px-3 py-2 sm:px-4 sm:py-3 text-[10px] sm:text-[11px] tracking-wider uppercase transition-all duration-300 border-b-2 lg:border-b-0 lg:border-l-2 snap-center ${
+                    className={`flex-shrink-0 w-auto md:w-full text-left px-3 py-2 sm:px-4 sm:py-3 text-[10px] sm:text-[11px] tracking-wider uppercase transition-all duration-300 border-b-2 md:border-b-0 md:border-l-2 snap-center ${
                       isActive 
                         ? 'border-sky-400 bg-sky-500/10 font-bold text-sky-300' 
                         : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/20'
@@ -781,7 +781,7 @@ export function CognitiveBiasSimulation() {
             </div>
           </div>
 
-          <div className="hidden lg:block pt-6 border-t border-[#fcfaf7]/10">
+          <div className="hidden md:block pt-6 border-t border-[#fcfaf7]/10">
             <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-2 flex items-center gap-2">
               <Activity className="w-3.5 h-3.5 text-emerald-500" /> SYSTEM RESOLUTION
             </div>
@@ -790,9 +790,10 @@ export function CognitiveBiasSimulation() {
         </div>
 
         {/* Simulator Chassis */}
-        <div className="lg:col-span-9 p-4 sm:p-5 lg:p-6 relative flex flex-col justify-between">
-          
-          {/* Header Metadata */}
+        <div className="md:col-span-8 lg:col-span-9 xl:col-span-10 p-4 sm:p-5 md:p-6 relative flex flex-col justify-between">
+          <div className="flex flex-col xl:flex-row gap-4 xl:gap-8 flex-1">
+            <div className="flex-1 flex flex-col min-w-0">
+            {/* Header Metadata */}
           <div className="mb-4 md:mb-5 relative z-10 flex flex-col gap-4">
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
               <div>
@@ -822,13 +823,13 @@ export function CognitiveBiasSimulation() {
           </div>
 
           {/* Swipe indicator for mobile only */}
-          <div className="block lg:hidden text-center text-[9px] uppercase tracking-[0.15em] text-sky-400/70 mb-2 animate-pulse bg-sky-950/20 py-1.5 rounded border border-sky-900/30">
+          <div className="block md:hidden text-center text-[9px] uppercase tracking-[0.15em] text-sky-400/70 mb-2 animate-pulse bg-sky-950/20 py-1.5 rounded border border-sky-900/30">
             ← Drag chassis horizontally to view active nodes →
           </div>
 
           {/* Node Map Area - horizontally scrollable on small screens to prevent squeezing */}
-          <div className="flex-1 overflow-x-auto pb-4 scrollbar-thin select-none touch-pan-x -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
-            <div className="relative min-w-[750px] h-[340px] sm:h-[380px] lg:h-[400px] my-auto">
+          <div className="flex-1 overflow-x-auto pb-4 scrollbar-thin select-none touch-pan-x -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
+            <div className="relative min-w-[550px] md:min-w-0 h-[340px] sm:h-[380px] md:h-[400px] my-auto w-full">
               <canvas 
                 ref={canvasRef} 
                 className="absolute inset-0 w-full h-full pointer-events-none z-0"
@@ -877,10 +878,10 @@ export function CognitiveBiasSimulation() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ type: "spring", damping: 15 }}
                       className={`
-                        relative bg-[#111319]/95 backdrop-blur-sm border rounded-xl shadow-lg transition-colors p-2.5 sm:p-3
+                        relative bg-[#111319]/95 backdrop-blur-sm border rounded-xl shadow-lg transition-colors p-2 sm:p-2.5 md:p-3
                         ${isProcess 
-                          ? 'w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center border-sky-500/30 shadow-[0_0_20px_rgba(14,165,233,0.15)] bg-[#0d0f14] hover:border-sky-400' 
-                          : 'w-40 sm:w-44 lg:w-48 border-slate-800 hover:border-slate-700'
+                          ? 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex flex-col items-center justify-center border-sky-500/30 shadow-[0_0_20px_rgba(14,165,233,0.15)] bg-[#0d0f14] hover:border-sky-400' 
+                          : 'w-32 sm:w-40 md:w-44 lg:w-48 border-slate-800 hover:border-slate-700'
                         }
                       `}
                     >
@@ -890,19 +891,18 @@ export function CognitiveBiasSimulation() {
                       )}
 
                       {isProcess ? (
-                        <div className="flex flex-col items-center gap-1">
-                          <Cpu className="w-5 h-5 sm:w-6 sm:h-6 text-sky-400 animate-spin-slow" />
-                          <span className="text-[8px] font-mono tracking-widest text-sky-300 uppercase">SOLVER</span>
+                        <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+                          <Cpu className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-sky-400 animate-spin-slow" />
+                          <span className="text-[7px] md:text-[8px] font-mono tracking-widest text-sky-300 uppercase">SOLVER</span>
                         </div>
                       ) : (
                         <div className="flex flex-col h-full justify-between">
-                          <div className="text-[9px] uppercase tracking-widest text-slate-500 mb-1.5 font-semibold">
+                          <div className="text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-500 mb-1 sm:mb-1.5 font-semibold leading-tight">
                             {node.label}
                           </div>
-
                           {isInput && node.valKey && (
                             <div className="space-y-1">
-                              <div className="flex justify-between text-[10px] font-mono">
+                              <div className="flex justify-between text-[8px] sm:text-[10px] font-mono">
                                 <span className="text-slate-600">0</span>
                                 <span className="font-bold text-sky-400">{val}%</span>
                                 <span className="text-slate-600">100</span>
@@ -917,18 +917,17 @@ export function CognitiveBiasSimulation() {
                               />
                             </div>
                           )}
-
                           {isOutput && (
                             <div className="mt-0.5">
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-mono font-bold text-emerald-400 tracking-tight">
+                              <div className="flex items-baseline gap-0.5 sm:gap-1">
+                                <span className="text-lg sm:text-xl md:text-2xl font-mono font-bold text-emerald-400 tracking-tight">
                                   {displayVal.toFixed(0)}
                                 </span>
-                                <span className="text-[10px] font-mono text-slate-500">{unit}</span>
+                                <span className="text-[8px] sm:text-[10px] font-mono text-slate-500">{unit}</span>
                               </div>
                               
                               {/* Glowing progression rail */}
-                              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1.5">
+                              <div className="w-full h-1 sm:h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1 sm:mt-1.5">
                                 <div 
                                   className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.4)] transition-all duration-300"
                                   style={{ width: `${Math.min(100, Math.max(0, isMsUnit ? (displayVal / 9.5) : displayVal))}%` }}
@@ -944,18 +943,20 @@ export function CognitiveBiasSimulation() {
               })}
             </div>
           </div>
+          </div>
           
           {/* Active Sandbox Simulator & Dynamic Diagnostic Panel */}
-          <div className="mt-5 sm:mt-8 border-t border-[#fcfaf7]/10 pt-4 sm:pt-6">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-sky-400 font-bold mb-3 sm:mb-4 flex items-center gap-1.5">
+          <div className="xl:w-[450px] 2xl:w-[500px] flex-shrink-0 mt-5 sm:mt-8 xl:mt-0 border-t xl:border-t-0 xl:border-l border-[#fcfaf7]/10 pt-4 sm:pt-6 xl:pt-0 xl:pl-8 flex flex-col justify-between">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.2em] text-sky-400 font-bold mb-3 sm:mb-4 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse" /> Active Simulation Sandbox & Diagnostic Portal
             </div>
             
             {activeBias === 'eeg_cognitive_load' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-[#090a0d] border border-emerald-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
+              <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-1 gap-4 md:gap-6 bg-[#090a0d] border border-emerald-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
                 
                 {/* Simulated EEG Waveform Scope */}
-                <div className="md:col-span-7 lg:col-span-8 space-y-2.5">
+                <div className="md:col-span-7 lg:col-span-8 xl:col-span-1 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
                       <Activity className="w-4 h-4 text-emerald-400 animate-pulse" /> Live Prefrontal Cortex EEG Scope
@@ -982,7 +983,7 @@ export function CognitiveBiasSimulation() {
                 </div>
 
                 {/* Cognitive Diagnostics Dashboard */}
-                <div className="md:col-span-5 lg:col-span-4 flex flex-col justify-between bg-[#0c0e14] border border-emerald-500/10 rounded-xl p-3.5 md:p-4 space-y-3">
+                <div className="md:col-span-5 lg:col-span-4 xl:col-span-1 flex flex-col justify-between bg-[#0c0e14] border border-emerald-500/10 rounded-xl p-3.5 md:p-4 space-y-3">
                   <div>
                     <div className="text-[9px] text-slate-500 uppercase tracking-widest font-bold mb-2">Cognitive Load Status</div>
                     {inputs.betaWave / Math.max(10, inputs.alphaWave) > 1.8 ? (
@@ -1032,10 +1033,10 @@ export function CognitiveBiasSimulation() {
             )}
 
             {activeBias === 'cooperative_networks' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-[#090a0d] border border-violet-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
+              <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-1 gap-4 md:gap-6 bg-[#090a0d] border border-violet-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
                 
                 {/* Simulated Terminal logs */}
-                <div className="md:col-span-7 lg:col-span-8 space-y-2.5">
+                <div className="md:col-span-7 lg:col-span-8 xl:col-span-1 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-violet-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
                       <Terminal className="w-4 h-4 text-violet-400 animate-pulse" /> Multi-Agent Cooperative Ledger
@@ -1043,7 +1044,7 @@ export function CognitiveBiasSimulation() {
                     <span className="text-[9px] text-slate-500">Protocol: Prisoner's Dilemma R-1</span>
                   </div>
 
-                  <div className="bg-[#050609] border border-violet-500/15 rounded-xl p-3.5 font-mono text-[10.5px] space-y-2 max-h-[100px] md:max-h-[115px] overflow-y-auto scrollbar-thin">
+                  <div className="bg-[#050609] border border-violet-500/15 rounded-xl p-3.5 font-mono text-[10.5px] space-y-2 min-h-[140px]">
                     {getMarlSimState(inputs.mutualTrust, inputs.payoffIncentive, inputs.networkDensity).map((log, idx) => (
                       <div key={idx} className={`flex items-start gap-2.5 p-1.5 rounded border ${log.color}`}>
                         <span className="font-bold opacity-75 shrink-0">[{log.tag}]</span>
@@ -1054,7 +1055,7 @@ export function CognitiveBiasSimulation() {
                 </div>
 
                 {/* Theoretical Parameters Details */}
-                <div className="md:col-span-5 lg:col-span-4 bg-[#0c0e14] border border-violet-500/10 rounded-xl p-3.5 md:p-4 flex flex-col justify-between">
+                <div className="md:col-span-5 lg:col-span-4 xl:col-span-1 bg-[#0c0e14] border border-violet-500/10 rounded-xl p-3.5 md:p-4 flex flex-col justify-between">
                   <div className="space-y-2.5">
                     <div className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Network Architecture</div>
                     <div className="space-y-1">
@@ -1074,10 +1075,10 @@ export function CognitiveBiasSimulation() {
             )}
 
             {activeBias === 'sunk_cost' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-[#090a0d] border border-sky-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
+              <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-1 gap-4 md:gap-6 bg-[#090a0d] border border-sky-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
                 
                 {/* Sunk Cost Decision game */}
-                <div className="md:col-span-7 lg:col-span-8 space-y-3">
+                <div className="md:col-span-7 lg:col-span-8 xl:col-span-1 space-y-3">
                   <div className="text-[10px] text-sky-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
                     <Tv className="w-4 h-4 text-sky-400" /> Executive Boardroom Decision Game
                   </div>
@@ -1177,10 +1178,10 @@ export function CognitiveBiasSimulation() {
             )}
 
             {activeBias === 'confirmation' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-[#090a0d] border border-purple-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
+              <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-1 gap-4 md:gap-6 bg-[#090a0d] border border-purple-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
                 
                 {/* Simulated Social Media Feed */}
-                <div className="md:col-span-7 lg:col-span-8 space-y-2.5">
+                <div className="md:col-span-7 lg:col-span-8 xl:col-span-1 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
                       <Volume2 className="w-4 h-4 text-purple-400 animate-pulse" /> Neural Filter News Feed
@@ -1220,7 +1221,7 @@ export function CognitiveBiasSimulation() {
                 </div>
 
                 {/* Cognitive Filtration mechanics explanation */}
-                <div className="md:col-span-5 lg:col-span-4 bg-[#0c0e14] border border-purple-500/10 rounded-xl p-3.5 md:p-4 flex flex-col justify-between">
+                <div className="md:col-span-5 lg:col-span-4 xl:col-span-1 bg-[#0c0e14] border border-purple-500/10 rounded-xl p-3.5 md:p-4 flex flex-col justify-between">
                   <div className="space-y-2.5">
                     <div className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Signal Filtration Math</div>
                     <div className="space-y-1.5">
@@ -1240,10 +1241,10 @@ export function CognitiveBiasSimulation() {
             )}
 
             {activeBias === 'availability' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 bg-[#090a0d] border border-amber-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
+              <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-1 gap-4 md:gap-6 bg-[#090a0d] border border-amber-500/10 rounded-xl p-4 md:p-5 text-xs font-mono text-slate-300 animate-fadeIn">
                 
                 {/* Interactive Toggles & Perceived vs Actual Risk Comparison */}
-                <div className="md:col-span-7 lg:col-span-8 space-y-3">
+                <div className="md:col-span-7 lg:col-span-8 xl:col-span-1 space-y-3">
                   <div className="text-[10px] text-amber-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
                     <Tv className="w-4 h-4 text-amber-400" /> Sensational Media Headlines Console
                   </div>
@@ -1399,38 +1400,38 @@ export function CognitiveBiasSimulation() {
                       </span>
                     </div>
 
-                    {/* Word Chips container - compact grid to prevent excessive wrapping */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-[#11131a]/80 rounded-xl border border-white/5 relative items-center">
+                    {/* Word Chips container - responsive grid to handle long text gracefully */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 p-3 bg-[#11131a]/80 rounded-xl border border-white/5 relative items-start">
                       {getBilingualSegments(inputs.l2Dominance, inputs.cognitiveInhibition, selectedBilingualSentence).map((seg, idx) => {
                         let badgeBg = "";
                         let badgeText = "";
                         let borderStyle = "";
                         if (seg.status === "fluent") {
                           badgeBg = "bg-emerald-500/10";
-                          badgeText = "text-emerald-400";
+                          badgeText = "text-emerald-200";
                           borderStyle = "border-emerald-500/20";
                         } else if (seg.status === "intrusion") {
                           badgeBg = "bg-rose-500/10";
-                          badgeText = "text-rose-400";
+                          badgeText = "text-rose-200";
                           borderStyle = "border-rose-500/20";
                         } else {
-                          badgeBg = "bg-amber-500/10";
-                          badgeText = "text-amber-400";
-                          borderStyle = "border-amber-500/20";
+                          badgeBg = "bg-amber-500/20";
+                          badgeText = "text-amber-100 drop-shadow-sm";
+                          borderStyle = "border-amber-500/30";
                         }
 
                         return (
-                          <div key={idx} className="flex flex-col gap-1 p-2 bg-white/[0.02] border border-white/5 rounded-lg">
+                          <div key={idx} className="flex flex-col gap-1.5 p-2.5 bg-white/[0.02] border border-white/5 rounded-lg w-full h-full justify-between">
                             <motion.div
                               layout
                               initial={{ scale: 0.95, opacity: 0 }}
                               animate={{ scale: 1, opacity: 1 }}
                               transition={{ duration: 0.25 }}
-                              className={`px-2 py-1 rounded border ${badgeBg} ${borderStyle} ${badgeText} font-sans font-medium text-xs shadow-sm truncate`}
+                              className={`px-2 py-1.5 rounded border ${badgeBg} ${borderStyle} ${badgeText} font-sans font-semibold text-xs sm:text-[11px] lg:text-xs shadow-sm leading-relaxed`}
                             >
                               {seg.word}
                             </motion.div>
-                            <span className="text-[8.5px] text-slate-500 font-mono tracking-wide px-0.5 truncate">
+                            <span className="text-[9px] text-slate-500 font-mono tracking-wide px-0.5 leading-snug">
                               {seg.lang} • {seg.desc}
                             </span>
                           </div>
@@ -1465,10 +1466,12 @@ export function CognitiveBiasSimulation() {
                 </div>
               </div>
             )}
+            </div>
           </div>
+        </div>
 
-          {/* Touch instructions and informational footer */}
-          <div className="mt-4 pt-4 border-t border-[#fcfaf7]/5 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-500 gap-3 font-mono">
+        {/* Touch instructions and informational footer */}
+            <div className="mt-4 pt-4 border-t border-[#fcfaf7]/5 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-500 gap-3 font-mono">
             <span className="flex items-center gap-1.5">
               <Sliders className="w-3.5 h-3.5 text-sky-400" /> SLIDER AND TOUCH GESTURES ACTIVE
             </span>

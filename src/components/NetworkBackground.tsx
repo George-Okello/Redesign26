@@ -62,7 +62,8 @@ export function NetworkBackground() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      const rgb = '26, 26, 26';
+      const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
+      const rgb = isNeon ? '57, 255, 20' : '26, 26, 26';
       
       for (let i = 0; i < particles.length; i++) {
         particles[i].update(canvas.width, canvas.height);

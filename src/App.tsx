@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
-import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Sparkles, Terminal } from 'lucide-react';
 import { NetworkBackground } from './components/NetworkBackground';
 import { ScrollToTop } from './components/ScrollToTop';
 import { FooterGlobe } from './components/FooterGlobe';
+import { CustomCursor } from './components/CustomCursor';
+import { SmoothScroll } from './components/SmoothScroll';
+import { TerminalMode } from './components/TerminalMode';
 import { Hero, About, InteractiveLab, Publications, Projects, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
 
 const RESEARCH_QUESTIONS = [
@@ -22,9 +25,26 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" }
 ];
 
-function Header() {
+interface HeaderProps {
+  onActivateTerminal: () => void;
+}
+
+function Header({ onActivateTerminal }: HeaderProps) {
   const [qIndex, setQIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [logoClicks, setLogoClicks] = useState(0);
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setLogoClicks((prev) => {
+      const next = prev + 1;
+      if (next >= 5) {
+        onActivateTerminal();
+        return 0;
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,12 +103,25 @@ function Header() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 bg-[#fcfaf7]/90 backdrop-blur-md border-b border-[#1a1a1a]/5 transition-all duration-300">
         <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] md:text-xs tracking-[0.2em] uppercase font-bold text-[#1a1a1a]">
           
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-3 hover:text-orange-highlight transition-all duration-300 relative z-50 group">
+          {/* Logo (Easter Egg: Click 5 times to activate terminal) */}
+          <a 
+            href="#" 
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 hover:text-orange-highlight transition-all duration-300 relative z-50 group"
+          >
             <div className="flex items-center justify-center w-5 h-5 border border-[#1a1a1a] group-hover:border-orange-highlight rounded-full transition-colors duration-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a] group-hover:bg-orange-highlight animate-pulse transition-colors duration-300"></span>
+              <span 
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  logoClicks > 0 ? 'bg-orange-highlight animate-ping' : 'bg-[#1a1a1a] group-hover:bg-orange-highlight animate-pulse'
+                }`}
+                style={{
+                  animationDuration: logoClicks > 0 ? `${Math.max(0.15, 1.2 - logoClicks * 0.25)}s` : undefined
+                }}
+              />
             </div>
-            <span className="font-sans font-bold tracking-widest">George Okello</span>
+            <span className="font-sans font-bold tracking-widest">
+              {logoClicks > 0 ? `George Okello [${logoClicks}/5]` : 'George Okello'}
+            </span>
           </a>
           
           {/* Rotating Research Questions (Hidden on small mobile, visible on iPad and Desktop) */}
@@ -306,6 +339,16 @@ function InitialLoader({ onComplete }: { onComplete: () => void }) {
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [showCredentials, setShowCredentials] = useState(false);
+  const [isTerminalActive, setIsTerminalActive] = useState(false);
+  const [globalGlitch, setGlobalGlitch] = useState(false);
+  const [typedSequence, setTypedSequence] = useState("");
+
+  // Site Easter Egg States
+  const [gravityMode, setGravityMode] = useState(false);
+  const [neonMode, setNeonMode] = useState(false);
+  const [partyMode, setPartyMode] = useState(false);
+  const [invertMode, setInvertMode] = useState(false);
+  const [showHUD, setShowHUD] = useState(false);
 
   useEffect(() => {
     // Revert/cleanup dark mode completely
@@ -313,6 +356,112 @@ export default function App() {
     root.classList.remove('dark');
     root.classList.remove('theme-transition');
     localStorage.removeItem('theme-preference');
+
+    // Easter egg welcome message in console
+    console.log(
+      "%c[SYS] Welcome to George Okello's Complex Systems Gateway.%c\nSecret inputs detected: Try typing 'glitch', 'gravity', 'neon', 'party', 'invert', or 'terminal' anywhere on the page to trigger subterranean protocols.",
+      "color: #ff5a09; font-weight: bold; font-size: 14px;",
+      "color: #8a817c; font-size: 11px;"
+    );
+  }, []);
+
+  // Sync Easter Eggs to HTML document root classes
+  useEffect(() => {
+    const root = document.documentElement;
+    if (gravityMode) root.classList.add('gravity-active');
+    else root.classList.remove('gravity-active');
+  }, [gravityMode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (neonMode) root.classList.add('neon-active');
+    else root.classList.remove('neon-active');
+  }, [neonMode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (partyMode) root.classList.add('party-active');
+    else root.classList.remove('party-active');
+  }, [partyMode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (invertMode) root.classList.add('invert-active');
+    else root.classList.remove('invert-active');
+  }, [invertMode]);
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      
+      // ESC key to reset all easter eggs
+      if (e.key === "Escape") {
+        setGravityMode(false);
+        setNeonMode(false);
+        setPartyMode(false);
+        setInvertMode(false);
+        setShowHUD(false);
+        return;
+      }
+
+      if (key.length === 1 && /^[a-z]$/.test(key)) {
+        setTypedSequence((prev) => {
+          const next = (prev + key).slice(-12);
+          
+          if (next.endsWith("glitch")) {
+            setGlobalGlitch(true);
+            setTimeout(() => {
+              setGlobalGlitch(false);
+              setIsTerminalActive(true);
+            }, 2200);
+            return "";
+          }
+          
+          if (next.endsWith("terminal")) {
+            setIsTerminalActive(true);
+            return "";
+          }
+
+          if (next.endsWith("gravity")) {
+            setGravityMode((prev) => !prev);
+            setShowHUD(true);
+            return "";
+          }
+
+          if (next.endsWith("neon") || next.endsWith("matrix")) {
+            setNeonMode((prev) => !prev);
+            setShowHUD(true);
+            return "";
+          }
+
+          if (next.endsWith("party") || next.endsWith("confetti")) {
+            setPartyMode((prev) => !prev);
+            setShowHUD(true);
+            return "";
+          }
+
+          if (next.endsWith("invert")) {
+            setInvertMode((prev) => !prev);
+            setShowHUD(true);
+            return "";
+          }
+
+          if (next.endsWith("reset")) {
+            setGravityMode(false);
+            setNeonMode(false);
+            setPartyMode(false);
+            setInvertMode(false);
+            setShowHUD(false);
+            return "";
+          }
+          
+          return next;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
 
   const { scrollYProgress } = useScroll();
@@ -325,9 +474,42 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-[#fcfaf7] selection:bg-[#1a1a1a]/10 overflow-x-hidden text-[#1a1a1a]">
       <NoiseOverlay />
+      <SmoothScroll />
+      <CustomCursor />
       
       <AnimatePresence>
         {loading && <InitialLoader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isTerminalActive && (
+          <TerminalMode onExit={() => setIsTerminalActive(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {globalGlitch && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0.8, 1, 0.9, 1] }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[250] bg-red-950/30 mix-blend-difference pointer-events-none border-8 border-red-500/50 flex flex-col items-center justify-center font-mono text-rose-500 p-8"
+          >
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_6px] pointer-events-none" />
+            <div className="absolute inset-0 bg-red-500/5 mix-blend-color-burn pointer-events-none animate-pulse" />
+            
+            <div className="bg-black/95 border border-rose-500/50 p-8 rounded shadow-2xl max-w-md text-center space-y-4">
+              <span className="w-12 h-12 border border-rose-500 flex items-center justify-center rounded-full text-2xl mx-auto animate-spin">⚡</span>
+              <h4 className="text-sm font-bold tracking-[0.25em] uppercase">SYSTEM GLITCH INTRUSION</h4>
+              <p className="text-[10px] leading-relaxed text-rose-400">
+                CRITICAL BUFFER OVERFLOW. DETECTED SEQUENCE: "GLITCH". FORCING SYSTEM COGNITIVE DOWNSHIFT. REDIRECTING TERMINAL PIPELINE...
+              </p>
+              <div className="text-[9px] text-slate-500 animate-pulse uppercase">
+                re-modulating frequency spectrum in 2000ms
+              </div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <motion.div
@@ -340,7 +522,7 @@ export default function App() {
           style={{ scaleX }} 
         />
         <NetworkBackground />
-        <Header />
+        <Header onActivateTerminal={() => setIsTerminalActive(true)} />
         <main className="relative z-10 mx-auto max-w-7xl xl:max-w-[1360px] 2xl:max-w-[1536px] px-6 md:px-12 lg:px-24 pt-32">
           <Hero />
           <About />
@@ -369,6 +551,13 @@ export default function App() {
                       className="text-orange-highlight hover:opacity-80 transition-opacity font-bold tracking-wider cursor-pointer uppercase text-[7px]"
                     >
                       {showCredentials ? '[close_baselines.log]' : '[query_baselines.log]'}
+                    </button>
+                    <span className="text-[#8a817c]/20 select-none">•</span>
+                    <button 
+                      onClick={() => setShowHUD(!showHUD)}
+                      className="hover:text-orange-highlight transition-colors font-bold tracking-wider cursor-pointer uppercase text-[7px]"
+                    >
+                      {showHUD ? '[close_subroutines.sys]' : '[subterranean_subroutines.sys]'}
                     </button>
                   </div>
                 </div>
@@ -449,6 +638,108 @@ export default function App() {
           </div>
         </footer>
         <ScrollToTop />
+
+        {/* Subterranean Secrets HUD Control Panel */}
+        <AnimatePresence>
+          {(gravityMode || neonMode || partyMode || invertMode || showHUD) && (
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
+              className={`fixed bottom-24 left-6 md:left-8 z-[150] max-w-[280px] sm:max-w-xs w-full backdrop-blur-lg border rounded-xl p-5 shadow-2xl font-mono text-[9px] md:text-[10px] transition-all duration-500 ${
+                neonMode 
+                  ? 'bg-[#060608]/95 border-[#39ff14]/30 text-[#39ff14] shadow-[#39ff14]/5' 
+                  : 'bg-white/80 border-[#1a1a1a]/10 text-[#1a1a1a] shadow-black/5'
+              }`}
+            >
+              <div className={`flex items-center justify-between border-b pb-3 mb-3 ${neonMode ? 'border-[#39ff14]/15' : 'border-[#1a1a1a]/10'}`}>
+                <div className="flex items-center gap-2 font-bold tracking-widest text-orange-highlight">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  <span>[SUBTERRANEAN_HUD]</span>
+                </div>
+                <button
+                  onClick={() => {
+                    setGravityMode(false);
+                    setNeonMode(false);
+                    setPartyMode(false);
+                    setInvertMode(false);
+                    setShowHUD(false);
+                  }}
+                  className={`hover:text-orange-highlight transition-colors uppercase tracking-widest text-[8px] border px-1.5 py-0.5 rounded cursor-pointer ${
+                    neonMode ? 'border-[#39ff14]/25' : 'border-[#1a1a1a]/15'
+                  }`}
+                >
+                  [reset]
+                </button>
+              </div>
+
+              <p className={`text-[8.5px] mb-3 tracking-wider leading-relaxed ${neonMode ? 'text-[#39ff14]/70' : 'text-slate-500'}`}>
+                System subroutines active. Toggle environmental constraints or parameters below:
+              </p>
+
+              <div className="space-y-1.5">
+                {[
+                  { id: "gravity", label: "gravity_override", value: gravityMode, setter: setGravityMode },
+                  { id: "neon", label: "cyber_neon_reskin", value: neonMode, setter: setNeonMode },
+                  { id: "party", label: "spark_particle_trail", value: partyMode, setter: setPartyMode },
+                  { id: "invert", label: "color_inversion", value: invertMode, setter: setInvertMode }
+                ].map((item) => (
+                  <label 
+                    key={item.id}
+                    className={`flex items-center justify-between p-2 rounded border border-transparent transition-all duration-200 cursor-pointer group ${
+                      neonMode 
+                        ? 'hover:bg-[#39ff14]/5 hover:border-[#39ff14]/10' 
+                        : 'hover:bg-[#1a1a1a]/5 hover:border-[#1a1a1a]/5'
+                    }`}
+                  >
+                    <span className="tracking-widest uppercase text-[8.5px]">{item.label}</span>
+                    <input
+                      type="checkbox"
+                      checked={item.value}
+                      onChange={(e) => item.setter(e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all duration-200 ${
+                      item.value 
+                        ? 'bg-orange-highlight border-orange-highlight' 
+                        : neonMode 
+                          ? 'border-[#39ff14]/40 group-hover:border-[#39ff14]' 
+                          : 'border-[#1a1a1a]/30 group-hover:border-orange-highlight'
+                    }`}>
+                      {item.value && <span className="w-1 h-1 rounded-full bg-white animate-pulse" />}
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <div className={`mt-3 pt-3 border-t text-[7.5px] flex justify-between items-center ${
+                neonMode ? 'border-[#39ff14]/15 text-[#39ff14]/50' : 'border-[#1a1a1a]/5 text-slate-400'
+              }`}>
+                <span>ESC to reset / close</span>
+                <button 
+                  onClick={() => setIsTerminalActive(true)}
+                  className="text-orange-highlight hover:underline cursor-pointer uppercase font-bold tracking-wider"
+                >
+                  [open_cli]
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Translucent Floating Terminal CLI Button */}
+        <motion.button
+          onClick={() => setIsTerminalActive(true)}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="fixed bottom-8 left-6 md:left-8 z-40 font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] text-[#1a1a1a] hover:text-white px-4 py-3 border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group"
+          aria-label="Open Terminal CLI"
+        >
+          <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
+          <span className="font-bold">[_terminal_cli]</span>
+        </motion.button>
       </motion.div>
     </div>
   );

@@ -471,8 +471,13 @@ export function InteractiveLab() {
           <SuperParagraphReveal text="A visual laboratory mapping the predictable irrationality of cognitive architectures. Interact with dynamic decision trees modeling well-documented cognitive biases." delay={0.2} />
         </p>
       </div>
-      <motion.div variants={fadeUp}>
-        <CognitiveBiasSimulation />
+      <motion.div 
+        variants={fadeUp}
+        className="w-[100vw] relative left-1/2 -translate-x-1/2 px-4 md:px-8 lg:px-8 xl:px-8 2xl:px-12"
+      >
+        <div className="mx-auto w-full max-w-[1920px]">
+          <CognitiveBiasSimulation />
+        </div>
       </motion.div>
     </motion.section>
   );
