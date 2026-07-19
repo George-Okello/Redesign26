@@ -363,9 +363,6 @@ export default function App() {
               <div className="flex flex-col gap-4 flex-grow">
                 <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
                 <div className="flex flex-col gap-2">
-                  <span className="text-[#8a817c] leading-relaxed lowercase tracking-widest text-[8px]">
-                    network science <span className="mx-2 text-orange-highlight/40">•</span> multi-agent systems <span className="mx-2 text-orange-highlight/40">•</span> complex systems
-                  </span>
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 gap-y-1 text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
                     <button 
                       onClick={() => setShowCredentials(!showCredentials)}

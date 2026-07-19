@@ -105,6 +105,71 @@ function useMobileDevice() {
 export function Hero() {
   const content = [
     {
+      topPill: "Neural Signal Processing",
+      question: "How can we deploy efficient, interpretable cognitive load monitoring on edge devices?",
+      subtitle: "A comparative study of lightweight CNN and Transformer models on EEG data.",
+      currentFocus: {
+        title: "Edge Deployment",
+        desc: "Low-latency brain-computer interfaces"
+      },
+      selectedInquiry: {
+        title: "Attention Mechanisms",
+        desc: "Interpreting transformer temporal patterns"
+      }
+    },
+    {
+      topPill: "Cognitive Modeling",
+      question: "What cognitive control processes govern bilingual language transitions?",
+      subtitle: "Computational simulation of code-switching using multilingual BERT representations.",
+      currentFocus: {
+        title: "Neural Trajectories",
+        desc: "Continuous transitions in representational space"
+      },
+      selectedInquiry: {
+        title: "Switch Costs",
+        desc: "Symmetric control demands across languages"
+      }
+    },
+    {
+      topPill: "Reinforcement Learning",
+      question: "How do recurrent RL architectures compare under degraded, noisy observation settings?",
+      subtitle: "Evaluating LSTM-augmented DQNs in visually occluded working memory tasks.",
+      currentFocus: {
+        title: "Observation Noise",
+        desc: "Resilience in partially observable environments"
+      },
+      selectedInquiry: {
+        title: "Memory Capacity",
+        desc: "Temporal credit assignment under constraints"
+      }
+    },
+    {
+      topPill: "Affective Computing",
+      question: "Can CNN-based emotion recognition systems generalize across culturally diverse populations?",
+      subtitle: "Developing culturally robust facial expression recognition architectures.",
+      currentFocus: {
+        title: "Cultural Fairness",
+        desc: "Mitigating demographic bias in emotion AI"
+      },
+      selectedInquiry: {
+        title: "Attention Fusion",
+        desc: "Multi-scale features for expression nuances"
+      }
+    },
+    {
+      topPill: "Behavioral AI",
+      question: "What happens when reinforcement learning agents exhibit human cognitive biases?",
+      subtitle: "Simulating loss aversion, anchoring, and optimism in a multi-armed bandit problem.",
+      currentFocus: {
+        title: "Cognitive Biases",
+        desc: "Loss aversion, anchoring, and confirmation bias"
+      },
+      selectedInquiry: {
+        title: "Exploration Strategies",
+        desc: "How optimism bias accelerates learning"
+      }
+    },
+    {
       topPill: "Multi-Agent Systems",
       question: "How do social hierarchies and trust naturally emerge in AI populations?",
       subtitle: "Computational modelling of trust dynamics using multi-agent reinforcement learning.",
@@ -315,6 +380,47 @@ export function About() {
         <p>
           <SuperParagraphReveal delay={0.2} text="Most of my work is an excuse to explore those questions from different angles. Sometimes that means building AI systems, sometimes it means writing research, and sometimes it means disappearing down a rabbit hole that starts with one paper and ends fifty tabs later." />
         </p>
+      </div>
+
+      {/* Core Research Areas/Domains */}
+      <div className="mb-24">
+        <h3 className="text-[10px] font-bold text-[#1a1a1a] uppercase tracking-[0.25em] mb-8">Active Research Domains</h3>
+        <div className="flex flex-wrap gap-3">
+          {[
+            "Network Science",
+            "Computational Neuroscience",
+            "Cognitive Science & Behavioral AI",
+            "Neural Signal Processing (EEG-Based)",
+            "Bilingual Language Dynamics",
+            "Multi-Agent Reinforcement Learning",
+            "Interpretable & Explainable AI",
+            "Complex Adaptive Systems"
+          ].map((area, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.05 }}
+            >
+              <motion.div
+                animate={{ y: [0, (idx % 2 === 0 ? -4 : 4), 0] }}
+                transition={{ 
+                  duration: 4 + (idx % 3), 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: idx * 0.2
+                }}
+                whileHover={{ scale: 1.05, rotate: (idx % 2 === 0 ? 1 : -1) }}
+                whileTap={{ scale: 0.95 }}
+                className="relative group px-5 py-3 bg-[#fcfaf7] hover:bg-[#1a1a1a] text-[#4a4a4a] hover:text-[#fcfaf7] active:bg-[#1a1a1a] active:text-[#fcfaf7] border border-[#1a1a1a]/10 hover:border-[#1a1a1a] active:border-[#1a1a1a] rounded-full text-[10px] uppercase tracking-widest font-semibold transition-colors duration-500 cursor-default flex items-center gap-3 select-none shadow-sm hover:shadow-lg active:shadow-lg"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]/20 group-hover:bg-orange-highlight group-active:bg-orange-highlight transition-colors duration-500" />
+                <span className="relative z-10">{area}</span>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       <motion.div variants={staggerContainer} className="flex flex-col gap-12 border-t border-[#1a1a1a]/10 pt-16">
