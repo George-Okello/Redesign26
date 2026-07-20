@@ -300,8 +300,23 @@ export function SwarmSimulation() {
     <div className="w-full flex flex-col gap-6">
       <div className="w-full h-[350px] md:h-[500px] relative bg-[#0a0a0a] rounded-xl border border-[#1a1a1a]/10 overflow-hidden shadow-2xl group">
         <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10 flex flex-col gap-1 mix-blend-difference pointer-events-none text-[#fcfaf7]">
-          <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest">Attractor Field</h3>
+          <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest">Attractor Field (Separation, Alignment, Cohesion)</h3>
           <p className="text-[9px] md:text-[10px] uppercase tracking-wider opacity-60">Hover/touch to attract • Hold/press to form vortex</p>
+        </div>
+
+        <div className="absolute top-4 right-4 md:top-6 md:right-6 z-10 flex flex-col md:flex-row items-end md:items-center gap-1.5 md:gap-4 mix-blend-difference pointer-events-none text-[#fcfaf7] text-right">
+          <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
+            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-rose-500 animate-pulse" />
+            <span>Separation: {separationWeight.toFixed(1)}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
+            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span>Alignment: {alignmentWeight.toFixed(1)}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
+            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Cohesion: {cohesionWeight.toFixed(1)}</span>
+          </div>
         </div>
 
         <canvas 

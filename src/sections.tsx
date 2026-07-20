@@ -496,10 +496,10 @@ export function SwarmSection() {
           <SuperTextReveal text="04 / Current Obsession" />
         </h2>
         <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
-          <SuperTextReveal text="Fluid Systems Visualizer" delay={0.1} />
+          <SuperTextReveal text="Swarm Intelligence Flocking Simulation" delay={0.1} />
         </h3>
         <p className="text-sm text-[#4a4a4a] max-w-2xl leading-relaxed">
-          <SuperParagraphReveal text="Exploring complex adaptive systems, cellular automata, and swarm intelligence algorithms visually. Click inside the viewport to interact directly with the flocking agents." delay={0.2} />
+          <SuperParagraphReveal text="Demonstrating Emergent Collective Behavior (Separation, Alignment, Cohesion). Exploring complex adaptive systems, cellular automata, and swarm intelligence algorithms visually. Click inside the viewport to interact directly with the flocking agents." delay={0.2} />
         </p>
       </div>
       <motion.div variants={fadeUp}>
