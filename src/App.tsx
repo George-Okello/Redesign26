@@ -7,7 +7,7 @@ import { FooterGlobe } from './components/FooterGlobe';
 import { CustomCursor } from './components/CustomCursor';
 import { SmoothScroll } from './components/SmoothScroll';
 import { TerminalMode } from './components/TerminalMode';
-import { Hero, About, InteractiveLab, Publications, Projects, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
+import { Hero, About, InteractiveLab, Publications, Projects, GrantsAndAwards, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
 
 const RESEARCH_QUESTIONS = [
   "Can AI Be Human in Thought?",
@@ -529,6 +529,7 @@ export default function App() {
           <InteractiveLab />
           <Publications />
           <Projects />
+          <GrantsAndAwards />
           <KaggleSection />
           <Notes />
           <ArchivedFieldNotes />

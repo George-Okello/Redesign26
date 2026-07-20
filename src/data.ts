@@ -145,3 +145,49 @@ export const notes: Note[] = [
     readTime: "5 min read"
   }
 ];
+
+export interface AwardItem {
+  title: string;
+  year: string;
+  organization: string;
+  website?: string;
+  description: string;
+  extendedContext: string;
+  impactMetrics: { label: string; value: string }[];
+  scientificFocus: string;
+  technologies: string[];
+}
+
+export const awards: AwardItem[] = [
+  {
+    title: "Innovate Africa Challenge Winner",
+    year: "2024–2025",
+    organization: "Smart Africa Initiative for AI Innovation",
+    website: "https://smartafrica.org/innovate-africa-challenge",
+    description: "Recognized for an innovative agricultural system integrating IoT edge telemetry, localized LLM advisory applications, and an incentive tokenomics structure for smallholder farmers.",
+    extendedContext: "This honor recognized an integrated smart-agriculture system designed to empower smallholder farmers. By merging solar-powered IoT soil-and-microclimate telemetry with an offline-resilient, LLM-powered voice and text app, farmers receive precise, real-time agronomic guidance tailored to their local environment. Crucially, the platform includes a behavioral-incentive token system that rewards farmers for adopting regenerative farming techniques, conserving water, and sharing critical local sensor data.",
+    impactMetrics: [
+      { label: "Focus Domain", value: "Smart Agriculture & IoT" },
+      { label: "Geographical Scope", value: "East African Farming Cooperatives" },
+      { label: "Key Innovation", value: "LLM Advisory + Token Incentives" }
+    ],
+    scientificFocus: "Calibrating resource-constrained multi-modal model advice based on real-time soil telemetry and testing game-theoretic token rewards to maximize regenerative farming compliance.",
+    technologies: ["IoT Telemetry", "Localized LLMs", "Token Incentive Mechanics", "Edge Computing"]
+  },
+  {
+    title: "Mozilla Foundation Research Grant",
+    year: "2023",
+    organization: "Mozilla Foundation",
+    website: "https://foundation.mozilla.org",
+    description: "Awarded competitive research funding to design and deploy AI-driven, localized socio-technical systems for climate-resilient agriculture.",
+    extendedContext: "Focused on smallholder farmers in Kenya, this grant funded the research and implementation of an NLP-driven decision support system. The engine decodes complex meteorological patterns and real-time agronomic data, serving actionable localized crop advice directly over simple SMS and web interfaces, mitigating the digital divide and enabling direct agency.",
+    impactMetrics: [
+      { label: "Focus Domain", value: "Socio-Technical NLP Systems" },
+      { label: "Geographical Scope", value: "Kenyan Smallholder Farms" },
+      { label: "Key Innovation", value: "Localized Low-Resource NLP" }
+    ],
+    scientificFocus: "Translating complex meteorological models into low-resource conversational languages without losing safety bounds.",
+    technologies: ["NLP/LLMs", "Meteorological Time-Series", "SMS-Gateway Architecture"]
+  }
+];
+
