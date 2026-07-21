@@ -299,23 +299,26 @@ export function SwarmSimulation() {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="w-full h-[350px] md:h-[500px] relative bg-[#0a0a0a] rounded-xl border border-[#1a1a1a]/10 overflow-hidden shadow-2xl group">
-        <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10 flex flex-col gap-1 mix-blend-difference pointer-events-none text-[#fcfaf7]">
-          <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest">Attractor Field (Separation, Alignment, Cohesion)</h3>
-          <p className="text-[9px] md:text-[10px] uppercase tracking-wider opacity-60">Hover/touch to attract • Hold/press to form vortex</p>
+        <div className="absolute top-4 left-4 right-4 md:right-auto md:top-6 md:left-6 z-10 flex flex-col gap-1 mix-blend-difference pointer-events-none text-[#fcfaf7]">
+          <h3 className="text-[10px] md:text-sm font-bold uppercase tracking-widest leading-tight">Attractor Field<span className="hidden md:inline"> (Separation, Alignment, Cohesion)</span></h3>
+          <p className="text-[8px] md:text-[10px] uppercase tracking-wider opacity-60">Hover/touch to attract • Hold/press to form vortex</p>
         </div>
 
-        <div className="absolute top-4 right-4 md:top-6 md:right-6 z-10 flex flex-col md:flex-row items-end md:items-center gap-1.5 md:gap-4 mix-blend-difference pointer-events-none text-[#fcfaf7] text-right">
+        <div className="absolute bottom-4 right-4 md:bottom-auto md:top-6 md:right-6 z-10 flex flex-col md:flex-row items-end md:items-center gap-1.5 md:gap-4 mix-blend-difference pointer-events-none text-[#fcfaf7] text-right">
           <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
-            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-rose-500 animate-pulse" />
+            <span className="hidden md:inline w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-rose-500 animate-pulse" />
             <span>Separation: {separationWeight.toFixed(1)}</span>
+            <span className="inline md:hidden w-1 h-1 rounded-full bg-rose-500 animate-pulse" />
           </div>
           <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
-            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span className="hidden md:inline w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-sky-400 animate-pulse" />
             <span>Alignment: {alignmentWeight.toFixed(1)}</span>
+            <span className="inline md:hidden w-1 h-1 rounded-full bg-sky-400 animate-pulse" />
           </div>
           <div className="flex items-center gap-1.5 text-[8px] md:text-[9.5px] uppercase tracking-wider font-mono opacity-85">
-            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="hidden md:inline w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>Cohesion: {cohesionWeight.toFixed(1)}</span>
+            <span className="inline md:hidden w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
           </div>
         </div>
 
@@ -325,6 +328,33 @@ export function SwarmSimulation() {
         />
       </div>
       
+      <div className="flex flex-wrap items-center justify-center gap-2 border border-[#1a1a1a]/10 p-1.5 md:p-2 rounded-2xl md:rounded-full w-full md:w-fit mx-auto mb-2">
+        <button 
+          onClick={() => { setAlignmentWeight(1.0); setCohesionWeight(1.0); setSeparationWeight(1.5); }}
+          className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 1.0 && cohesionWeight === 1.0 && separationWeight === 1.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
+        >
+          Balanced
+        </button>
+        <button 
+          onClick={() => { setAlignmentWeight(1.5); setCohesionWeight(0.5); setSeparationWeight(2.5); }}
+          className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 1.5 && cohesionWeight === 0.5 && separationWeight === 2.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
+        >
+          Predator-Prey
+        </button>
+        <button 
+          onClick={() => { setAlignmentWeight(0.5); setCohesionWeight(2.5); setSeparationWeight(0.5); }}
+          className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 0.5 && cohesionWeight === 2.5 && separationWeight === 0.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
+        >
+          Aggregation
+        </button>
+        <button 
+          onClick={() => { setAlignmentWeight(0.2); setCohesionWeight(0.1); setSeparationWeight(3.0); }}
+          className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 0.2 && cohesionWeight === 0.1 && separationWeight === 3.0 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
+        >
+          Dynamic Dispersion
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex flex-col gap-2">
           <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] flex justify-between">

@@ -8,6 +8,7 @@ import { CustomCursor } from './components/CustomCursor';
 import { SmoothScroll } from './components/SmoothScroll';
 import { TerminalMode } from './components/TerminalMode';
 import { Hero, About, InteractiveLab, Publications, Projects, GrantsAndAwards, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
+import { ResearchFocus } from './components/ResearchFocus';
 
 const RESEARCH_QUESTIONS = [
   "Can AI Be Human in Thought?",
@@ -526,6 +527,13 @@ export default function App() {
         <main className="relative z-10 mx-auto max-w-7xl xl:max-w-[1360px] 2xl:max-w-[1536px] px-6 md:px-12 lg:px-24 pt-32">
           <Hero />
           <About />
+          <ResearchFocus />
+          {/* Animated Transition Separator */}
+          <div className="w-full flex items-center justify-center py-12 md:py-16 opacity-60 relative z-20">
+            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
+            <div className="w-2.5 h-2.5 rounded-full border border-orange-500 bg-orange-highlight/20 mx-4 animate-pulse shadow-[0_0_10px_rgba(255,90,9,0.5)]" />
+            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
+          </div>
           <InteractiveLab />
           <Publications />
           <Projects />

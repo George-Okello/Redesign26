@@ -26,12 +26,15 @@ export function CustomCursor() {
       // Check if hovering over clickable elements
       const target = e.target as HTMLElement;
       if (
-        target.tagName.toLowerCase() === 'button' ||
-        target.tagName.toLowerCase() === 'a' ||
-        target.closest('button') ||
-        target.closest('a') ||
-        window.getComputedStyle(target).cursor === 'pointer' ||
-        target.classList.contains('magnetic-interactive')
+        target &&
+        (
+          target.tagName?.toLowerCase() === 'button' ||
+          target.tagName?.toLowerCase() === 'a' ||
+          target.closest?.('button') ||
+          target.closest?.('a') ||
+          (target.nodeType === Node.ELEMENT_NODE && window.getComputedStyle(target).cursor === 'pointer') ||
+          target.classList?.contains('magnetic-interactive')
+        )
       ) {
         setIsHovering(true);
       } else {

@@ -16,6 +16,10 @@ body {
   transition: background-color 1.5s cubic-bezier(0.16, 1, 0.3, 1), color 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* --- Easter Egg Gravity Drift Animation --- */
 @keyframes gravityDrift {
   0% { transform: translateY(0px) rotate(0deg); }

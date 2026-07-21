@@ -382,47 +382,6 @@ export function About() {
         </p>
       </div>
 
-      {/* Core Research Areas/Domains */}
-      <div className="mb-24">
-        <h3 className="text-[10px] font-bold text-[#1a1a1a] uppercase tracking-[0.25em] mb-8">Active Research Domains</h3>
-        <div className="flex flex-wrap gap-3">
-          {[
-            "Network Science",
-            "Computational Neuroscience",
-            "Cognitive Science & Behavioral AI",
-            "Neural Signal Processing (EEG-Based)",
-            "Bilingual Language Dynamics",
-            "Multi-Agent Reinforcement Learning",
-            "Interpretable & Explainable AI",
-            "Complex Adaptive Systems"
-          ].map((area, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.05 }}
-            >
-              <motion.div
-                animate={{ y: [0, (idx % 2 === 0 ? -4 : 4), 0] }}
-                transition={{ 
-                  duration: 4 + (idx % 3), 
-                  repeat: Infinity, 
-                  ease: "easeInOut",
-                  delay: idx * 0.2
-                }}
-                whileHover={{ scale: 1.05, rotate: (idx % 2 === 0 ? 1 : -1) }}
-                whileTap={{ scale: 0.95 }}
-                className="relative group px-5 py-3 bg-[#fcfaf7] hover:bg-[#1a1a1a] text-[#4a4a4a] hover:text-[#fcfaf7] active:bg-[#1a1a1a] active:text-[#fcfaf7] border border-[#1a1a1a]/10 hover:border-[#1a1a1a] active:border-[#1a1a1a] rounded-full text-[10px] uppercase tracking-widest font-semibold transition-colors duration-500 cursor-default flex items-center gap-3 select-none shadow-sm hover:shadow-lg active:shadow-lg"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]/20 group-hover:bg-orange-highlight group-active:bg-orange-highlight transition-colors duration-500" />
-                <span className="relative z-10">{area}</span>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
       <motion.div variants={staggerContainer} className="flex flex-col gap-12 border-t border-[#1a1a1a]/10 pt-16">
         <motion.div variants={fadeUp} className="flex flex-col md:flex-row gap-4 md:gap-8 group">
           <div className="md:w-1/4 text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] pt-2 transition-colors group-hover:text-[#1a1a1a]">Principle I</div>
@@ -462,7 +421,7 @@ export function InteractiveLab() {
     >
       <div className="mb-12 text-center md:text-left">
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
-          <SuperTextReveal text="03 / Interactive Lab" />
+          <SuperTextReveal text="04 / Interactive Lab" />
         </h2>
         <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Cognitive Architecture Sandbox" delay={0.1} />
@@ -493,7 +452,7 @@ export function SwarmSection() {
     >
       <div className="mb-12">
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
-          <SuperTextReveal text="04 / Current Obsession" />
+          <SuperTextReveal text="05 / Current Obsession" />
         </h2>
         <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Swarm Intelligence Flocking Simulation" delay={0.1} />
