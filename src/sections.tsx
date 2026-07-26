@@ -1843,13 +1843,13 @@ export function Contact() {
               href="mailto:georgeokelloouma@gmail.com" 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#1a1a1a]/20 transition-all duration-300 w-full sm:w-auto"
+              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-orange-highlight/40 transition-all duration-300 w-full sm:w-auto"
             >
               <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-orange-highlight/10 transition-colors duration-300">
-                  <Mail className="w-4 h-4 text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300" />
+                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-orange-highlight transition-colors duration-300">
+                  <Mail className="w-4 h-4 text-[#1a1a1a] group-hover:text-white transition-colors duration-300" />
                 </div>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">Email</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">Email</span>
               </div>
               <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-orange-highlight group-hover:-rotate-45 transition-all duration-300" />
             </motion.a>
@@ -1860,31 +1860,32 @@ export function Contact() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#1a1a1a]/20 transition-all duration-300 w-full sm:w-auto"
+              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#0a66c2]/40 transition-all duration-300 w-full sm:w-auto"
             >
               <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-[#0077b5]/10 transition-colors duration-300">
-                  <Linkedin className="w-4 h-4 text-[#1a1a1a] group-hover:text-[#0077b5] transition-colors duration-300" />
+                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-[#0a66c2] transition-colors duration-300">
+                  <Linkedin className="w-4 h-4 text-[#1a1a1a] group-hover:text-white transition-colors duration-300" />
                 </div>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">LinkedIn</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-[#0a66c2] transition-colors duration-300">LinkedIn</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-[#0077b5] group-hover:-rotate-45 transition-all duration-300" />
+              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-[#0a66c2] group-hover:-rotate-45 transition-all duration-300" />
             </motion.a>
+
             <motion.a 
               href="https://georgyokesh112.artstation.com/" 
               target="_blank" 
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#1a1a1a]/20 transition-all duration-300 w-full sm:w-auto"
+              className="group flex items-center justify-between gap-8 bg-white border border-[#1a1a1a]/10 px-6 py-4 rounded-full shadow-sm hover:shadow-md hover:border-[#e11d48]/40 transition-all duration-300 w-full sm:w-auto"
             >
               <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-[#13aff0]/10 transition-colors duration-300">
-                  <Palette className="w-4 h-4 text-[#1a1a1a] group-hover:text-[#13aff0] transition-colors duration-300" />
+                <div className="w-8 h-8 rounded-full bg-[#f4f1eb] flex items-center justify-center group-hover:bg-[#e11d48] transition-colors duration-300">
+                  <Palette className="w-4 h-4 text-[#1a1a1a] group-hover:text-white transition-colors duration-300" />
                 </div>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a]">ArtStation</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-[#e11d48] transition-colors duration-300">ArtStation</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-[#13aff0] group-hover:-rotate-45 transition-all duration-300" />
+              <ArrowRight className="w-4 h-4 text-[#8a817c] group-hover:text-[#e11d48] group-hover:-rotate-45 transition-all duration-300" />
             </motion.a>
           </div>
         </div>
