@@ -5,6 +5,8 @@ import { NetworkBackground } from './components/NetworkBackground';
 import { ScrollToTop } from './components/ScrollToTop';
 import { FooterGlobe } from './components/FooterGlobe';
 import { CustomCursor } from './components/CustomCursor';
+import { DramaticIntro } from './components/DramaticIntro';
+import { GlitchEffect } from './components/GlitchEffect';
 import { SmoothScroll } from './components/SmoothScroll';
 import { TerminalMode } from './components/TerminalMode';
 import { MagneticWrapper } from './components/MagneticWrapper';
@@ -564,6 +566,8 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#fcfaf7] selection:bg-[#1a1a1a]/10 overflow-x-hidden text-[#1a1a1a]">
+      <DramaticIntro />
+      <GlitchEffect />
       <NoiseOverlay />
       <SmoothScroll />
       <CustomCursor />

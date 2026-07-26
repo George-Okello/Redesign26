@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface Spark {
   id: number;
@@ -17,6 +17,7 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [sparks, setSparks] = useState<Spark[]>([]);
+  const [shockwaves, setShockwaves] = useState<{ id: number; x: number; y: number; color: string }[]>([]);
 
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
@@ -71,15 +72,36 @@ export function CustomCursor() {
       }
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
+      const isParty = document.documentElement.classList.contains('party-active') || document.body.classList.contains('party-active');
+      
+      let baseColor = 'rgba(255, 90, 9, 0.8)'; // orange-highlight by default
+      if (isNeon) baseColor = 'rgba(57, 255, 20, 0.8)';
+      if (isParty) {
+        const colors = ['rgba(255, 90, 9, 0.8)', 'rgba(57, 255, 20, 0.8)', 'rgba(0, 255, 255, 0.8)', 'rgba(255, 0, 127, 0.8)', 'rgba(255, 234, 0, 0.8)', 'rgba(157, 0, 255, 0.8)'];
+        baseColor = colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      const id = Date.now() + Math.random();
+      setShockwaves(prev => [...prev, { id, x: e.clientX, y: e.clientY, color: baseColor }]);
+
+      setTimeout(() => {
+        setShockwaves(prev => prev.filter(s => s.id !== id));
+      }, 1200);
+    };
+
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
     window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
     
     return () => {
       window.removeEventListener('mousemove', updateMousePosition);
+      window.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
     };
@@ -134,6 +156,51 @@ export function CustomCursor() {
 
   return (
     <>
+      {/* Click Shockwaves (Over-dramatic ripple effect) */}
+      <AnimatePresence>
+        {shockwaves.map((wave) => (
+          <motion.div
+            key={wave.id}
+            initial={{ scale: 0, opacity: 1, borderWidth: '8px' }}
+            animate={{ scale: 40, opacity: 0, borderWidth: '0px' }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="fixed rounded-full pointer-events-none z-[9996]"
+            style={{
+              left: wave.x,
+              top: wave.y,
+              width: '20px',
+              height: '20px',
+              borderColor: wave.color,
+              borderStyle: 'solid',
+              transform: 'translate(-50%, -50%)',
+              boxShadow: `0 0 40px ${wave.color}, inset 0 0 20px ${wave.color}`,
+              mixBlendMode: 'screen'
+            }}
+          />
+        ))}
+        {shockwaves.map((wave) => (
+          <motion.div
+            key={`inner-${wave.id}`}
+            initial={{ scale: 0, opacity: 1 }}
+            animate={{ scale: 15, opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="fixed rounded-full pointer-events-none z-[9995]"
+            style={{
+              left: wave.x,
+              top: wave.y,
+              width: '20px',
+              height: '20px',
+              backgroundColor: wave.color,
+              transform: 'translate(-50%, -50%)',
+              mixBlendMode: 'screen',
+              filter: 'blur(10px)'
+            }}
+          />
+        ))}
+      </AnimatePresence>
+
       {/* Particle trail sparks */}
       {sparks.map((spark) => (
         <div
