@@ -6,6 +6,7 @@ import { useScrollReveal } from './hooks/useScrollReveal';
 import { SwarmSimulation } from './components/SwarmSimulation';
 import { CognitiveBiasSimulation } from './components/CognitiveBiasSimulation';
 import { SuperTextReveal, SuperParagraphReveal } from './components/SuperTextReveal';
+import { ScrambleText } from './components/ScrambleText';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
@@ -306,22 +307,43 @@ export function Hero() {
       {/* Bottom Cards */}
       <div className="absolute -bottom-16 left-[50%] w-screen -translate-x-1/2 flex justify-between items-end pb-0 px-4 md:px-12 lg:px-20 pointer-events-none z-20">
         {/* Current Focus - Left */}
-        <div className="hidden md:block w-72 lg:w-80 border border-[#1a1a1a]/5 rounded-xl p-8 bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] relative overflow-hidden text-left pointer-events-auto hover:shadow-[0_16px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1">
-          <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10" />
-          <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-orange-highlight mb-4">Current Focus</p>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIdx}
-              initial={{ opacity: 0, x: -15, filter: "blur(4px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: 15, filter: "blur(4px)" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h3 className="text-base font-bold text-[#1a1a1a] mb-2 leading-snug">{content[currentIdx].currentFocus.title}</h3>
-              <p className="text-sm text-[#8a817c] italic leading-relaxed">{content[currentIdx].currentFocus.desc}</p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <MagneticCard maxRotate={6} maxTranslate={10} className="hidden md:block w-72 lg:w-80 relative overflow-hidden pointer-events-auto">
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-2xl border border-[#1a1a1a]/10 rounded-xl transition-all duration-500 hover:shadow-[0_16px_60px_rgba(0,0,0,0.06)] hover:border-[#1a1a1a]/20" />
+          
+          {/* Tech Pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-xl" style={{ backgroundImage: 'radial-gradient(#1a1a1a 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+          
+          {/* Corner Crosshairs */}
+          <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#1a1a1a]/30" />
+          <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#1a1a1a]/30" />
+          <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#1a1a1a]/30" />
+          <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#1a1a1a]/30" />
+
+          {/* Accent Line */}
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10 shadow-[2px_0_10px_rgba(255,90,9,0.3)] rounded-l-xl" />
+          
+          <div className="relative p-8 text-left h-full flex flex-col justify-center">
+            <div className="flex justify-between items-start mb-6">
+              <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-orange-highlight flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-orange-highlight rounded-full animate-pulse" />
+                Current Focus
+              </p>
+              <span className="text-[7px] font-mono tracking-widest text-[#1a1a1a]/30">OP_01</span>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIdx}
+                initial={{ opacity: 0, x: -15, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: 15, filter: "blur(4px)" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2 leading-tight tracking-tight">{content[currentIdx].currentFocus.title}</h3>
+                <p className="text-xs text-[#8a817c] italic leading-relaxed">{content[currentIdx].currentFocus.desc}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </MagneticCard>
 
         <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8a817c] text-center w-full md:w-auto absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center">
           <span className="mb-6 opacity-60">SCROLL</span>
@@ -340,22 +362,43 @@ export function Hero() {
         </div>
 
         {/* Selected Inquiry - Right */}
-        <div className="hidden md:block w-72 lg:w-80 border border-[#1a1a1a]/5 rounded-xl p-8 bg-white/70 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] relative overflow-hidden text-right pointer-events-auto hover:shadow-[0_16px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1">
-          <div className="absolute right-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10" />
-          <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-orange-highlight mb-4">Selected Inquiry</p>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIdx}
-              initial={{ opacity: 0, x: 15, filter: "blur(4px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: -15, filter: "blur(4px)" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h3 className="text-base font-bold text-[#1a1a1a] mb-2 leading-snug">{content[currentIdx].selectedInquiry.title}</h3>
-              <p className="text-sm text-[#8a817c] italic leading-relaxed">{content[currentIdx].selectedInquiry.desc}</p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <MagneticCard maxRotate={6} maxTranslate={10} className="hidden md:block w-72 lg:w-80 relative overflow-hidden pointer-events-auto">
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-2xl border border-[#1a1a1a]/10 rounded-xl transition-all duration-500 hover:shadow-[0_16px_60px_rgba(0,0,0,0.06)] hover:border-[#1a1a1a]/20" />
+          
+          {/* Tech Pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-xl" style={{ backgroundImage: 'radial-gradient(#1a1a1a 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+          
+          {/* Corner Crosshairs */}
+          <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#1a1a1a]/30" />
+          <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#1a1a1a]/30" />
+          <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#1a1a1a]/30" />
+          <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#1a1a1a]/30" />
+
+          {/* Accent Line */}
+          <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10 shadow-[-2px_0_10px_rgba(255,90,9,0.3)] rounded-r-xl" />
+          
+          <div className="relative p-8 text-right h-full flex flex-col justify-center">
+            <div className="flex justify-between items-start mb-6 flex-row-reverse">
+              <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-orange-highlight flex items-center gap-2">
+                Selected Inquiry
+                <span className="w-1.5 h-1.5 bg-orange-highlight rounded-full animate-pulse" />
+              </p>
+              <span className="text-[7px] font-mono tracking-widest text-[#1a1a1a]/30">SEQ_A3</span>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIdx}
+                initial={{ opacity: 0, x: 15, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: -15, filter: "blur(4px)" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2 leading-tight tracking-tight">{content[currentIdx].selectedInquiry.title}</h3>
+                <p className="text-xs text-[#8a817c] italic leading-relaxed">{content[currentIdx].selectedInquiry.desc}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </MagneticCard>
       </div>
     </motion.section>
   );
@@ -370,7 +413,7 @@ export function About() {
       {...revealProps}
     >
       <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-8 uppercase tracking-[0.3em]">
-        <SuperTextReveal text="Theoretical Foundations" />
+        <ScrambleText text="Theoretical Foundations" />
       </h2>
       
       <div className="space-y-6 text-base md:text-lg text-[#4a4a4a] leading-relaxed mb-16">
@@ -421,7 +464,7 @@ export function InteractiveLab() {
     >
       <div className="mb-12 text-center md:text-left">
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
-          <SuperTextReveal text="04 / Interactive Lab" />
+          <ScrambleText text="04 / Interactive Lab" />
         </h2>
         <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Cognitive Architecture Sandbox" delay={0.1} />
@@ -452,7 +495,7 @@ export function SwarmSection() {
     >
       <div className="mb-12">
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
-          <SuperTextReveal text="05 / Current Obsession" />
+          <ScrambleText text="05 / Current Obsession" />
         </h2>
         <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Swarm Intelligence Flocking Simulation" delay={0.1} />
@@ -499,7 +542,7 @@ export function Publications() {
     >
       <div className="mb-20">
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-8 uppercase tracking-[0.3em]">
-          <SuperTextReveal text="Research Journey" />
+          <ScrambleText text="Research Journey" />
         </h2>
       </div>
       
@@ -738,7 +781,7 @@ export function Projects() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <h2 className="text-[10px] font-bold text-[#1a1a1a] uppercase tracking-[0.3em] mb-3">
-            <SuperTextReveal text="Industry Implementations" />
+            <ScrambleText text="Industry Implementations" />
           </h2>
           <p className="text-xs text-[#8a817c] uppercase tracking-widest font-bold">
             Interactive Presentation • Slide {activeIdx + 1} of {industryProjects.length}
@@ -1095,7 +1138,7 @@ export function ArchivedFieldNotes() {
     >
       <div className="mb-12">
         <span className="text-[10px] uppercase tracking-[0.2em] text-[#1a1a1a] font-bold border-b border-[#1a1a1a]/10 pb-2">
-          <SuperTextReveal text="Archived Field Notes" />
+          <ScrambleText text="Archived Field Notes" />
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1768,7 +1811,7 @@ export function Contact() {
       {...revealProps}
     >
       <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#1a1a1a] mb-8">
-        <SuperTextReveal text="Contact" />
+        <ScrambleText text="Contact" />
       </h2>
       <h2 className="text-4xl md:text-5xl font-serif italic font-light tracking-tight text-[#1a1a1a] mb-8">
         <SuperTextReveal text="Let's explore questions together." delay={0.1} />

@@ -33,6 +33,14 @@ export function NetworkBackground() {
         this.x += this.vx;
         this.y += this.vy;
 
+        const dxMouse = this.x - mouse.x;
+        const dyMouse = this.y - mouse.y;
+        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        if (distMouse < 100) {
+          this.x += (dxMouse / distMouse) * 1.5;
+          this.y += (dyMouse / distMouse) * 1.5;
+        }
+
         if (this.x < -50) this.x = width + 50;
         if (this.x > width + 50) this.x = -50;
         if (this.y < -50) this.y = height + 50;

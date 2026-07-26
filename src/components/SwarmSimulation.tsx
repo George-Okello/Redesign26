@@ -1,3 +1,4 @@
+import { MagneticWrapper } from "./MagneticWrapper";
 import { useEffect, useRef, useState } from 'react';
 
 export function SwarmSimulation() {
@@ -329,30 +330,30 @@ export function SwarmSimulation() {
       </div>
       
       <div className="flex flex-wrap items-center justify-center gap-2 border border-[#1a1a1a]/10 p-1.5 md:p-2 rounded-2xl md:rounded-full w-full md:w-fit mx-auto mb-2">
-        <button 
+        <MagneticWrapper><button 
           onClick={() => { setAlignmentWeight(1.0); setCohesionWeight(1.0); setSeparationWeight(1.5); }}
           className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 1.0 && cohesionWeight === 1.0 && separationWeight === 1.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
         >
           Balanced
-        </button>
-        <button 
+        </button></MagneticWrapper>
+        <MagneticWrapper><button 
           onClick={() => { setAlignmentWeight(1.5); setCohesionWeight(0.5); setSeparationWeight(2.5); }}
           className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 1.5 && cohesionWeight === 0.5 && separationWeight === 2.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
         >
           Predator-Prey
-        </button>
-        <button 
+        </button></MagneticWrapper>
+        <MagneticWrapper><button 
           onClick={() => { setAlignmentWeight(0.5); setCohesionWeight(2.5); setSeparationWeight(0.5); }}
           className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 0.5 && cohesionWeight === 2.5 && separationWeight === 0.5 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
         >
           Aggregation
-        </button>
-        <button 
+        </button></MagneticWrapper>
+        <MagneticWrapper><button 
           onClick={() => { setAlignmentWeight(0.2); setCohesionWeight(0.1); setSeparationWeight(3.0); }}
           className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-300 ${alignmentWeight === 0.2 && cohesionWeight === 0.1 && separationWeight === 3.0 ? 'bg-[#1a1a1a] text-white shadow-md' : 'hover:bg-[#1a1a1a]/5 text-[#4a4a4a]'}`}
         >
           Dynamic Dispersion
-        </button>
+        </button></MagneticWrapper>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

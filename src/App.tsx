@@ -7,6 +7,7 @@ import { FooterGlobe } from './components/FooterGlobe';
 import { CustomCursor } from './components/CustomCursor';
 import { SmoothScroll } from './components/SmoothScroll';
 import { TerminalMode } from './components/TerminalMode';
+import { MagneticWrapper } from './components/MagneticWrapper';
 import { Hero, About, InteractiveLab, Publications, Projects, GrantsAndAwards, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
 import { ResearchFocus } from './components/ResearchFocus';
 
@@ -105,25 +106,27 @@ function Header({ onActivateTerminal }: HeaderProps) {
         <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] md:text-xs tracking-[0.2em] uppercase font-bold text-[#1a1a1a]">
           
           {/* Logo (Easter Egg: Click 5 times to activate terminal) */}
-          <a 
-            href="#" 
-            onClick={handleLogoClick}
-            className="flex items-center gap-3 hover:text-orange-highlight transition-all duration-300 relative z-50 group"
-          >
-            <div className="flex items-center justify-center w-5 h-5 border border-[#1a1a1a] group-hover:border-orange-highlight rounded-full transition-colors duration-300">
-              <span 
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  logoClicks > 0 ? 'bg-orange-highlight animate-ping' : 'bg-[#1a1a1a] group-hover:bg-orange-highlight animate-pulse'
-                }`}
-                style={{
-                  animationDuration: logoClicks > 0 ? `${Math.max(0.15, 1.2 - logoClicks * 0.25)}s` : undefined
-                }}
-              />
-            </div>
-            <span className="font-sans font-bold tracking-widest">
-              {logoClicks > 0 ? `George Okello [${logoClicks}/5]` : 'George Okello'}
-            </span>
-          </a>
+          <MagneticWrapper>
+            <a 
+              href="#" 
+              onClick={handleLogoClick}
+              className="flex items-center gap-3 hover:text-orange-highlight transition-all duration-300 relative z-50 group"
+            >
+              <div className="flex items-center justify-center w-5 h-5 border border-[#1a1a1a] group-hover:border-orange-highlight rounded-full transition-colors duration-300">
+                <span 
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                    logoClicks > 0 ? 'bg-orange-highlight animate-ping' : 'bg-[#1a1a1a] group-hover:bg-orange-highlight animate-pulse'
+                  }`}
+                  style={{
+                    animationDuration: logoClicks > 0 ? `${Math.max(0.15, 1.2 - logoClicks * 0.25)}s` : undefined
+                  }}
+                />
+              </div>
+              <span className="font-sans font-bold tracking-widest">
+                {logoClicks > 0 ? `George Okello [${logoClicks}/5]` : 'George Okello'}
+              </span>
+            </a>
+          </MagneticWrapper>
           
           {/* Rotating Research Questions (Hidden on small mobile, visible on iPad and Desktop) */}
           <div className="hidden sm:flex flex-1 justify-center overflow-hidden px-4">
@@ -144,14 +147,17 @@ function Header({ onActivateTerminal }: HeaderProps) {
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <a 
-                key={link.label} 
-                href={link.href} 
-                className="hover:text-orange-highlight transition-colors duration-300 relative group py-1"
-              >
-                <span>{link.label}</span>
-                <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-orange-highlight scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
+              <div key={link.label}>
+                <MagneticWrapper>
+                  <a 
+                    href={link.href} 
+                    className="hover:text-orange-highlight transition-colors duration-300 relative group py-1 block px-2"
+                  >
+                    <span>{link.label}</span>
+                    <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-orange-highlight scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                  </a>
+                </MagneticWrapper>
+              </div>
             ))}
           </div>
 
@@ -267,13 +273,35 @@ function NoiseOverlay() {
 
 function InitialLoader({ onComplete }: { onComplete: () => void }) {
   const [subText, setSubText] = useState("Translating brain signals...");
+  const [progress, setProgress] = useState(0);
+  const [hexLine, setHexLine] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     
-    const t1 = setTimeout(() => setSubText("Establishing neural links..."), 1200);
-    const t2 = setTimeout(() => setSubText("Calibrating network weights..."), 2400);
-    const t3 = setTimeout(() => setSubText("Accessing complex systems..."), 3600);
+    // Non-linear progress simulation
+    let current = 0;
+    const progressTimer = setInterval(() => {
+      current += Math.random() * 8;
+      if (current >= 100) {
+        current = 100;
+        clearInterval(progressTimer);
+      }
+      setProgress(Math.min(100, Math.floor(current)));
+    }, 150);
+
+    // Rapid hex code generation for "hacker" feel
+    const hexTimer = setInterval(() => {
+      const hex = Array.from({length: 8}, () => 
+        Math.floor(Math.random() * 16).toString(16).toUpperCase()
+      ).join(' ');
+      setHexLine(hex);
+    }, 80);
+
+    const t1 = setTimeout(() => setSubText("Establishing neural links..."), 1000);
+    const t2 = setTimeout(() => setSubText("Calibrating network weights..."), 2000);
+    const t3 = setTimeout(() => setSubText("Bypassing semantic limiters..."), 3000);
+    const t4 = setTimeout(() => setSubText("Accessing complex systems..."), 3800);
 
     const timer = setTimeout(() => {
       document.body.style.overflow = 'unset';
@@ -281,9 +309,12 @@ function InitialLoader({ onComplete }: { onComplete: () => void }) {
     }, 4500);
     
     return () => {
+      clearInterval(progressTimer);
+      clearInterval(hexTimer);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
       clearTimeout(timer);
       document.body.style.overflow = 'unset';
     };
@@ -292,46 +323,105 @@ function InitialLoader({ onComplete }: { onComplete: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-auto select-none"
+      exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
+      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-auto select-none overflow-hidden"
     >
-      <div className="overflow-hidden mb-6">
-        <motion.div
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold text-[#1a1a1a] flex items-center gap-3"
-        >
-          <motion.div
+      {/* Tech Grid Background */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.03]" 
+        style={{
+          backgroundImage: `linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          backgroundPosition: 'center center'
+        }} 
+      />
+      
+      {/* Glitch Scanner Line */}
+      <motion.div 
+        animate={{ y: ['-10vh', '110vh'] }}
+        transition={{ duration: 2.5, ease: 'linear', repeat: Infinity }}
+        className="absolute top-0 left-0 right-0 h-[1px] bg-orange-highlight/40 shadow-[0_0_15px_rgba(255,90,9,0.4)] z-0 pointer-events-none"
+      />
+
+      <div className="relative z-10 w-full max-w-sm px-6 flex flex-col items-center">
+        
+        {/* Core Animated Ring */}
+        <div className="relative flex justify-center items-center w-32 h-32 mb-10">
+          <motion.div 
             animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            className="w-3 h-3 border-2 border-[#1a1a1a]/20 border-t-orange-highlight rounded-full"
+            transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+            className="absolute inset-0 border-[0.5px] border-[#1a1a1a]/20 rounded-full border-dashed"
           />
-          Initializing
-        </motion.div>
-      </div>
-      <div className="w-48 md:w-64 h-[1px] bg-[#1a1a1a]/10 relative overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-0 h-full bg-orange-highlight"
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 3.5, delay: 0.5, ease: "easeInOut" }}
-        />
-      </div>
-      <div className="mt-6 h-4 overflow-hidden flex justify-center items-center">
-        <AnimatePresence mode="wait">
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 12, ease: "linear", repeat: Infinity }}
+            className="absolute inset-2 border-[0.5px] border-orange-highlight/30 rounded-full"
+          />
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+            className="absolute inset-4 border-t-2 border-r-2 border-orange-highlight rounded-full opacity-80"
+          />
+          <motion.div 
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+            className="w-1.5 h-1.5 bg-orange-highlight rounded-full absolute shadow-[0_0_10px_rgba(255,90,9,0.8)]"
+          />
+          <div className="absolute text-[10px] font-mono font-bold tracking-widest text-[#1a1a1a] mt-10">
+            {progress.toString().padStart(3, '0')}%
+          </div>
+        </div>
+
+        {/* Data readout */}
+        <div className="w-full flex justify-between items-end mb-3">
           <motion.div
-            key={subText}
-            initial={{ y: 10, opacity: 0 }}
+            initial={{ y: 5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -10, opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="text-[9px] uppercase tracking-widest text-[#8a817c] italic font-serif"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#1a1a1a] flex items-center gap-2"
           >
-            {subText}
+            SYS_BOOT.SEQ
           </motion.div>
-        </AnimatePresence>
+          <div className="text-[7px] font-mono text-orange-highlight/70 tracking-widest">
+            [ {hexLine} ]
+          </div>
+        </div>
+
+        {/* Segmented Progress Bar */}
+        <div className="w-full flex gap-[2px] h-[3px] relative overflow-hidden">
+           {Array.from({length: 25}).map((_, i) => (
+             <div 
+               key={i} 
+               className={`flex-1 h-full transition-all duration-75 ${progress > (i * 4) ? 'bg-orange-highlight shadow-[0_0_5px_rgba(255,90,9,0.5)]' : 'bg-[#1a1a1a]/10'}`} 
+             />
+           ))}
+        </div>
+        
+        {/* Dynamic Log Text */}
+        <div className="mt-8 w-full flex flex-col items-center">
+          <div className="h-4 overflow-hidden flex justify-center items-center w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={subText}
+                initial={{ y: 10, opacity: 0, filter: "blur(2px)" }}
+                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                exit={{ y: -10, opacity: 0, filter: "blur(2px)" }}
+                transition={{ duration: 0.3 }}
+                className="text-[9px] uppercase tracking-[0.2em] text-[#8a817c] italic font-serif flex items-center gap-2"
+              >
+                <Sparkles className="w-2.5 h-2.5 text-orange-highlight/60" />
+                {subText}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          <div className="mt-6 text-[7px] font-mono text-[#1a1a1a]/30 tracking-widest uppercase flex gap-4">
+             <span>MEM_0x{Math.floor(progress * 2.55).toString(16).padStart(2, '0').toUpperCase()}</span>
+             <span>v_9.4.2</span>
+             <span>SYS_OK</span>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

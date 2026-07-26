@@ -1,3 +1,4 @@
+import { MagneticWrapper } from "./MagneticWrapper";
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -764,8 +765,7 @@ export function CognitiveBiasSimulation() {
               {Object.entries(models).map(([key, model]) => {
                 const isActive = activeBias === key;
                 return (
-                  <button
-                    key={key}
+                  <MagneticWrapper key={key}><button
                     onClick={() => setActiveBias(key as ModelType)}
                     className={`flex-shrink-0 w-auto md:w-full text-left px-3 py-2 sm:px-4 sm:py-3 text-[10px] sm:text-[11px] tracking-wider uppercase transition-all duration-300 border-b-2 md:border-b-0 md:border-l-2 snap-center ${
                       isActive 
@@ -775,7 +775,7 @@ export function CognitiveBiasSimulation() {
                   >
                     <div className="text-[9px] opacity-40 font-mono tracking-normal lowercase mb-0.5">{model.category}</div>
                     <div className="font-sans font-medium">{model.name}</div>
-                  </button>
+                  </button></MagneticWrapper>
                 );
               })}
             </div>
@@ -1096,7 +1096,7 @@ export function CognitiveBiasSimulation() {
                     <div className="space-y-1.5 pt-1">
                       <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Decide project outcome:</span>
                       <div className="grid grid-cols-2 gap-3">
-                        <button
+                        <MagneticWrapper><button
                           onClick={() => {
                             setSunkDecision('abandon');
                             setSunkSimulating(true);
@@ -1109,8 +1109,8 @@ export function CognitiveBiasSimulation() {
                           }`}
                         >
                           <X className="w-3.5 h-3.5" /> Abort / Cut Losses
-                        </button>
-                        <button
+                        </button></MagneticWrapper>
+                        <MagneticWrapper><button
                           onClick={() => {
                             setSunkDecision('continue');
                             setSunkSimulating(true);
@@ -1123,7 +1123,7 @@ export function CognitiveBiasSimulation() {
                           }`}
                         >
                           <Play className="w-3.5 h-3.5" /> Double Down
-                        </button>
+                        </button></MagneticWrapper>
                       </div>
                     </div>
                   </div>
@@ -1170,7 +1170,7 @@ export function CognitiveBiasSimulation() {
                   <div className="pt-3 border-t border-sky-500/10 text-[9.5px] font-sans text-slate-500 flex justify-between">
                     <span>Sunk Cost Bias: {out1.toFixed(0)}%</span>
                     {sunkDecision && (
-                      <button onClick={() => setSunkDecision(null)} className="text-sky-400 hover:underline">Reset Game</button>
+                      <MagneticWrapper><button onClick={() => setSunkDecision(null)} className="text-sky-400 hover:underline">Reset Game</button></MagneticWrapper>
                     )}
                   </div>
                 </div>
@@ -1253,7 +1253,7 @@ export function CognitiveBiasSimulation() {
                     <span className="text-[9.5px] text-slate-500 uppercase font-bold tracking-wider">Select Media Alerts to feed your memory:</span>
                     
                     <div className="grid grid-cols-1 gap-2">
-                      <button 
+                      <MagneticWrapper><button 
                         onClick={() => handleAvailabilityToggle('shark', !vividShark)}
                         className={`flex items-center justify-between p-2.5 md:p-3 rounded-lg border transition-all ${
                           vividShark 
@@ -1271,9 +1271,9 @@ export function CognitiveBiasSimulation() {
                         <div className={`px-2 py-0.5 rounded text-[9px] font-bold ${vividShark ? 'bg-amber-400/20 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
                           {vividShark ? 'ACTIVE IN RETRIEVAL' : 'OFF'}
                         </div>
-                      </button>
+                      </button></MagneticWrapper>
 
-                      <button 
+                      <MagneticWrapper><button 
                         onClick={() => handleAvailabilityToggle('plane', !vividPlane)}
                         className={`flex items-center justify-between p-2.5 md:p-3 rounded-lg border transition-all ${
                           vividPlane 
@@ -1291,9 +1291,9 @@ export function CognitiveBiasSimulation() {
                         <div className={`px-2 py-0.5 rounded text-[9px] font-bold ${vividPlane ? 'bg-amber-400/20 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
                           {vividPlane ? 'ACTIVE IN RETRIEVAL' : 'OFF'}
                         </div>
-                      </button>
+                      </button></MagneticWrapper>
 
-                      <button 
+                      <MagneticWrapper><button 
                         onClick={() => handleAvailabilityToggle('lottery', !vividLottery)}
                         className={`flex items-center justify-between p-2.5 md:p-3 rounded-lg border transition-all ${
                           vividLottery 
@@ -1311,7 +1311,7 @@ export function CognitiveBiasSimulation() {
                         <div className={`px-2 py-0.5 rounded text-[9px] font-bold ${vividLottery ? 'bg-amber-400/20 text-amber-400' : 'bg-slate-800 text-slate-500'}`}>
                           {vividLottery ? 'ACTIVE IN RETRIEVAL' : 'OFF'}
                         </div>
-                      </button>
+                      </button></MagneticWrapper>
                     </div>
                   </div>
                 </div>
@@ -1343,7 +1343,7 @@ export function CognitiveBiasSimulation() {
                   <div className="pt-3 border-t border-amber-500/10 flex justify-between text-[9px] text-slate-500">
                     <span>Recency Bias weight: {inputs.recentExposure}%</span>
                     {(vividShark || vividPlane || vividLottery) && (
-                      <button 
+                      <MagneticWrapper><button 
                         onClick={() => {
                           setVividShark(false);
                           setVividPlane(false);
@@ -1353,7 +1353,7 @@ export function CognitiveBiasSimulation() {
                         className="text-amber-400 hover:underline"
                       >
                         Mute Media Alerts
-                      </button>
+                      </button></MagneticWrapper>
                     )}
                   </div>
                 </div>
@@ -1377,8 +1377,7 @@ export function CognitiveBiasSimulation() {
                     {/* Sentence Tabs */}
                     <div className="flex gap-1 bg-[#12141c] p-1 rounded-lg border border-white/5 self-start sm:self-center">
                       {["Sentence A", "Sentence B", "Sentence C"].map((tab, idx) => (
-                        <button
-                          key={tab}
+                        <MagneticWrapper key={tab}><button
                           onClick={() => setSelectedBilingualSentence(idx)}
                           className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase transition-all duration-200 ${
                             selectedBilingualSentence === idx 
@@ -1387,7 +1386,7 @@ export function CognitiveBiasSimulation() {
                           }`}
                         >
                           {tab}
-                        </button>
+                        </button></MagneticWrapper>
                       ))}
                     </div>
                   </div>
