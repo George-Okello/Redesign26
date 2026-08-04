@@ -44,6 +44,8 @@ export function CustomCursor() {
 
       // Party Mode Sparks
       const isParty = document.documentElement.classList.contains('party-active') || document.body.classList.contains('party-active');
+      const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
+
       if (isParty) {
         const colors = ['#ff5a09', '#39ff14', '#00ffff', '#ff007f', '#ffea00', '#9d00ff'];
         setSparks((prev) => [
@@ -68,6 +70,21 @@ export function CustomCursor() {
             size: Math.random() * 6 + 4,
             alpha: 1.0,
           },
+        ]);
+      } else {
+        // Subtle cyber-research trail
+        setSparks((prev) => [
+          ...prev.slice(-20), // Limit total sparks
+          {
+            id: Math.random(),
+            x: e.clientX,
+            y: e.clientY,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            color: isNeon ? '#39ff14' : '#ff5a09',
+            size: Math.random() * 2 + 1,
+            alpha: 0.5,
+          }
         ]);
       }
     };

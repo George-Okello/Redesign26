@@ -1,6 +1,7 @@
 import { MagneticWrapper } from "./MagneticWrapper";
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import confetti from 'canvas-confetti';
 import { 
   Settings2, 
   Activity, 
@@ -1101,6 +1102,14 @@ export function CognitiveBiasSimulation() {
                             setSunkDecision('abandon');
                             setSunkSimulating(true);
                             setTimeout(() => setSunkSimulating(false), 800);
+                            
+                            // Trigger confetti for successfully overcoming sunk cost bias
+                            confetti({
+                              particleCount: 100,
+                              spread: 70,
+                              origin: { y: 0.6 },
+                              colors: ['#3b82f6', '#10b981', '#f59e0b']
+                            });
                           }}
                           className={`py-2 px-3 rounded-lg font-bold border transition-all text-center flex items-center justify-center gap-1.5 ${
                             sunkDecision === 'abandon'

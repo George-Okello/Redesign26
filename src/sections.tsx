@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring, useInView } from 'motion/react';
+import confetti from 'canvas-confetti';
 import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp, Globe, Cpu, Layers, Wifi, BookOpen, Palette } from 'lucide-react';
 import { publications, industryProjects, awards, AwardItem } from './data';
 import { useScrollReveal } from './hooks/useScrollReveal';
@@ -512,8 +513,8 @@ export function SwarmSection() {
 }
 
 export function Publications() {
-  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
   const sectionRef = useRef<HTMLElement>(null);
+  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30, externalRef: sectionRef });
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const publicationsPerPage = 5;
@@ -536,7 +537,6 @@ export function Publications() {
   return (
     <motion.section 
       id="research"
-      ref={sectionRef}
       className="py-24 max-w-4xl"
       {...revealProps}
     >
@@ -886,6 +886,8 @@ export function Projects() {
               key={activeProject.backgroundImage}
               src={activeProject.backgroundImage}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover filter saturate-[0.55] contrast-[1.05] brightness-[1.02]"
               referrerPolicy="no-referrer"
               initial={{ opacity: 0, scale: 1.04 }}
@@ -1535,7 +1537,39 @@ function AgriDecisionVisualizer() {
 }
 
 export function GrantsAndAwards() {
-  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30, externalRef: sectionRef });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  
+  useEffect(() => {
+    if (isInView) {
+      const duration = 3000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#e11d48', '#13aff0', '#ffb020']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#e11d48', '#13aff0', '#ffb020']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+      frame();
+    }
+  }, [isInView]);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const activeAward = awards[activeIndex];

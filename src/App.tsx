@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { Menu, X, ArrowRight, Sparkles, Terminal } from 'lucide-react';
 import { NetworkBackground } from './components/NetworkBackground';
@@ -8,10 +8,24 @@ import { CustomCursor } from './components/CustomCursor';
 import { DramaticIntro } from './components/DramaticIntro';
 import { GlitchEffect } from './components/GlitchEffect';
 import { SmoothScroll } from './components/SmoothScroll';
+import { audio } from './utils/audio';
+import { AudioProvider } from './utils/AudioProvider';
 import { TerminalMode } from './components/TerminalMode';
 import { MagneticWrapper } from './components/MagneticWrapper';
-import { Hero, About, InteractiveLab, Publications, Projects, GrantsAndAwards, KaggleSection, Notes, ArchivedFieldNotes, SwarmSection, Contact } from './sections';
 import { ResearchFocus } from './components/ResearchFocus';
+
+// Lazy loaded heavy components
+const Hero = lazy(() => import('./sections').then(module => ({ default: module.Hero })));
+const About = lazy(() => import('./sections').then(module => ({ default: module.About })));
+const InteractiveLab = lazy(() => import('./sections').then(module => ({ default: module.InteractiveLab })));
+const Publications = lazy(() => import('./sections').then(module => ({ default: module.Publications })));
+const Projects = lazy(() => import('./sections').then(module => ({ default: module.Projects })));
+const GrantsAndAwards = lazy(() => import('./sections').then(module => ({ default: module.GrantsAndAwards })));
+const KaggleSection = lazy(() => import('./sections').then(module => ({ default: module.KaggleSection })));
+const Notes = lazy(() => import('./sections').then(module => ({ default: module.Notes })));
+const ArchivedFieldNotes = lazy(() => import('./sections').then(module => ({ default: module.ArchivedFieldNotes })));
+const SwarmSection = lazy(() => import('./sections').then(module => ({ default: module.SwarmSection })));
+const Contact = lazy(() => import('./sections').then(module => ({ default: module.Contact })));
 
 const RESEARCH_QUESTIONS = [
   "Can AI Be Human in Thought?",
@@ -61,11 +75,14 @@ function Header({ onActivateTerminal }: HeaderProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none'; // Lock scroll on touch devices
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
     };
   }, [isOpen]);
 
@@ -167,7 +184,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
           <div className="flex lg:hidden items-center relative z-50">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 -mr-2 text-[#1a1a1a] hover:opacity-75 transition-opacity focus:outline-none"
+              className="p-3 -mr-3 flex items-center justify-center min-w-[44px] min-h-[44px] text-[#1a1a1a] hover:opacity-75 active:opacity-50 active:scale-95 transition-all focus:outline-none"
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -206,7 +223,15 @@ function Header({ onActivateTerminal }: HeaderProps) {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            className="fixed inset-0 z-40 bg-[#fcfaf7] pt-28 px-6 md:px-12 pb-12 flex flex-col justify-between overflow-y-auto lg:hidden"
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0.2, bottom: 0 }}
+            onDragEnd={(e, { offset, velocity }) => {
+              if (offset.y < -50 || velocity.y < -500) {
+                setIsOpen(false);
+              }
+            }}
+            className="fixed inset-0 z-40 bg-[#fcfaf7]/95 backdrop-blur-xl pt-28 px-6 md:px-12 pb-12 flex flex-col justify-between overflow-y-auto lg:hidden"
           >
             {/* Ambient Background Watermark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none select-none z-0">
@@ -226,7 +251,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
                       <a
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] hover:text-orange-highlight transition-colors flex items-center justify-between group"
+                        className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
                       >
                         <span className="relative">
                           {link.label}
@@ -487,6 +512,13 @@ export default function App() {
     const handleKeyPress = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       
+      // Cmd+K / Ctrl+K to toggle terminal
+      if ((e.metaKey || e.ctrlKey) && key === 'k') {
+        e.preventDefault();
+        setIsTerminalActive((prev) => !prev);
+        return;
+      }
+
       // ESC key to reset all easter eggs
       if (e.key === "Escape") {
         setGravityMode(false);
@@ -566,6 +598,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#fcfaf7] selection:bg-[#1a1a1a]/10 overflow-x-hidden text-[#1a1a1a]">
+      <AudioProvider />
       <DramaticIntro />
       <GlitchEffect />
       <NoiseOverlay />
@@ -619,24 +652,26 @@ export default function App() {
         <NetworkBackground />
         <Header onActivateTerminal={() => setIsTerminalActive(true)} />
         <main className="relative z-10 mx-auto max-w-7xl xl:max-w-[1360px] 2xl:max-w-[1536px] px-6 md:px-12 lg:px-24 pt-32">
-          <Hero />
-          <About />
-          <ResearchFocus />
-          {/* Animated Transition Separator */}
-          <div className="w-full flex items-center justify-center py-12 md:py-16 opacity-60 relative z-20">
-            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
-            <div className="w-2.5 h-2.5 rounded-full border border-orange-500 bg-orange-highlight/20 mx-4 animate-pulse shadow-[0_0_10px_rgba(255,90,9,0.5)]" />
-            <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
-          </div>
-          <InteractiveLab />
-          <Publications />
-          <Projects />
-          <GrantsAndAwards />
-          <KaggleSection />
-          <Notes />
-          <ArchivedFieldNotes />
-          <SwarmSection />
-          <Contact />
+          <Suspense fallback={<div className="h-screen flex items-center justify-center text-[10px] uppercase tracking-widest text-[#8a817c] animate-pulse">Loading modules...</div>}>
+            <Hero />
+            <About />
+            <ResearchFocus />
+            {/* Animated Transition Separator */}
+            <div className="w-full flex items-center justify-center py-12 md:py-16 opacity-60 relative z-20">
+              <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
+              <div className="w-2.5 h-2.5 rounded-full border border-orange-500 bg-orange-highlight/20 mx-4 animate-pulse shadow-[0_0_10px_rgba(255,90,9,0.5)]" />
+              <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
+            </div>
+            <InteractiveLab />
+            <Publications />
+            <Projects />
+            <GrantsAndAwards />
+            <KaggleSection />
+            <Notes />
+            <ArchivedFieldNotes />
+            <SwarmSection />
+            <Contact />
+          </Suspense>
         </main>
 
         <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
@@ -648,17 +683,17 @@ export default function App() {
               <div className="flex flex-col gap-4 flex-grow">
                 <span className="text-[#fcfaf7] tracking-[0.4em] font-bold">© {new Date().getFullYear()} George Okello.</span>
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 gap-y-1 text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-[#8a817c]/50 font-mono tracking-wider text-[7.5px] leading-relaxed">
                     <button 
                       onClick={() => setShowCredentials(!showCredentials)}
-                      className="text-orange-highlight hover:opacity-80 transition-opacity font-bold tracking-wider cursor-pointer uppercase text-[7px]"
+                      className="text-orange-highlight hover:opacity-80 active:opacity-50 transition-opacity font-bold tracking-wider cursor-pointer uppercase text-[7px] p-2 -m-2"
                     >
                       {showCredentials ? '[close_baselines.log]' : '[query_baselines.log]'}
                     </button>
-                    <span className="text-[#8a817c]/20 select-none">•</span>
+                    <span className="text-[#8a817c]/20 select-none hidden md:inline">•</span>
                     <button 
                       onClick={() => setShowHUD(!showHUD)}
-                      className="hover:text-orange-highlight transition-colors font-bold tracking-wider cursor-pointer uppercase text-[7px]"
+                      className="hover:text-orange-highlight active:text-orange-highlight active:opacity-50 transition-colors font-bold tracking-wider cursor-pointer uppercase text-[7px] p-2 -m-2"
                     >
                       {showHUD ? '[close_subroutines.sys]' : '[subterranean_subroutines.sys]'}
                     </button>
@@ -675,12 +710,14 @@ export default function App() {
                       className="overflow-hidden w-full max-w-xl text-left"
                     >
                       <div className="bg-[#121110] text-[#fcfaf7] font-mono text-[9px] md:text-[10px] p-4 rounded-lg border border-white/5 space-y-2.5 shadow-2xl relative">
-                        <div className="absolute top-3 right-3 text-[7.5px] text-[#8a817c] tracking-widest uppercase">
-                          acc: verified
-                        </div>
-                        <div className="text-[#8a817c] flex items-center gap-2 uppercase tracking-widest text-[8px] mb-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-orange-highlight animate-pulse" />
-                          SYS.ACCREDITATIONS // CROSS-DOMAIN BASELINES & EXPERIMENTATION LOGS
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 mb-2">
+                          <div className="text-[#8a817c] flex items-start md:items-center gap-2 uppercase tracking-widest text-[8px] leading-relaxed">
+                            <span className="w-1.5 h-1.5 rounded-full bg-orange-highlight animate-pulse shrink-0 mt-1 md:mt-0" />
+                            <span>SYS.ACCREDITATIONS // CROSS-DOMAIN BASELINES & EXPERIMENTATION LOGS</span>
+                          </div>
+                          <div className="text-[7.5px] text-[#8a817c] tracking-widest uppercase shrink-0">
+                            acc: verified
+                          </div>
                         </div>
                         <div className="border-t border-white/10 my-2" />
                         
@@ -768,7 +805,7 @@ export default function App() {
                     setInvertMode(false);
                     setShowHUD(false);
                   }}
-                  className={`hover:text-orange-highlight transition-colors uppercase tracking-widest text-[8px] border px-1.5 py-0.5 rounded cursor-pointer ${
+                  className={`hover:text-orange-highlight active:scale-95 active:opacity-50 transition-all uppercase tracking-widest text-[8px] border px-3 py-2 -my-2 rounded cursor-pointer ${
                     neonMode ? 'border-[#39ff14]/25' : 'border-[#1a1a1a]/15'
                   }`}
                 >
@@ -821,7 +858,7 @@ export default function App() {
                 <span>ESC to reset / close</span>
                 <button 
                   onClick={() => setIsTerminalActive(true)}
-                  className="text-orange-highlight hover:underline cursor-pointer uppercase font-bold tracking-wider"
+                  className="text-orange-highlight hover:underline active:opacity-50 transition-opacity cursor-pointer uppercase font-bold tracking-wider p-2 -m-2"
                 >
                   [open_cli]
                 </button>
@@ -831,18 +868,31 @@ export default function App() {
         </AnimatePresence>
 
         {/* Translucent Floating Terminal CLI Button */}
-        <motion.button
-          onClick={() => setIsTerminalActive(true)}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="fixed bottom-8 left-6 md:left-8 z-40 font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] text-[#1a1a1a] hover:text-white px-4 py-3 border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group"
-          aria-label="Open Terminal CLI"
-        >
-          <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
-          <span className="font-bold">[_terminal_cli]</span>
-        </motion.button>
+        <div className="fixed bottom-8 left-6 md:left-8 z-40 flex items-center gap-4">
+          <motion.button
+            onClick={() => setIsTerminalActive(true)}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white px-5 py-3.5 min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group"
+            aria-label="Open Terminal CLI"
+          >
+            <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
+            <span className="font-bold">[_terminal_cli]</span>
+          </motion.button>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1 }}
+            className="hidden md:flex items-center gap-1.5 font-mono text-[9px] text-[#8a817c]/50 uppercase tracking-widest select-none pointer-events-none"
+          >
+            <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">CMD</span>
+            <span>+</span>
+            <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">K</span>
+          </motion.div>
+        </div>
       </motion.div>
     </div>
   );

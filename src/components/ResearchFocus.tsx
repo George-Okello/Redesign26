@@ -108,7 +108,7 @@ export function ResearchFocus() {
         </div>
 
         {/* Dynamic Card Container */}
-        <div 
+        <motion.div 
           ref={containerRef}
           className="relative h-[450px] md:h-[700px] w-full mt-10 flex justify-center perspective-1000 items-center md:items-end md:pb-12"
           {...revealProps}
@@ -167,6 +167,8 @@ export function ResearchFocus() {
                     <img 
                       src={domain.bgImage} 
                       alt={domain.title}
+                      loading="lazy"
+                      decoding="async"
                       className={`w-full h-full object-cover transition-all duration-700 mix-blend-lighten ${isExpanded ? 'opacity-80 scale-105' : 'opacity-60'}`}
                     />
                     <div className={`absolute inset-0 transition-opacity duration-700 ${isExpanded ? 'bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-[#0a0a0a]/90' : 'bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-[#0a0a0a]/80'}`}></div>
@@ -221,7 +223,7 @@ export function ResearchFocus() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
