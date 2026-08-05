@@ -734,6 +734,22 @@ export function TerminalMode({ onExit }: TerminalModeProps) {
         type = 'success';
         break;
 
+      case 'ascii':
+        resultOutput = (
+          <pre className="font-mono text-[6px] sm:text-[8px] md:text-[10px] text-orange-highlight leading-tight whitespace-pre">
+{`   _____                           _                
+  / ____|                         | |               
+ | |  __   ___   ___   _ __  __ _ | |__    ___  ___ 
+ | | |_ | / _ \\ / _ \\ | '__|/ _\` || '_ \\  / _ \\/ __|
+ | |__| ||  __/| (_) || |  | (_| || |_) ||  __/\\__ \\
+  \\_____| \\___| \\___/ |_|   \\__, ||_.__/  \\___||___/
+                             __/ |                  
+                            |___/                   `}
+          </pre>
+        );
+        type = 'ascii';
+        break;
+
       case 'glitch':
         setIsGlitching(true);
         setTimeout(() => setIsGlitching(false), 2500);

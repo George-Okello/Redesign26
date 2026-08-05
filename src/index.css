@@ -41,6 +41,7 @@ html {
 .gravity-active button,
 .gravity-active .magnetic-interactive {
   display: inline-block;
+  will-change: transform;
   animation: gravityDrift var(--drift-duration, 8s) ease-in-out infinite alternate !important;
   animation-delay: var(--drift-delay, 0s) !important;
 }

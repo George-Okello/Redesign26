@@ -5,6 +5,7 @@ import { NetworkBackground } from './components/NetworkBackground';
 import { ScrollToTop } from './components/ScrollToTop';
 import { FooterGlobe } from './components/FooterGlobe';
 import { CustomCursor } from './components/CustomCursor';
+import { ParticleStreamCanvas } from "./components/ParticleStreamCanvas";
 import { DramaticIntro } from './components/DramaticIntro';
 import { GlitchEffect } from './components/GlitchEffect';
 import { SmoothScroll } from './components/SmoothScroll';
@@ -13,6 +14,7 @@ import { AudioProvider } from './utils/AudioProvider';
 import { TerminalMode } from './components/TerminalMode';
 import { MagneticWrapper } from './components/MagneticWrapper';
 import { ResearchFocus } from './components/ResearchFocus';
+import { InitialLoader } from './components/InitialLoader';
 import { ParallaxSection } from './components/ParallaxSection';
 
 // Lazy loaded heavy components
@@ -299,162 +301,6 @@ function NoiseOverlay() {
   );
 }
 
-function InitialLoader({ onComplete }: { onComplete: () => void }) {
-  const [subText, setSubText] = useState("Translating brain signals...");
-  const [progress, setProgress] = useState(0);
-  const [hexLine, setHexLine] = useState("");
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    
-    // Non-linear progress simulation
-    let current = 0;
-    const progressTimer = setInterval(() => {
-      current += Math.random() * 8;
-      if (current >= 100) {
-        current = 100;
-        clearInterval(progressTimer);
-      }
-      setProgress(Math.min(100, Math.floor(current)));
-    }, 150);
-
-    // Rapid hex code generation for "hacker" feel
-    const hexTimer = setInterval(() => {
-      const hex = Array.from({length: 8}, () => 
-        Math.floor(Math.random() * 16).toString(16).toUpperCase()
-      ).join(' ');
-      setHexLine(hex);
-    }, 80);
-
-    const t1 = setTimeout(() => setSubText("Establishing neural links..."), 1000);
-    const t2 = setTimeout(() => setSubText("Calibrating network weights..."), 2000);
-    const t3 = setTimeout(() => setSubText("Bypassing semantic limiters..."), 3000);
-    const t4 = setTimeout(() => setSubText("Accessing complex systems..."), 3800);
-
-    const timer = setTimeout(() => {
-      document.body.style.overflow = 'unset';
-      onComplete();
-    }, 4500);
-    
-    return () => {
-      clearInterval(progressTimer);
-      clearInterval(hexTimer);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(timer);
-      document.body.style.overflow = 'unset';
-    };
-  }, [onComplete]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[300] bg-[#fcfaf7] flex flex-col items-center justify-center pointer-events-auto select-none overflow-hidden"
-    >
-      {/* Tech Grid Background */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-        style={{
-          backgroundImage: `linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          backgroundPosition: 'center center'
-        }} 
-      />
-      
-      {/* Glitch Scanner Line */}
-      <motion.div 
-        animate={{ y: ['-10vh', '110vh'] }}
-        transition={{ duration: 2.5, ease: 'linear', repeat: Infinity }}
-        className="absolute top-0 left-0 right-0 h-[1px] bg-orange-highlight/40 shadow-[0_0_15px_rgba(255,90,9,0.4)] z-0 pointer-events-none"
-      />
-
-      <div className="relative z-10 w-full max-w-sm px-6 flex flex-col items-center">
-        
-        {/* Core Animated Ring */}
-        <div className="relative flex justify-center items-center w-32 h-32 mb-10">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, ease: "linear", repeat: Infinity }}
-            className="absolute inset-0 border-[0.5px] border-[#1a1a1a]/20 rounded-full border-dashed"
-          />
-          <motion.div 
-            animate={{ rotate: -360 }}
-            transition={{ duration: 12, ease: "linear", repeat: Infinity }}
-            className="absolute inset-2 border-[0.5px] border-orange-highlight/30 rounded-full"
-          />
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-            className="absolute inset-4 border-t-2 border-r-2 border-orange-highlight rounded-full opacity-80"
-          />
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
-            className="w-1.5 h-1.5 bg-orange-highlight rounded-full absolute shadow-[0_0_10px_rgba(255,90,9,0.8)]"
-          />
-          <div className="absolute text-[10px] font-mono font-bold tracking-widest text-[#1a1a1a] mt-10">
-            {progress.toString().padStart(3, '0')}%
-          </div>
-        </div>
-
-        {/* Data readout */}
-        <div className="w-full flex justify-between items-end mb-3">
-          <motion.div
-            initial={{ y: 5, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#1a1a1a] flex items-center gap-2"
-          >
-            SYS_BOOT.SEQ
-          </motion.div>
-          <div className="text-[7px] font-mono text-orange-highlight/70 tracking-widest">
-            [ {hexLine} ]
-          </div>
-        </div>
-
-        {/* Segmented Progress Bar */}
-        <div className="w-full flex gap-[2px] h-[3px] relative overflow-hidden">
-           {Array.from({length: 25}).map((_, i) => (
-             <div 
-               key={i} 
-               className={`flex-1 h-full transition-all duration-75 ${progress > (i * 4) ? 'bg-orange-highlight shadow-[0_0_5px_rgba(255,90,9,0.5)]' : 'bg-[#1a1a1a]/10'}`} 
-             />
-           ))}
-        </div>
-        
-        {/* Dynamic Log Text */}
-        <div className="mt-8 w-full flex flex-col items-center">
-          <div className="h-4 overflow-hidden flex justify-center items-center w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={subText}
-                initial={{ y: 10, opacity: 0, filter: "blur(2px)" }}
-                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                exit={{ y: -10, opacity: 0, filter: "blur(2px)" }}
-                transition={{ duration: 0.3 }}
-                className="text-[9px] uppercase tracking-[0.2em] text-[#8a817c] italic font-serif flex items-center gap-2"
-              >
-                <Sparkles className="w-2.5 h-2.5 text-orange-highlight/60" />
-                {subText}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          
-          <div className="mt-6 text-[7px] font-mono text-[#1a1a1a]/30 tracking-widest uppercase flex gap-4">
-             <span>MEM_0x{Math.floor(progress * 2.55).toString(16).padStart(2, '0').toUpperCase()}</span>
-             <span>v_9.4.2</span>
-             <span>SYS_OK</span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [showCredentials, setShowCredentials] = useState(false);
@@ -467,6 +313,7 @@ export default function App() {
   const [neonMode, setNeonMode] = useState(false);
   const [partyMode, setPartyMode] = useState(false);
   const [invertMode, setInvertMode] = useState(false);
+  const [audioMode, setAudioMode] = useState(true);
   const [showHUD, setShowHUD] = useState(false);
 
   useEffect(() => {
@@ -508,6 +355,10 @@ export default function App() {
     if (invertMode) root.classList.add('invert-active');
     else root.classList.remove('invert-active');
   }, [invertMode]);
+
+  useEffect(() => {
+    audio.setMuted(!audioMode);
+  }, [audioMode]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -605,6 +456,7 @@ export default function App() {
       <NoiseOverlay />
       <SmoothScroll />
       <CustomCursor />
+      <ParticleStreamCanvas />
       
       <AnimatePresence>
         {loading && <InitialLoader onComplete={() => setLoading(false)} />}
@@ -653,7 +505,22 @@ export default function App() {
         <NetworkBackground />
         <Header onActivateTerminal={() => setIsTerminalActive(true)} />
         <main className="relative z-10 mx-auto max-w-7xl xl:max-w-[1360px] 2xl:max-w-[1536px] px-6 md:px-12 lg:px-24 pt-32">
-          <Suspense fallback={<div className="h-screen flex items-center justify-center text-[10px] uppercase tracking-widest text-[#8a817c] animate-pulse">Loading modules...</div>}>
+          <Suspense fallback={
+            <div className="h-screen w-full flex flex-col items-center justify-center gap-6">
+              <div className="w-12 h-12 relative animate-spin">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full text-[#1a1a1a]/10">
+                  <circle cx="50" cy="50" r="48" stroke="currentColor" strokeWidth="4" />
+                </svg>
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full text-orange-highlight">
+                  <path d="M50 2 a48 48 0 0 1 48 48" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="text-[10px] uppercase tracking-[0.3em] text-[#1a1a1a] font-bold">Initializing System</div>
+                <div className="text-[8px] uppercase tracking-widest text-[#8a817c] animate-pulse">Precomputing Assets</div>
+              </div>
+            </div>
+          }>
             <Hero />
             <About />
             <ParallaxSection speed={0.04}>
@@ -826,6 +693,7 @@ export default function App() {
 
               <div className="space-y-1.5">
                 {[
+                  { id: "audio", label: "ui_sound_effects", value: audioMode, setter: setAudioMode },
                   { id: "gravity", label: "gravity_override", value: gravityMode, setter: setGravityMode },
                   { id: "neon", label: "cyber_neon_reskin", value: neonMode, setter: setNeonMode },
                   { id: "party", label: "spark_particle_trail", value: partyMode, setter: setPartyMode },
@@ -876,18 +744,20 @@ export default function App() {
 
         {/* Translucent Floating Terminal CLI Button */}
         <div className="fixed bottom-8 left-6 md:left-8 z-40 flex items-center gap-4">
-          <motion.button
-            onClick={() => setIsTerminalActive(true)}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white px-5 py-3.5 min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group"
-            aria-label="Open Terminal CLI"
-          >
-            <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
-            <span className="font-bold">[_terminal_cli]</span>
-          </motion.button>
+          <MagneticWrapper strength={0.3}>
+            <motion.button
+              onClick={() => setIsTerminalActive(true)}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white px-5 py-3.5 min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group magnetic-interactive"
+              aria-label="Open Terminal CLI"
+            >
+              <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
+              <span className="font-bold">[_terminal_cli]</span>
+            </motion.button>
+          </MagneticWrapper>
           
           <motion.div 
             initial={{ opacity: 0, x: -10 }}

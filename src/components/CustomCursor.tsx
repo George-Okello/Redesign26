@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export function CustomCursor() {
+export const CustomCursor = React.memo(function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [shockwaves, setShockwaves] = useState<{ id: number; x: number; y: number; color: string }[]>([]);
@@ -253,4 +253,4 @@ export function CustomCursor() {
       />
     </>
   );
-}
+});

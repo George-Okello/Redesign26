@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export function NetworkBackground() {
+export const NetworkBackground = React.memo(function NetworkBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -151,4 +151,4 @@ export function NetworkBackground() {
       />
     </div>
   );
-}
+});

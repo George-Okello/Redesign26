@@ -8,6 +8,7 @@ import { SwarmSimulation } from './components/SwarmSimulation';
 import { CognitiveBiasSimulation } from './components/CognitiveBiasSimulation';
 import { SuperTextReveal, SuperParagraphReveal } from './components/SuperTextReveal';
 import { ScrambleText } from './components/ScrambleText';
+import { audio } from "./utils/audio";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
@@ -456,9 +457,31 @@ export function About() {
 }
 
 export function InteractiveLab() {
-  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30, externalRef: sectionRef });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      if (latest > 0 && latest < 1) {
+        audio.startAmbient();
+        audio.setAmbientPan((latest - 0.5) * 2);
+      } else {
+        audio.stopAmbient();
+      }
+    });
+    return () => {
+      unsubscribe();
+      audio.stopAmbient();
+    };
+  }, [scrollYProgress]);
+
   return (
     <motion.section 
+      ref={sectionRef}
       id="lab"
       className="py-16 w-full mx-auto max-w-7xl xl:max-w-none"
       {...revealProps}

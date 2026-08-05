@@ -1,7 +1,7 @@
 import { MagneticWrapper } from "./MagneticWrapper";
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-export function SwarmSimulation() {
+export const SwarmSimulation = React.memo(function SwarmSimulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [alignmentWeight, setAlignmentWeight] = useState(1.0);
   const [cohesionWeight, setCohesionWeight] = useState(1.0);
@@ -451,4 +451,4 @@ export function SwarmSimulation() {
       </div>
     </div>
   );
-}
+});
