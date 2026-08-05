@@ -13,6 +13,7 @@ import { AudioProvider } from './utils/AudioProvider';
 import { TerminalMode } from './components/TerminalMode';
 import { MagneticWrapper } from './components/MagneticWrapper';
 import { ResearchFocus } from './components/ResearchFocus';
+import { ParallaxSection } from './components/ParallaxSection';
 
 // Lazy loaded heavy components
 const Hero = lazy(() => import('./sections').then(module => ({ default: module.Hero })));
@@ -655,7 +656,9 @@ export default function App() {
           <Suspense fallback={<div className="h-screen flex items-center justify-center text-[10px] uppercase tracking-widest text-[#8a817c] animate-pulse">Loading modules...</div>}>
             <Hero />
             <About />
-            <ResearchFocus />
+            <ParallaxSection speed={0.04}>
+              <ResearchFocus />
+            </ParallaxSection>
             {/* Animated Transition Separator */}
             <div className="w-full flex items-center justify-center py-12 md:py-16 opacity-60 relative z-20">
               <div className="h-[1px] bg-gradient-to-r from-transparent via-[#1a1a1a]/20 to-transparent w-1/3" />
@@ -664,12 +667,16 @@ export default function App() {
             </div>
             <InteractiveLab />
             <Publications />
-            <Projects />
+            <ParallaxSection speed={0.03}>
+              <Projects />
+            </ParallaxSection>
             <GrantsAndAwards />
             <KaggleSection />
             <Notes />
             <ArchivedFieldNotes />
-            <SwarmSection />
+            <ParallaxSection speed={0.04}>
+              <SwarmSection />
+            </ParallaxSection>
             <Contact />
           </Suspense>
         </main>

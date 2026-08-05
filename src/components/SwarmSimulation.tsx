@@ -7,21 +7,35 @@ export function SwarmSimulation() {
   const [cohesionWeight, setCohesionWeight] = useState(1.0);
   const [separationWeight, setSeparationWeight] = useState(1.5);
 
+  const weightsRef = useRef({ alignment: 1.0, cohesion: 1.0, separation: 1.5 });
+
+  useEffect(() => {
+    weightsRef.current = {
+      alignment: alignmentWeight,
+      cohesion: cohesionWeight,
+      separation: separationWeight
+    };
+  }, [alignmentWeight, cohesionWeight, separationWeight]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let boids: Boid[] = [];
     let animationFrameId: number;
     let shockwave: { x: number, y: number, radius: number, maxRadius: number } | null = null;
     let mousePos: { x: number, y: number } | null = null;
     let isMouseDown = false;
 
-    const numBoids = 150;
+    // Responsive boid count for optimal performance
+    const isMobile = window.innerWidth < 768;
+    const numBoids = isMobile ? 80 : 140;
     const visualRange = 60;
+    const visualRangeSq = visualRange * visualRange; // 3600
+    const separationRangeSq = 400; // 20 * 20
     const maxSpeed = 4.0;
+    const cellSize = visualRange;
 
     class Boid {
       x: number;
@@ -39,41 +53,38 @@ export function SwarmSimulation() {
       }
     }
 
+    let boids: Boid[] = [];
+
     const initBoids = () => {
       boids = [];
+      const width = canvas.width / (window.devicePixelRatio > 1 ? Math.min(window.devicePixelRatio, 2) : 1);
+      const height = canvas.height / (window.devicePixelRatio > 1 ? Math.min(window.devicePixelRatio, 2) : 1);
       for (let i = 0; i < numBoids; i++) {
-        boids.push(new Boid(canvas.width, canvas.height));
+        boids.push(new Boid(width || 800, height || 500));
       }
     };
 
-    const handleCanvasClick = (e: MouseEvent) => {
+    const getCanvasCoords = (clientX: number, clientY: number) => {
       const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const x = (e.clientX - rect.left) * scaleX;
-      const y = (e.clientY - rect.top) * scaleY;
-      
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    };
+
+    const handleCanvasClick = (e: MouseEvent) => {
+      const { x, y } = getCanvasCoords(e.clientX, e.clientY);
       shockwave = { x, y, radius: 0, maxRadius: 300 };
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      mousePos = {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
-      };
+      mousePos = getCanvasCoords(e.clientX, e.clientY);
     };
 
     const handleTouchStart = (e: TouchEvent) => {
       isMouseDown = true;
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
       if (e.touches.length > 0) {
-        const x = (e.touches[0].clientX - rect.left) * scaleX;
-        const y = (e.touches[0].clientY - rect.top) * scaleY;
+        const { x, y } = getCanvasCoords(e.touches[0].clientX, e.touches[0].clientY);
         mousePos = { x, y };
         shockwave = { x, y, radius: 0, maxRadius: 200 };
       }
@@ -81,13 +92,8 @@ export function SwarmSimulation() {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
       if (e.touches.length > 0) {
-        const x = (e.touches[0].clientX - rect.left) * scaleX;
-        const y = (e.touches[0].clientY - rect.top) * scaleY;
-        mousePos = { x, y };
+        mousePos = getCanvasCoords(e.touches[0].clientX, e.touches[0].clientY);
       }
     };
 
@@ -104,43 +110,44 @@ export function SwarmSimulation() {
     const handleMouseDown = () => { isMouseDown = true; };
     const handleMouseUp = () => { isMouseDown = false; };
 
-    const distance = (boid1: { x: number, y: number }, boid2: { x: number, y: number }) => {
-      return Math.sqrt((boid1.x - boid2.x) ** 2 + (boid1.y - boid2.y) ** 2);
-    };
-
-    const drawBoid = (ctx: CanvasRenderingContext2D, boid: Boid) => {
-      const angle = Math.atan2(boid.dy, boid.dx);
-      ctx.translate(boid.x, boid.y);
-      ctx.rotate(angle);
-      
-      ctx.beginPath();
-      ctx.moveTo(10, 0);
-      ctx.lineTo(-5, 5);
-      ctx.lineTo(-3, 0);
-      ctx.lineTo(-5, -5);
-      ctx.closePath();
-      
-      ctx.fillStyle = boid.color;
-      ctx.fill();
-      
-      ctx.rotate(-angle);
-      ctx.translate(-boid.x, -boid.y);
-    };
-
     const resize = () => {
       const parent = canvas.parentElement;
       if (parent) {
-        canvas.width = parent.clientWidth;
-        canvas.height = parent.clientHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = parent.clientWidth;
+        const h = parent.clientHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        ctx.scale(dpr, dpr);
       }
       initBoids();
     };
 
     const draw = () => {
+      const parent = canvas.parentElement;
+      const width = parent ? parent.clientWidth : canvas.width;
+      const height = parent ? parent.clientHeight : canvas.height;
+
       // Trail effect
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.2)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.25)';
+      ctx.fillRect(0, 0, width, height);
+
+      const weights = weightsRef.current;
+
+      // Spatial Grid partitioning for O(N) neighbor searching
+      const cols = Math.max(1, Math.ceil(width / cellSize));
+      const rows = Math.max(1, Math.ceil(height / cellSize));
+      const grid: Boid[][] = Array.from({ length: cols * rows }, () => []);
+
+      for (let i = 0; i < boids.length; i++) {
+        const b = boids[i];
+        const col = Math.min(cols - 1, Math.max(0, Math.floor(b.x / cellSize)));
+        const row = Math.min(rows - 1, Math.max(0, Math.floor(b.y / cellSize)));
+        grid[row * cols + col].push(b);
+      }
+
       if (shockwave) {
         ctx.beginPath();
         ctx.arc(shockwave.x, shockwave.y, shockwave.radius, 0, Math.PI * 2);
@@ -162,43 +169,65 @@ export function SwarmSimulation() {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Draw futuristic quantum gravity web tether lines to nearby boids!
-        boids.forEach(b => {
-          const dist = distance(b, mousePos!);
-          if (dist < 200) {
-            ctx.beginPath();
-            ctx.moveTo(mousePos!.x, mousePos!.y);
+        // Batched quantum gravity web tether lines
+        ctx.beginPath();
+        ctx.strokeStyle = isMouseDown ? 'rgba(244, 63, 94, 0.3)' : 'rgba(14, 165, 233, 0.2)';
+        ctx.lineWidth = isMouseDown ? 1.0 : 0.6;
+
+        const mX = mousePos.x;
+        const mY = mousePos.y;
+        for (let i = 0; i < boids.length; i++) {
+          const b = boids[i];
+          const dx = b.x - mX;
+          const dy = b.y - mY;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 40000) { // 200^2
+            ctx.moveTo(mX, mY);
             ctx.lineTo(b.x, b.y);
-            // Alpha increases as distance decreases
-            const alpha = (1 - dist / 200) * (isMouseDown ? 0.35 : 0.15);
-            ctx.strokeStyle = isMouseDown ? `rgba(244, 63, 94, ${alpha})` : `rgba(14, 165, 233, ${alpha})`;
-            ctx.lineWidth = 0.5 + (1 - dist / 200) * 1.2;
-            ctx.stroke();
           }
-        });
+        }
+        ctx.stroke();
       }
 
-      for (let boid of boids) {
+      for (let i = 0; i < boids.length; i++) {
+        const boid = boids[i];
         boid.color = 'rgba(252, 250, 247, 0.6)';
-        
-        // Cohesion
+
+        // Find neighbors using spatial grid (3x3 cell neighborhood)
+        const bCol = Math.min(cols - 1, Math.max(0, Math.floor(boid.x / cellSize)));
+        const bRow = Math.min(rows - 1, Math.max(0, Math.floor(boid.y / cellSize)));
+
         let centerX = 0, centerY = 0, numNeighbors = 0;
         let moveX = 0, moveY = 0;
         let avgDX = 0, avgDY = 0;
 
-        for (let otherBoid of boids) {
-          if (otherBoid !== boid) {
-            const dist = distance(boid, otherBoid);
-            if (dist < visualRange) {
-              centerX += otherBoid.x;
-              centerY += otherBoid.y;
-              avgDX += otherBoid.dx;
-              avgDY += otherBoid.dy;
-              numNeighbors++;
-            }
-            if (dist < 20) {
-              moveX += boid.x - otherBoid.x;
-              moveY += boid.y - otherBoid.y;
+        const minC = Math.max(0, bCol - 1);
+        const maxC = Math.min(cols - 1, bCol + 1);
+        const minR = Math.max(0, bRow - 1);
+        const maxR = Math.min(rows - 1, bRow + 1);
+
+        for (let r = minR; r <= maxR; r++) {
+          for (let c = minC; c <= maxC; c++) {
+            const cellBoids = grid[r * cols + c];
+            for (let j = 0; j < cellBoids.length; j++) {
+              const other = cellBoids[j];
+              if (other === boid) continue;
+
+              const dx = other.x - boid.x;
+              const dy = other.y - boid.y;
+              const distSq = dx * dx + dy * dy;
+
+              if (distSq < visualRangeSq) {
+                centerX += other.x;
+                centerY += other.y;
+                avgDX += other.dx;
+                avgDY += other.dy;
+                numNeighbors++;
+              }
+              if (distSq < separationRangeSq) {
+                moveX -= dx;
+                moveY -= dy;
+              }
             }
           }
         }
@@ -206,68 +235,97 @@ export function SwarmSimulation() {
         if (numNeighbors > 0) {
           centerX /= numNeighbors;
           centerY /= numNeighbors;
-          boid.dx += (centerX - boid.x) * 0.005 * cohesionWeight;
-          boid.dy += (centerY - boid.y) * 0.005 * cohesionWeight;
+          boid.dx += (centerX - boid.x) * 0.005 * weights.alignment; // using alignment/cohesion factors
+          boid.dy += (centerY - boid.y) * 0.005 * weights.cohesion;
 
           avgDX /= numNeighbors;
           avgDY /= numNeighbors;
-          boid.dx += (avgDX - boid.dx) * 0.05 * alignmentWeight;
-          boid.dy += (avgDY - boid.dy) * 0.05 * alignmentWeight;
+          boid.dx += (avgDX - boid.dx) * 0.05 * weights.alignment;
+          boid.dy += (avgDY - boid.dy) * 0.05 * weights.alignment;
         }
 
-        boid.dx += moveX * 0.05 * separationWeight;
-        boid.dy += moveY * 0.05 * separationWeight;
-        
-        // Interaction
+        boid.dx += moveX * 0.05 * weights.separation;
+        boid.dy += moveY * 0.05 * weights.separation;
+
+        // Interaction with shockwave
         if (shockwave) {
-           const dist = distance(boid, shockwave);
-           if (Math.abs(dist - shockwave.radius) < 30) {
-             boid.dx += (boid.x - shockwave.x) * 0.2;
-             boid.dy += (boid.y - shockwave.y) * 0.2;
-             boid.color = 'rgba(255, 100, 100, 1)';
-           }
+          const dx = boid.x - shockwave.x;
+          const dy = boid.y - shockwave.y;
+          const distSq = dx * dx + dy * dy;
+          const r = shockwave.radius;
+          const minR = r - 30;
+          const maxR = r + 30;
+          if (distSq > minR * minR && distSq < maxR * maxR) {
+            boid.dx += dx * 0.02;
+            boid.dy += dy * 0.02;
+            boid.color = 'rgba(255, 100, 100, 1)';
+          }
         }
 
+        // Interaction with cursor / attraction field
         if (mousePos) {
-           const dist = distance(boid, mousePos);
-           if (dist < 250) {
-             boid.color = `rgba(252, 250, 247, ${1 - dist / 250})`;
-             if (isMouseDown) {
-               // Vortex effect
-               const angle = Math.atan2(boid.y - mousePos.y, boid.x - mousePos.x);
-               boid.dx += Math.cos(angle + Math.PI / 2) * 0.5;
-               boid.dy += Math.sin(angle + Math.PI / 2) * 0.5;
-               boid.dx -= (boid.x - mousePos.x) * 0.02;
-               boid.dy -= (boid.y - mousePos.y) * 0.02;
-             } else {
-               // Gentle attraction
-               boid.dx -= (boid.x - mousePos.x) * 0.002;
-               boid.dy -= (boid.y - mousePos.y) * 0.002;
-             }
-           }
+          const dx = boid.x - mousePos.x;
+          const dy = boid.y - mousePos.y;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < 62500) { // 250^2
+            const dist = Math.sqrt(distSq);
+            boid.color = `rgba(252, 250, 247, ${1 - dist / 250})`;
+            if (isMouseDown) {
+              // Vortex effect
+              const angle = Math.atan2(dy, dx);
+              boid.dx += Math.cos(angle + Math.PI / 2) * 0.5;
+              boid.dy += Math.sin(angle + Math.PI / 2) * 0.5;
+              boid.dx -= dx * 0.02;
+              boid.dy -= dy * 0.02;
+            } else {
+              // Gentle attraction field
+              boid.dx -= dx * 0.002;
+              boid.dy -= dy * 0.002;
+            }
+          }
         }
-        
+
         // Limit speed
-        const speed = Math.sqrt(boid.dx * boid.dx + boid.dy * boid.dy);
-        const currentMaxSpeed = (mousePos && distance(boid, mousePos) < 250 && isMouseDown) ? maxSpeed * 2 : maxSpeed;
-        if (speed > currentMaxSpeed) {
+        const speedSq = boid.dx * boid.dx + boid.dy * boid.dy;
+        const currentMaxSpeed = (mousePos && isMouseDown) ? maxSpeed * 2 : maxSpeed;
+        const maxSpeedSq = currentMaxSpeed * currentMaxSpeed;
+
+        if (speedSq > maxSpeedSq) {
+          const speed = Math.sqrt(speedSq);
           boid.dx = (boid.dx / speed) * currentMaxSpeed;
           boid.dy = (boid.dy / speed) * currentMaxSpeed;
         }
-        
+
         // Keep in bounds
-        const margin = 50;
+        const margin = 40;
         const turnFactor = 0.5;
         if (boid.x < margin) boid.dx += turnFactor;
-        if (boid.x > canvas.width - margin) boid.dx -= turnFactor;
+        if (boid.x > width - margin) boid.dx -= turnFactor;
         if (boid.y < margin) boid.dy += turnFactor;
-        if (boid.y > canvas.height - margin) boid.dy -= turnFactor;
+        if (boid.y > height - margin) boid.dy -= turnFactor;
 
         boid.x += boid.dx;
         boid.y += boid.dy;
-        drawBoid(ctx, boid);
+
+        // Optimized boid shape drawing (No Canvas Matrix stack calls)
+        const curSpeedSq = boid.dx * boid.dx + boid.dy * boid.dy;
+        const invSpeed = curSpeedSq > 0.0001 ? 1 / Math.sqrt(curSpeedSq) : 1;
+        const ux = boid.dx * invSpeed;
+        const uy = boid.dy * invSpeed;
+        const vx = -uy;
+        const vy = ux;
+
+        ctx.beginPath();
+        ctx.moveTo(boid.x + ux * 10, boid.y + uy * 10);
+        ctx.lineTo(boid.x - ux * 5 + vx * 5, boid.y - uy * 5 + vy * 5);
+        ctx.lineTo(boid.x - ux * 3, boid.y - uy * 3);
+        ctx.lineTo(boid.x - ux * 5 - vx * 5, boid.y - uy * 5 - vy * 5);
+        ctx.closePath();
+        ctx.fillStyle = boid.color;
+        ctx.fill();
       }
-      
+
       animationFrameId = requestAnimationFrame(draw);
     };
 
@@ -295,7 +353,7 @@ export function SwarmSimulation() {
       canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', resize);
     };
-  }, [alignmentWeight, cohesionWeight, separationWeight]);
+  }, []);
 
   return (
     <div className="w-full flex flex-col gap-6">

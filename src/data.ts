@@ -23,7 +23,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 14, NO. 3 | AUTUMN 2026",
     focus: "NEURAL SIGNAL PROCESSING",
     description: "Decoding high-fidelity brain-computer interfaces for real-time cognitive monitoring and adaptive learning systems in edge environments.",
-    bgImage: "https://images.unsplash.com/photo-1617791160505-6f00504e3519?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1617791160505-6f00504e3519?q=75&w=800&auto=format&fit=crop",
     icon: BrainCircuit
   },
   {
@@ -32,7 +32,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 15, NO. 1 | WINTER 2026",
     focus: "MULTI-AGENT REINFORCEMENT LEARNING",
     description: "Simulating complex adaptive systems where autonomous agents evolve trust, endogenous hierarchies, and optimal foraging behaviors.",
-    bgImage: "https://images.unsplash.com/photo-1618044733300-9472054094ee?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1618044733300-9472054094ee?q=75&w=800&auto=format&fit=crop",
     icon: Network
   },
   {
@@ -41,7 +41,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 15, NO. 2 | SPRING 2026",
     focus: "BILINGUAL LANGUAGE DYNAMICS",
     description: "Mapping the topology of large language models to understand cross-lingual transfer, cognitive alignment, and conceptual blending.",
-    bgImage: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=75&w=800&auto=format&fit=crop",
     icon: MessageSquare
   },
   {
@@ -50,7 +50,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 15, NO. 4 | SUMMER 2026",
     focus: "INTERPRETABLE & EXPLAINABLE AI",
     description: "Bridging the gap between neural performance and logical constraints to ensure autonomous systems are safe, verifiable, and equitable.",
-    bgImage: "https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=75&w=800&auto=format&fit=crop",
     icon: ShieldCheck
   },
   {
@@ -59,7 +59,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 16, NO. 1 | AUTUMN 2026",
     focus: "ASYNCHRONOUS FEDERATED LEARNING",
     description: "Overcoming infrastructure constraints by developing drift-corrected aggregation algorithms for decentralized edge networks.",
-    bgImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=75&w=800&auto=format&fit=crop",
     icon: Zap
   },
   {
@@ -68,7 +68,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 16, NO. 2 | WINTER 2027",
     focus: "MULTIMODAL MACHINE LEARNING",
     description: "Bridging the gap between neural performance and real-world deployment through constraint-aware evaluation of multimodal sensors.",
-    bgImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=75&w=800&auto=format&fit=crop",
     icon: Eye
   },
   {
@@ -77,7 +77,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 16, NO. 3 | SPRING 2027",
     focus: "CULTURAL PRESERVATION & LLMS",
     description: "Designing natural language systems to decode complex cultural knowledge and preserve indigenous socio-technical heritage.",
-    bgImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=75&w=800&auto=format&fit=crop",
     icon: Library
   },
   {
@@ -86,7 +86,7 @@ export const researchDomains: ResearchDomain[] = [
     issue: "VOLUME 16, NO. 4 | SUMMER 2027",
     focus: "SOCIO-TECHNICAL NLP & EDGE IOT",
     description: "Translating complex meteorological time-series into low-resource conversational insights using offline-resilient edge telemetry.",
-    bgImage: "https://images.unsplash.com/photo-1633412802994-5c058f151b66?q=80&w=1000&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1633412802994-5c058f151b66?q=75&w=800&auto=format&fit=crop",
     icon: Sprout
   }
 ];

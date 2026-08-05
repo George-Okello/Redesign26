@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { SuperTextReveal, SuperParagraphReveal } from './SuperTextReveal';
 import { researchDomains } from '../data';
+import { LazyImage } from './LazyImage';
 
 export function ResearchFocus() {
   const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
@@ -164,11 +165,9 @@ export function ResearchFocus() {
                 <div className={`w-full h-full rounded-xl overflow-hidden shadow-2xl relative bg-[#111] border group flex flex-col transition-colors duration-500 ${isExpanded ? 'border-orange-500/50' : 'border-[#222]/50'}`}>
                   {/* Background Image */}
                   <div className="absolute inset-0 z-0">
-                    <img 
+                    <LazyImage 
                       src={domain.bgImage} 
                       alt={domain.title}
-                      loading="lazy"
-                      decoding="async"
                       className={`w-full h-full object-cover transition-all duration-700 mix-blend-lighten ${isExpanded ? 'opacity-80 scale-105' : 'opacity-60'}`}
                     />
                     <div className={`absolute inset-0 transition-opacity duration-700 ${isExpanded ? 'bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-[#0a0a0a]/90' : 'bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-[#0a0a0a]/80'}`}></div>

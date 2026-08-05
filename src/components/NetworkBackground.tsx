@@ -72,6 +72,7 @@ export function NetworkBackground() {
       
       const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
       const rgb = isNeon ? '57, 255, 20' : '26, 26, 26';
+      const time = Date.now() * 0.001;
       
       for (let i = 0; i < particles.length; i++) {
         particles[i].update(canvas.width, canvas.height);
@@ -79,28 +80,30 @@ export function NetworkBackground() {
         // Check mouse distance
         const dxMouse = particles[i].x - mouse.x;
         const dyMouse = particles[i].y - mouse.y;
-        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
+        const distMouse = Math.sqrt(distMouseSq);
         
         // Draw connections
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const distSq = dx * dx + dy * dy;
           
-          if (dist < 180) {
+          if (distSq < 32400) { // 180^2
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
             // Lines get stronger near the mouse to simulate "attention" or "activation"
             let opacity = 0.08 - dist / 2250;
-            if (distMouse < 200) {
+            if (distMouseSq < 40000) { // 200^2
               opacity += (200 - distMouse) * 0.0005;
             }
             ctx.strokeStyle = `rgba(${rgb}, ${Math.max(0, opacity)})`;
-            ctx.lineWidth = distMouse < 200 ? 1.5 : 0.5;
+            ctx.lineWidth = distMouseSq < 40000 ? 1.5 : 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             
             // Soft curve instead of straight line for organic feel
-            const midX = (particles[i].x + particles[j].x) / 2 + (Math.sin(Date.now() * 0.001 + i) * 10);
-            const midY = (particles[i].y + particles[j].y) / 2 + (Math.cos(Date.now() * 0.001 + j) * 10);
+            const midX = (particles[i].x + particles[j].x) * 0.5 + (Math.sin(time + i) * 10);
+            const midY = (particles[i].y + particles[j].y) * 0.5 + (Math.cos(time + j) * 10);
             
             ctx.quadraticCurveTo(midX, midY, particles[j].x, particles[j].y);
             ctx.stroke();

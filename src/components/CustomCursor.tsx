@@ -1,30 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-interface Spark {
-  id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  color: string;
-  size: number;
-  alpha: number;
-}
-
 export function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [sparks, setSparks] = useState<Spark[]>([]);
   const [shockwaves, setShockwaves] = useState<{ id: number; x: number; y: number; color: string }[]>([]);
 
+  const cursorDotRef = useRef<HTMLDivElement>(null);
+  const cursorRingRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
-      
-      // Check if hovering over clickable elements
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    let animId: number;
+    const mouse = { x: -100, y: -100, targetX: -100, targetY: -100 };
+    const ring = { x: -100, y: -100 };
+    let visible = false;
+
+    type Spark = {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      color: string;
+      size: number;
+      alpha: number;
+    };
+    const sparks: Spark[] = [];
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+
+      if (!visible) {
+        visible = true;
+        setIsVisible(true);
+      }
+
+      // Check hover over interactive elements
       const target = e.target as HTMLElement;
       if (
         target &&
@@ -42,41 +56,26 @@ export function CustomCursor() {
         setIsHovering(false);
       }
 
-      // Party Mode Sparks
+      // Add particle sparks directly to ref array without React re-renders
       const isParty = document.documentElement.classList.contains('party-active') || document.body.classList.contains('party-active');
       const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
 
       if (isParty) {
         const colors = ['#ff5a09', '#39ff14', '#00ffff', '#ff007f', '#ffea00', '#9d00ff'];
-        setSparks((prev) => [
-          ...prev.slice(-40), // Limit total sparks
-          {
-            id: Math.random(),
+        if (sparks.length < 50) {
+          sparks.push({
             x: e.clientX,
             y: e.clientY,
-            vx: (Math.random() - 0.5) * 5,
-            vy: (Math.random() - 0.5) * 5 - 1.5, // slight upward float
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4 - 1.5,
             color: colors[Math.floor(Math.random() * colors.length)],
-            size: Math.random() * 6 + 4,
+            size: Math.random() * 5 + 3,
             alpha: 1.0,
-          },
-          {
-            id: Math.random(),
-            x: e.clientX,
-            y: e.clientY,
-            vx: (Math.random() - 0.5) * 5,
-            vy: (Math.random() - 0.5) * 5 - 1.5,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            size: Math.random() * 6 + 4,
-            alpha: 1.0,
-          },
-        ]);
+          });
+        }
       } else {
-        // Subtle cyber-research trail
-        setSparks((prev) => [
-          ...prev.slice(-20), // Limit total sparks
-          {
-            id: Math.random(),
+        if (sparks.length < 25) {
+          sparks.push({
             x: e.clientX,
             y: e.clientY,
             vx: (Math.random() - 0.5) * 0.5,
@@ -84,8 +83,8 @@ export function CustomCursor() {
             color: isNeon ? '#39ff14' : '#ff5a09',
             size: Math.random() * 2 + 1,
             alpha: 0.5,
-          }
-        ]);
+          });
+        }
       }
     };
 
@@ -93,7 +92,7 @@ export function CustomCursor() {
       const isNeon = document.documentElement.classList.contains('neon-active') || document.body.classList.contains('neon-active');
       const isParty = document.documentElement.classList.contains('party-active') || document.body.classList.contains('party-active');
       
-      let baseColor = 'rgba(255, 90, 9, 0.8)'; // orange-highlight by default
+      let baseColor = 'rgba(255, 90, 9, 0.8)';
       if (isNeon) baseColor = 'rgba(57, 255, 20, 0.8)';
       if (isParty) {
         const colors = ['rgba(255, 90, 9, 0.8)', 'rgba(57, 255, 20, 0.8)', 'rgba(0, 255, 255, 0.8)', 'rgba(255, 0, 127, 0.8)', 'rgba(255, 234, 0, 0.8)', 'rgba(157, 0, 255, 0.8)'];
@@ -108,25 +107,83 @@ export function CustomCursor() {
       }, 1200);
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => {
+      visible = false;
+      setIsVisible(false);
+    };
 
-    window.addEventListener('mousemove', updateMousePosition);
-    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mousedown', handleMouseDown, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseenter', handleMouseEnter);
-    
+
+    // High performance RAF loop updating DOM transforms & canvas rendering directly
+    const updateLoop = () => {
+      mouse.x += (mouse.targetX - mouse.x) * 0.5;
+      mouse.y += (mouse.targetY - mouse.y) * 0.5;
+
+      ring.x += (mouse.targetX - ring.x) * 0.2;
+      ring.y += (mouse.targetY - ring.y) * 0.2;
+
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.transform = `translate3d(${mouse.x - 6}px, ${mouse.y - 6}px, 0)`;
+      }
+      if (cursorRingRef.current) {
+        cursorRingRef.current.style.transform = `translate3d(${ring.x - 16}px, ${ring.y - 16}px, 0)`;
+      }
+
+      // Draw sparks on canvas
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (let i = sparks.length - 1; i >= 0; i--) {
+            const s = sparks[i];
+            s.x += s.vx;
+            s.y += s.vy;
+            s.alpha -= 0.03;
+            s.size *= 0.96;
+
+            if (s.alpha <= 0) {
+              sparks.splice(i, 1);
+              continue;
+            }
+
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, Math.max(0.5, s.size), 0, Math.PI * 2);
+            ctx.fillStyle = s.color;
+            ctx.globalAlpha = Math.max(0, s.alpha);
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(updateLoop);
+    };
+
+    const resizeCanvas = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animId = requestAnimationFrame(updateLoop);
+
     return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
+      cancelAnimationFrame(animId);
+      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseenter', handleMouseEnter);
+      window.removeEventListener('resize', resizeCanvas);
     };
-  }, [isVisible]);
+  }, []);
 
-  // Hide default cursor on desktop, but keep it for touch devices
+  // Hide default cursor on desktop
   useEffect(() => {
-    // Only apply on non-touch devices
     if (window.matchMedia('(pointer: fine)').matches) {
       const style = document.createElement('style');
       style.innerHTML = `
@@ -141,39 +198,21 @@ export function CustomCursor() {
         }
       `;
       document.head.appendChild(style);
-      
       return () => {
         document.head.removeChild(style);
       };
     }
   }, []);
 
-  useEffect(() => {
-    if (sparks.length === 0) return;
-    let animId: number;
-    const decay = () => {
-      setSparks((prevSparks) =>
-        prevSparks
-          .map((s) => ({
-            ...s,
-            x: s.x + s.vx,
-            y: s.y + s.vy,
-            alpha: s.alpha - 0.03,
-            size: s.size * 0.96,
-          }))
-          .filter((s) => s.alpha > 0)
-      );
-      animId = requestAnimationFrame(decay);
-    };
-    animId = requestAnimationFrame(decay);
-    return () => cancelAnimationFrame(animId);
-  }, [sparks.length]);
-
-  if (!isVisible || !window.matchMedia('(pointer: fine)').matches) return null;
+  if (!window.matchMedia('(pointer: fine)').matches) return null;
 
   return (
     <>
-      {/* Click Shockwaves (Over-dramatic ripple effect) */}
+      <canvas 
+        ref={canvasRef} 
+        className="fixed inset-0 pointer-events-none z-[9997]"
+      />
+
       <AnimatePresence>
         {shockwaves.map((wave) => (
           <motion.div
@@ -196,74 +235,21 @@ export function CustomCursor() {
             }}
           />
         ))}
-        {shockwaves.map((wave) => (
-          <motion.div
-            key={`inner-${wave.id}`}
-            initial={{ scale: 0, opacity: 1 }}
-            animate={{ scale: 15, opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="fixed rounded-full pointer-events-none z-[9995]"
-            style={{
-              left: wave.x,
-              top: wave.y,
-              width: '20px',
-              height: '20px',
-              backgroundColor: wave.color,
-              transform: 'translate(-50%, -50%)',
-              mixBlendMode: 'screen',
-              filter: 'blur(10px)'
-            }}
-          />
-        ))}
       </AnimatePresence>
 
-      {/* Particle trail sparks */}
-      {sparks.map((spark) => (
-        <div
-          key={spark.id}
-          className="fixed rounded-full pointer-events-none z-[9997]"
-          style={{
-            left: spark.x,
-            top: spark.y,
-            width: spark.size,
-            height: spark.size,
-            backgroundColor: spark.color,
-            opacity: spark.alpha,
-            transform: 'translate(-50%, -50%)',
-            boxShadow: `0 0 ${spark.size * 1.5}px ${spark.color}`,
-          }}
-        />
-      ))}
-
-      <motion.div
-        className="fixed top-0 left-0 w-3 h-3 rounded-full bg-orange-highlight mix-blend-difference pointer-events-none z-[9999] flex items-center justify-center overflow-hidden"
-        animate={{
-          x: mousePosition.x - 6,
-          y: mousePosition.y - 6,
-          scale: isHovering ? 4 : 1,
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 800,
-          damping: 35,
-          mass: 0.5
-        }}
+      <div
+        ref={cursorDotRef}
+        className={`fixed top-0 left-0 w-3 h-3 rounded-full bg-orange-highlight mix-blend-difference pointer-events-none z-[9999] transition-transform duration-100 ease-out ${
+          isHovering ? 'scale-[4]' : 'scale-100'
+        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        style={{ willChange: 'transform' }}
       />
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-orange-highlight/40 pointer-events-none z-[9998]"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 1,
-          opacity: isHovering ? 0 : 1
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 250,
-          damping: 25,
-          mass: 0.5
-        }}
+      <div
+        ref={cursorRingRef}
+        className={`fixed top-0 left-0 w-8 h-8 rounded-full border border-orange-highlight/40 pointer-events-none z-[9998] transition-opacity duration-150 ease-out ${
+          isHovering ? 'scale-[1.5] opacity-0' : 'scale-100 opacity-100'
+        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        style={{ willChange: 'transform' }}
       />
     </>
   );
