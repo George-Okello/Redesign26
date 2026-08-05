@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { SuperTextReveal, SuperParagraphReveal } from './SuperTextReveal';
 import { researchDomains } from '../data';
 import { LazyImage } from './LazyImage';
-
-const TopologyGraph = lazy(() => import('./TopologyGraph').then(m => ({ default: m.TopologyGraph })));
 
 export function ResearchFocus() {
   const revealProps = useScrollReveal({ threshold: 0.1, yOffset: 30 });
@@ -116,10 +114,6 @@ export function ResearchFocus() {
           className="relative h-[450px] md:h-[700px] w-full mt-10 flex justify-center perspective-1000 items-center md:items-end md:pb-12"
           {...revealProps}
         >
-          <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center text-[9px] uppercase tracking-widest text-[#8a817c]">Loading Topology...</div>}>
-            <TopologyGraph activeNodeIndex={hoveredIndex !== null ? hoveredIndex : expandedIndex} />
-          </Suspense>
-
           {researchDomains.map((domain, index) => {
             const total = researchDomains.length;
             
