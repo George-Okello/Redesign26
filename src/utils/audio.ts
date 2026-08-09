@@ -6,6 +6,9 @@ class AudioManager {
   private ambientOsc: OscillatorNode | null = null;
   private ambientGain: GainNode | null = null;
   private ambientPan: StereoPannerNode | null = null;
+  private noiseSource: AudioBufferSourceNode | null = null;
+  private noiseGain: GainNode | null = null;
+  private noiseFilter: BiquadFilterNode | null = null;
   private _isAmbientPlaying = false;
 
   get isMuted() {
@@ -214,19 +217,48 @@ class AudioManager {
       this.ambientPan = ctx.createStereoPanner();
 
       this.ambientOsc.type = 'sine';
-      this.ambientOsc.frequency.setValueAtTime(60, ctx.currentTime);
-      this.ambientOsc.frequency.linearRampToValueAtTime(65, ctx.currentTime + 5);
+      this.ambientOsc.frequency.setValueAtTime(55, ctx.currentTime);
 
       this.ambientGain.gain.setValueAtTime(0, ctx.currentTime);
-      this.ambientGain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 2);
+      this.ambientGain.gain.linearRampToValueAtTime(0.005, ctx.currentTime + 2);
 
       this.ambientPan.pan.setValueAtTime(0, ctx.currentTime);
 
       this.ambientOsc.connect(this.ambientPan);
       this.ambientPan.connect(this.ambientGain);
       this.ambientGain.connect(ctx.destination);
-
       this.ambientOsc.start();
+
+      // Brown noise for wind/low rumble
+      const bufferSize = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = buffer.getChannelData(0);
+      let lastOut = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        output[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = output[i];
+        output[i] *= 3.5;
+      }
+
+      this.noiseSource = ctx.createBufferSource();
+      this.noiseSource.buffer = buffer;
+      this.noiseSource.loop = true;
+
+      this.noiseFilter = ctx.createBiquadFilter();
+      this.noiseFilter.type = 'lowpass';
+      this.noiseFilter.frequency.setValueAtTime(150, ctx.currentTime);
+      
+      this.noiseGain = ctx.createGain();
+      this.noiseGain.gain.setValueAtTime(0, ctx.currentTime);
+      this.noiseGain.gain.linearRampToValueAtTime(0.015, ctx.currentTime + 3);
+
+      this.noiseSource.connect(this.noiseFilter);
+      this.noiseFilter.connect(this.noiseGain);
+      this.noiseGain.connect(this.ambientPan);
+
+      this.noiseSource.start();
+
       this._isAmbientPlaying = true;
     } catch (e) {}
   }
@@ -235,9 +267,16 @@ class AudioManager {
     if (!this._isAmbientPlaying || !this.ambientGain || !this.ambientOsc) return;
     try {
       const ctx = this.getContext();
+      
       this.ambientGain.gain.cancelScheduledValues(ctx.currentTime);
       this.ambientGain.gain.setValueAtTime(this.ambientGain.gain.value, ctx.currentTime);
       this.ambientGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1);
+      
+      if (this.noiseGain) {
+        this.noiseGain.gain.cancelScheduledValues(ctx.currentTime);
+        this.noiseGain.gain.setValueAtTime(this.noiseGain.gain.value, ctx.currentTime);
+        this.noiseGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1);
+      }
       
       setTimeout(() => {
         if (this.ambientOsc) {
@@ -246,14 +285,47 @@ class AudioManager {
             this.ambientOsc.disconnect();
           } catch(e){}
         }
+        if (this.noiseSource) {
+          try {
+            this.noiseSource.stop();
+            this.noiseSource.disconnect();
+          } catch(e){}
+        }
         this.ambientPan?.disconnect();
         this.ambientGain?.disconnect();
+        this.noiseFilter?.disconnect();
+        this.noiseGain?.disconnect();
         
         this.ambientOsc = null;
         this.ambientPan = null;
         this.ambientGain = null;
+        this.noiseSource = null;
+        this.noiseFilter = null;
+        this.noiseGain = null;
         this._isAmbientPlaying = false;
       }, 1000);
+    } catch (e) {}
+  }
+
+  setAmbientIntensity(scrollProgress: number) {
+    if (!this._isAmbientPlaying || !this.noiseFilter || !this.ambientOsc || !this.noiseGain || !this.ambientGain) return;
+    try {
+      const ctx = this.getContext();
+      
+      const safeProgress = Math.max(0, Math.min(1, scrollProgress));
+      const undulation = Math.sin(safeProgress * Math.PI * 6); // 6 full cycles over the page
+      
+      const filterFreq = 150 + (safeProgress * 300) + (undulation * 40); 
+      this.noiseFilter.frequency.setTargetAtTime(filterFreq, ctx.currentTime, 0.5);
+
+      const oscFreq = 55 + (safeProgress * 20) + (undulation * 2);
+      this.ambientOsc.frequency.setTargetAtTime(oscFreq, ctx.currentTime, 0.5);
+      
+      const noiseVol = 0.015 + (safeProgress * 0.015) + (undulation * 0.005);
+      this.noiseGain.gain.setTargetAtTime(Math.max(0, noiseVol), ctx.currentTime, 0.5);
+
+      const droneVol = 0.005 + (safeProgress * 0.003) - (undulation * 0.001);
+      this.ambientGain.gain.setTargetAtTime(Math.max(0, droneVol), ctx.currentTime, 0.5);
     } catch (e) {}
   }
 

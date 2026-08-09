@@ -1,13 +1,13 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useSpring, useVelocity, useTransform } from 'motion/react';
 import { Menu, X, ArrowRight, Sparkles, Terminal } from 'lucide-react';
 import { NetworkBackground } from './components/NetworkBackground';
 import { ScrollToTop } from './components/ScrollToTop';
 import { FooterGlobe } from './components/FooterGlobe';
 import { CustomCursor } from './components/CustomCursor';
 import { ParticleStreamCanvas } from "./components/ParticleStreamCanvas";
-import { DramaticIntro } from './components/DramaticIntro';
 import { GlitchEffect } from './components/GlitchEffect';
+import { DramaticIntro } from './components/DramaticIntro';
 import { SmoothScroll } from './components/SmoothScroll';
 import { audio } from './utils/audio';
 import { AudioProvider } from './utils/AudioProvider';
@@ -16,6 +16,7 @@ import { MagneticWrapper } from './components/MagneticWrapper';
 import { ResearchFocus } from './components/ResearchFocus';
 import { InitialLoader } from './components/InitialLoader';
 import { ParallaxSection } from './components/ParallaxSection';
+import { ScannerLine } from './components/ScannerLine';
 
 // Lazy loaded heavy components
 const Hero = lazy(() => import('./sections').then(module => ({ default: module.Hero })));
@@ -40,7 +41,7 @@ const RESEARCH_QUESTIONS = [
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
-  { label: "Publications", href: "#research" },
+  { label: "Publications", href: "#publications" },
   { label: "Simulations", href: "#lab" },
   { label: "Implementations", href: "#projects" },
   { label: "Contact", href: "#contact" }
@@ -172,7 +173,8 @@ function Header({ onActivateTerminal }: HeaderProps) {
               <div key={link.label}>
                 <MagneticWrapper>
                   <a 
-                    href={link.href} 
+                    href={link.href}
+                    data-sound="subtle"
                     className="hover:text-orange-highlight transition-colors duration-300 relative group py-1 block px-2"
                   >
                     <span>{link.label}</span>
@@ -254,6 +256,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
                       <a
                         href={link.href}
                         onClick={() => setIsOpen(false)}
+                        data-sound="subtle"
                         className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
                       >
                         <span className="relative">
@@ -289,15 +292,28 @@ function Header({ onActivateTerminal }: HeaderProps) {
 }
 
 function NoiseOverlay() {
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400
+  });
+  
+  // Baseline is 0.035, jumps to 0.12+ on fast scroll
+  const opacity = useTransform(smoothVelocity, [-2500, 0, 2500], [0.15, 0.035, 0.15]);
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-[200] h-full w-full opacity-[0.035] mix-blend-overlay">
+    <motion.div 
+      className="pointer-events-none fixed inset-0 z-[200] h-full w-full mix-blend-overlay"
+      style={{ opacity }}
+    >
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 h-full w-full">
         <filter id="noiseFilter">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch" />
         </filter>
         <rect width="100%" height="100%" filter="url(#noiseFilter)" />
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
@@ -449,7 +465,7 @@ export default function App() {
   });
 
   return (
-    <div className="relative min-h-screen bg-[#fcfaf7] selection:bg-[#1a1a1a]/10 overflow-x-hidden text-[#1a1a1a]">
+    <div className="relative min-h-screen bg-[#F6F4F0] selection:bg-[#111418]/10 overflow-x-hidden text-[#111418]">
       <AudioProvider />
       <DramaticIntro />
       <GlitchEffect />
@@ -457,6 +473,7 @@ export default function App() {
       <SmoothScroll />
       <CustomCursor />
       <ParticleStreamCanvas />
+      <ScannerLine />
       
       <AnimatePresence>
         {loading && <InitialLoader onComplete={() => setLoading(false)} />}

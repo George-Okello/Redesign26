@@ -466,8 +466,9 @@ export function CognitiveBiasSimulation() {
     });
     observer.observe(canvas);
 
+    let isVisible = true;
     let frame = 0;
-    let animationId: number;
+    let animationId: number | null = null;
 
     const paths = [
       [ {x: 18, y: 16}, {x: 32, y: 25}, {x: 45, y: 20}, {x: 50, y: 50}, {x: 65, y: 25}, {x: 82, y: 25} ],
@@ -538,6 +539,7 @@ export function CognitiveBiasSimulation() {
     };
 
     const draw = () => {
+      if (!isVisible) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
 
@@ -674,10 +676,27 @@ export function CognitiveBiasSimulation() {
       animationId = requestAnimationFrame(draw);
     };
     
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (!isVisible) {
+          isVisible = true;
+          draw();
+        }
+      } else {
+        isVisible = false;
+        if (animationId !== null) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+      }
+    }, { threshold: 0 });
+    intersectionObserver.observe(canvas);
+
     draw();
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId !== null) cancelAnimationFrame(animationId);
       observer.disconnect();
+      intersectionObserver.disconnect();
     };
   }, [currentModel]);
 
@@ -689,11 +708,12 @@ export function CognitiveBiasSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animId: number;
+    let animId: number | null = null;
     let offset = 0;
+    let isVisible = true;
 
     const drawWave = () => {
-      if (!canvas || !ctx) return;
+      if (!isVisible || !canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 1.8;
@@ -742,8 +762,27 @@ export function CognitiveBiasSimulation() {
       animId = requestAnimationFrame(drawWave);
     };
 
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (!isVisible) {
+          isVisible = true;
+          drawWave();
+        }
+      } else {
+        isVisible = false;
+        if (animId !== null) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      }
+    }, { threshold: 0 });
+    intersectionObserver.observe(canvas);
+
     drawWave();
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      if (animId !== null) cancelAnimationFrame(animId);
+      intersectionObserver.disconnect();
+    };
   }, [activeBias, inputs.alphaWave, inputs.betaWave, inputs.taskComplexity]);
 
   return (

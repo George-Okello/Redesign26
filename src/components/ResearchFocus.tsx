@@ -90,7 +90,7 @@ export function ResearchFocus() {
 
   return (
     <section 
-      id="research" 
+      id="core-domains" 
       className="py-24 md:py-32 px-4 md:px-8 border-t border-[#1a1a1a]/10 bg-[#f4f2ee] overflow-hidden scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto">

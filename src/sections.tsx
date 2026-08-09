@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring, useInView } from 'motion/react';
 import confetti from 'canvas-confetti';
-import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp, Globe, Cpu, Layers, Wifi, BookOpen, Palette } from 'lucide-react';
+import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, ArrowDown, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp, Globe, Cpu, Layers, Wifi, BookOpen, Palette } from 'lucide-react';
 import { publications, industryProjects, awards, AwardItem } from './data';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import { SwarmSimulation } from './components/SwarmSimulation';
@@ -126,11 +126,11 @@ export function Hero() {
       subtitle: "Computational simulation of code-switching using multilingual BERT representations.",
       currentFocus: {
         title: "Neural Trajectories",
-        desc: "Continuous transitions in representational space"
+        desc: "Continuous transitions in space"
       },
       selectedInquiry: {
         title: "Switch Costs",
-        desc: "Symmetric control demands across languages"
+        desc: "Symmetric control demands"
       }
     },
     {
@@ -139,11 +139,11 @@ export function Hero() {
       subtitle: "Evaluating LSTM-augmented DQNs in visually occluded working memory tasks.",
       currentFocus: {
         title: "Observation Noise",
-        desc: "Resilience in partially observable environments"
+        desc: "Resilience in partial environments"
       },
       selectedInquiry: {
         title: "Memory Capacity",
-        desc: "Temporal credit assignment under constraints"
+        desc: "Temporal credit assignment"
       }
     },
     {
@@ -152,11 +152,11 @@ export function Hero() {
       subtitle: "Developing culturally robust facial expression recognition architectures.",
       currentFocus: {
         title: "Cultural Fairness",
-        desc: "Mitigating demographic bias in emotion AI"
+        desc: "Mitigating demographic bias"
       },
       selectedInquiry: {
         title: "Attention Fusion",
-        desc: "Multi-scale features for expression nuances"
+        desc: "Multi-scale expression nuances"
       }
     },
     {
@@ -165,76 +165,11 @@ export function Hero() {
       subtitle: "Simulating loss aversion, anchoring, and optimism in a multi-armed bandit problem.",
       currentFocus: {
         title: "Cognitive Biases",
-        desc: "Loss aversion, anchoring, and confirmation bias"
+        desc: "Loss aversion & anchoring"
       },
       selectedInquiry: {
         title: "Exploration Strategies",
-        desc: "How optimism bias accelerates learning"
-      }
-    },
-    {
-      topPill: "Multi-Agent Systems",
-      question: "How do social hierarchies and trust naturally emerge in AI populations?",
-      subtitle: "Computational modelling of trust dynamics using multi-agent reinforcement learning.",
-      currentFocus: {
-        title: "Emergent Social Structures",
-        desc: "Decentralized interactions forming hierarchies"
-      },
-      selectedInquiry: {
-        title: "Network Constraints",
-        desc: "Role of sparsity and logarithmic growth"
-      }
-    },
-    {
-      topPill: "Federated Learning",
-      question: "How to make Federated Learning equitable in infrastructure-constrained environments?",
-      subtitle: "A framework for improving asynchronous federated learning in resource-constrained networks.",
-      currentFocus: {
-        title: "Infrastructure Resilience",
-        desc: "Addressing loadshedding in Sub-Saharan Africa"
-      },
-      selectedInquiry: {
-        title: "Drift-Corrected Aggregation",
-        desc: "Realigning stale gradients"
-      }
-    },
-    {
-      topPill: "Multimodal Fusion",
-      question: "How does multimodal fusion accuracy hold up under deployment constraints?",
-      subtitle: "Proposing a reporting norm to bridge the gap between multimodal fusion research and MLOps.",
-      currentFocus: {
-        title: "Deployment Vacuum",
-        desc: "Bridging research benchmarks and MLOps"
-      },
-      selectedInquiry: {
-        title: "Constraint-Aware Evaluation",
-        desc: "Measuring accuracy against missing modalities"
-      }
-    },
-    {
-      topPill: "Neuro-Symbolic AI",
-      question: "How to combine fairness and formal verification in neuro-symbolic AI?",
-      subtitle: "A review of neuro-symbolic architectures for verifiable decision-making in high-stakes domains.",
-      currentFocus: {
-        title: "Verifiable Decision-Making",
-        desc: "High-stakes domains like healthcare & finance"
-      },
-      selectedInquiry: {
-        title: "Fairness by Design",
-        desc: "Building safety into the architecture"
-      }
-    },
-    {
-      topPill: "Cultural Preservation",
-      question: "How to preserve indigenous cultural heritage using Large Language Models?",
-      subtitle: "Developing a CHAT-informed conversational agent to preserve the Kenyan traditional game Bano.",
-      currentFocus: {
-        title: "Digital Mediation",
-        desc: "Balancing embodied knowledge and AI"
-      },
-      selectedInquiry: {
-        title: "CHAT Framework",
-        desc: "Evaluating Cultural Preservation Effectiveness"
+        desc: "Optimism accelerating learning"
       }
     }
   ];
@@ -247,9 +182,9 @@ export function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % content.length);
-    }, 5000);
+    }, 6000); // Slower, more elegant pacing
     return () => clearInterval(interval);
-  }, []);
+  }, [content.length]);
 
   return (
     <motion.section 
@@ -258,149 +193,145 @@ export function Hero() {
       whileInView="visible"
       viewport={{ once: true }}
       variants={staggerContainer}
-      className="min-h-[100vh] flex flex-col items-center justify-center pt-20 relative w-full"
+      className="min-h-[90vh] flex flex-col justify-center pt-24 pb-12 relative w-full"
     >
-      <motion.div variants={fadeUp} className="mb-6">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIdx}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-2 bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 px-4 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-bold text-[#8a817c]"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-highlight animate-pulse" />
-            {content[currentIdx].topPill}
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-      
-      <div className="min-h-[160px] md:min-h-[220px] flex flex-col items-center justify-center mb-8 max-w-5xl w-full">
-        <AnimatePresence mode="wait">
-          <motion.h1 
-            key={currentIdx}
-            initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -15, filter: "blur(8px)" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl md:text-7xl lg:text-[5.5rem] font-serif italic font-light tracking-tight leading-[1.05] text-[#1a1a1a] text-center"
-          >
-            {content[currentIdx].question}
-          </motion.h1>
-        </AnimatePresence>
-      </div>
-      
-      <div className="min-h-[60px] max-w-2xl w-full mb-16 text-center">
-        <AnimatePresence mode="wait">
-          <motion.p 
-            key={currentIdx}
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(4px)" }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-base md:text-lg text-[#4a4a4a] leading-relaxed font-light"
-          >
-            {content[currentIdx].subtitle}
-          </motion.p>
-        </AnimatePresence>
-      </div>
-
-      {/* Bottom Cards */}
-      <div className="absolute -bottom-16 left-[50%] w-screen -translate-x-1/2 flex justify-between items-end pb-0 px-4 md:px-12 lg:px-20 pointer-events-none z-20">
-        {/* Current Focus - Left */}
-        <MagneticCard maxRotate={6} maxTranslate={10} className="hidden md:block w-72 lg:w-80 relative overflow-hidden pointer-events-auto">
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-2xl border border-[#1a1a1a]/10 rounded-xl transition-all duration-500 hover:shadow-[0_16px_60px_rgba(0,0,0,0.06)] hover:border-[#1a1a1a]/20" />
-          
-          {/* Tech Pattern */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-xl" style={{ backgroundImage: 'radial-gradient(#1a1a1a 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-          
-          {/* Corner Crosshairs */}
-          <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#1a1a1a]/30" />
-          <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#1a1a1a]/30" />
-          <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#1a1a1a]/30" />
-          <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#1a1a1a]/30" />
-
-          {/* Accent Line */}
-          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10 shadow-[2px_0_10px_rgba(255,90,9,0.3)] rounded-l-xl" />
-          
-          <div className="relative p-8 text-left h-full flex flex-col justify-center">
-            <div className="flex justify-between items-start mb-6">
-              <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-orange-highlight flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-orange-highlight rounded-full animate-pulse" />
-                Current Focus
-              </p>
-              <span className="text-[7px] font-mono tracking-widest text-[#1a1a1a]/30">OP_01</span>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 w-full items-center">
+        
+        {/* Left Column - Large Typography */}
+        <div className="lg:col-span-7 flex flex-col justify-center relative">
+          <motion.div variants={fadeUp} className="mb-6 md:mb-10 flex">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIdx}
-                initial={{ opacity: 0, x: -15, filter: "blur(4px)" }}
-                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, x: 15, filter: "blur(4px)" }}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-3 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-[#1a1a1a]/60"
               >
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2 leading-tight tracking-tight">{content[currentIdx].currentFocus.title}</h3>
-                <p className="text-xs text-[#8a817c] italic leading-relaxed">{content[currentIdx].currentFocus.desc}</p>
+                <span className="w-6 h-[1px] bg-[#1a1a1a]/30" />
+                {content[currentIdx].topPill}
               </motion.div>
             </AnimatePresence>
-          </div>
-        </MagneticCard>
-
-        <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8a817c] text-center w-full md:w-auto absolute left-1/2 -translate-x-1/2 bottom-8 flex flex-col items-center">
-          <span className="mb-6 opacity-60">SCROLL</span>
-          <div className="w-[1px] h-24 bg-gradient-to-b from-[#1a1a1a]/0 via-[#1a1a1a]/10 to-[#1a1a1a]/0 relative overflow-hidden">
-            <motion.div
-              className="w-full h-[150%] bg-gradient-to-b from-orange-highlight/0 via-orange-highlight to-orange-highlight/0 absolute top-0 left-0"
-              initial={{ y: "-100%" }}
-              animate={{ y: "100%" }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
+          </motion.div>
+          
+          <div className="min-h-[180px] md:min-h-[240px] flex flex-col justify-center">
+            <AnimatePresence mode="wait">
+              <motion.h1 
+                key={currentIdx}
+                initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="text-4xl md:text-6xl lg:text-[4.75rem] font-serif tracking-tight leading-[1.08] text-[#1a1a1a]"
+              >
+                {content[currentIdx].question}
+              </motion.h1>
+            </AnimatePresence>
           </div>
         </div>
-
-        {/* Selected Inquiry - Right */}
-        <MagneticCard maxRotate={6} maxTranslate={10} className="hidden md:block w-72 lg:w-80 relative overflow-hidden pointer-events-auto">
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-2xl border border-[#1a1a1a]/10 rounded-xl transition-all duration-500 hover:shadow-[0_16px_60px_rgba(0,0,0,0.06)] hover:border-[#1a1a1a]/20" />
+        
+        {/* Right Column - Refined Details */}
+        <div className="lg:col-span-5 flex flex-col justify-center gap-10 lg:pl-12">
           
-          {/* Tech Pattern */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-xl" style={{ backgroundImage: 'radial-gradient(#1a1a1a 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-          
-          {/* Corner Crosshairs */}
-          <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#1a1a1a]/30" />
-          <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#1a1a1a]/30" />
-          <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#1a1a1a]/30" />
-          <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#1a1a1a]/30" />
-
-          {/* Accent Line */}
-          <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-orange-highlight to-orange-highlight/10 shadow-[-2px_0_10px_rgba(255,90,9,0.3)] rounded-r-xl" />
-          
-          <div className="relative p-8 text-right h-full flex flex-col justify-center">
-            <div className="flex justify-between items-start mb-6 flex-row-reverse">
-              <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-orange-highlight flex items-center gap-2">
-                Selected Inquiry
-                <span className="w-1.5 h-1.5 bg-orange-highlight rounded-full animate-pulse" />
-              </p>
-              <span className="text-[7px] font-mono tracking-widest text-[#1a1a1a]/30">SEQ_A3</span>
-            </div>
+          <div className="min-h-[80px]">
             <AnimatePresence mode="wait">
-              <motion.div
+              <motion.p 
                 key={currentIdx}
-                initial={{ opacity: 0, x: 15, filter: "blur(4px)" }}
-                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, x: -15, filter: "blur(4px)" }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, filter: "blur(4px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(4px)" }}
+                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-base md:text-xl text-[#4a4a4a] leading-relaxed font-light"
               >
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-2 leading-tight tracking-tight">{content[currentIdx].selectedInquiry.title}</h3>
-                <p className="text-xs text-[#8a817c] italic leading-relaxed">{content[currentIdx].selectedInquiry.desc}</p>
-              </motion.div>
+                {content[currentIdx].subtitle}
+              </motion.p>
             </AnimatePresence>
           </div>
-        </MagneticCard>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative">
+            <div className="absolute -left-6 top-0 bottom-0 w-[1px] bg-[#1a1a1a]/10 hidden lg:block" />
+            
+            {/* Current Focus Card */}
+            <div 
+              role="button" 
+              data-sound="expand"
+              className="group relative flex flex-col p-6 border-b lg:border-b-0 lg:border-l border-[#1a1a1a]/10 transition-colors duration-500 hover:bg-[#1a1a1a]/[0.02] cursor-pointer overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-highlight/0 to-orange-highlight/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute left-0 top-0 w-[2px] h-0 bg-orange-highlight group-hover:h-full transition-all duration-500 ease-out" />
+              
+              <span className="text-[9px] uppercase tracking-[0.2em] text-[#8a817c] mb-4 group-hover:text-orange-highlight transition-colors duration-300">
+                Primary Vector
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIdx}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">{content[currentIdx].currentFocus.title}</h3>
+                  <p className="text-xs text-[#8a817c] leading-relaxed">{content[currentIdx].currentFocus.desc}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Selected Inquiry Card */}
+            <div 
+              role="button" 
+              data-sound="expand"
+              className="group relative flex flex-col p-6 border-b lg:border-b-0 lg:border-l border-[#1a1a1a]/10 transition-colors duration-500 hover:bg-[#1a1a1a]/[0.02] cursor-pointer overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-highlight/0 to-orange-highlight/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute left-0 top-0 w-[2px] h-0 bg-[#1a1a1a] group-hover:h-full transition-all duration-500 ease-out" />
+              
+              <span className="text-[9px] uppercase tracking-[0.2em] text-[#8a817c] mb-4 group-hover:text-[#1a1a1a] transition-colors duration-300">
+                Secondary Node
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIdx}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+                >
+                  <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">{content[currentIdx].selectedInquiry.title}</h3>
+                  <p className="text-xs text-[#8a817c] leading-relaxed">{content[currentIdx].selectedInquiry.desc}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+      {/* Premium Circular Scroll Indicator */}
+      <div className="absolute bottom-8 right-0 md:right-8 z-20 flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="w-24 h-24 md:w-32 md:h-32 relative"
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full fill-[#1a1a1a]/60 text-[9px] font-mono uppercase tracking-[0.2em] font-medium">
+            <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
+            <text>
+              <textPath href="#circlePath" startOffset="0%">
+                Scroll to explore • Scroll to explore • 
+              </textPath>
+            </text>
+          </svg>
+        </motion.div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown className="w-4 h-4 md:w-5 md:h-5 text-orange-highlight" />
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   );
@@ -559,8 +490,8 @@ export function Publications() {
 
   return (
     <motion.section 
-      id="research"
-      className="py-24 max-w-4xl"
+      id="publications"
+      className="py-24 max-w-4xl scroll-mt-20"
       {...revealProps}
     >
       <div className="mb-20">

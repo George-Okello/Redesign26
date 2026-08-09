@@ -23,10 +23,11 @@ export const SwarmSimulation = React.memo(function SwarmSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
     let shockwave: { x: number, y: number, radius: number, maxRadius: number } | null = null;
     let mousePos: { x: number, y: number } | null = null;
     let isMouseDown = false;
+    let isVisible = true;
 
     // Responsive boid count for optimal performance
     const isMobile = window.innerWidth < 768;
@@ -126,6 +127,7 @@ export const SwarmSimulation = React.memo(function SwarmSimulation() {
     };
 
     const draw = () => {
+      if (!isVisible) return;
       const parent = canvas.parentElement;
       const width = parent ? parent.clientWidth : canvas.width;
       const height = parent ? parent.clientHeight : canvas.height;
@@ -338,11 +340,30 @@ export const SwarmSimulation = React.memo(function SwarmSimulation() {
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('resize', resize);
+    
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (!isVisible) {
+          isVisible = true;
+          draw();
+        }
+      } else {
+        isVisible = false;
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    }, { threshold: 0 });
+    
+    intersectionObserver.observe(canvas);
+    
     resize();
     draw();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+      intersectionObserver.disconnect();
       canvas.removeEventListener('click', handleCanvasClick);
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
