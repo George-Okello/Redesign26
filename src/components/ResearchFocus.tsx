@@ -189,9 +189,9 @@ export function ResearchFocus() {
                       <div className="flex flex-col justify-center items-center gap-1 text-[7px] md:text-[9px] text-[#b0a8a0] font-sans tracking-widest uppercase border-y border-white/10 py-2">
                         <span>{domain.focus}</span>
                       </div>
-                      <div className={`pt-2 text-left space-y-1 transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
-                        <div className="text-[9px] md:text-[11px] text-orange-400/90 font-serif italic max-w-[90%] leading-relaxed mt-2">
-                          <span className="font-bold text-orange-400 not-italic uppercase text-[8px] md:text-[9px] tracking-wider mr-1">ABSTRACT:</span>
+                      <div className={`pt-4 text-left transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+                        <div className="text-xs md:text-sm text-white/95 font-sans leading-relaxed mt-2 bg-black/40 p-4 rounded-lg border border-white/10 backdrop-blur-md shadow-xl">
+                          <span className="font-bold text-orange-400 uppercase text-[10px] md:text-[11px] tracking-widest block mb-2">ABSTRACT</span>
                           {domain.description}
                         </div>
                       </div>
