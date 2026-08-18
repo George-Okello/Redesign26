@@ -111,7 +111,7 @@ export function ResearchFocus() {
         {/* Dynamic Card Container */}
         <motion.div 
           ref={containerRef}
-          className="relative h-[450px] md:h-[700px] w-full mt-10 flex justify-center perspective-1000 items-center md:items-end md:pb-12"
+          className="relative h-[600px] md:h-[700px] w-full mt-24 md:mt-10 flex justify-center perspective-1000 items-center md:items-end md:pb-12"
           {...revealProps}
         >
           {researchDomains.map((domain, index) => {
@@ -149,7 +149,7 @@ export function ResearchFocus() {
             return (
               <motion.div
                 key={index}
-                className="absolute w-[280px] md:w-[460px] h-[380px] md:h-[580px] cursor-pointer origin-bottom"
+                className="absolute w-[300px] md:w-[460px] h-[460px] md:h-[580px] cursor-pointer origin-bottom"
                 onClick={() => handleCardClick(index)}
                 onMouseEnter={() => isDesktop && setHoveredIndex(index)}
                 onMouseLeave={() => isDesktop && setHoveredIndex(null)}
@@ -179,27 +179,27 @@ export function ResearchFocus() {
                       {Icon && <Icon className={`w-5 h-5 md:w-6 md:h-6 text-white/50 transition-all duration-500 ${isExpanded ? 'text-orange-400 drop-shadow-[0_0_10px_rgba(255,165,0,0.5)]' : ''}`} strokeWidth={1.5} />}
                     </div>
                     {/* Header Top */}
-                    <div className="text-center space-y-4 pt-6 md:pt-4">
-                      <h4 className={`font-serif tracking-wide uppercase leading-tight drop-shadow-xl text-white transition-all duration-500 ${isExpanded ? 'text-4xl md:text-5xl text-orange-50' : 'text-3xl md:text-5xl'}`}>
+                    <div className="text-center space-y-3 md:space-y-4 pt-6 md:pt-4">
+                      <h4 className={`font-serif tracking-wide uppercase leading-tight drop-shadow-xl text-white transition-all duration-500 ${isExpanded ? 'text-3xl md:text-5xl text-orange-50' : 'text-2xl md:text-5xl'}`}>
                         {domain.title}
                       </h4>
                       <div className="text-[9px] md:text-[11px] font-sans tracking-widest uppercase text-white/80 font-bold mb-2">
                         {domain.series}
                       </div>
-                      <div className="flex flex-col justify-center items-center gap-1 text-[7px] md:text-[9px] text-[#b0a8a0] font-sans tracking-widest uppercase border-y border-white/10 py-2">
+                      <div className="flex flex-col justify-center items-center gap-1 text-[7px] md:text-[9px] text-[#b0a8a0] font-sans tracking-widest uppercase border-y border-white/10 py-1.5 md:py-2">
                         <span>{domain.focus}</span>
                       </div>
-                      <div className={`pt-4 text-left transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
-                        <div className="text-xs md:text-sm text-white/95 font-sans leading-relaxed mt-2 bg-black/40 p-4 rounded-lg border border-white/10 backdrop-blur-md shadow-xl">
-                          <span className="font-bold text-orange-400 uppercase text-[10px] md:text-[11px] tracking-widest block mb-2">ABSTRACT</span>
+                      <div className={`pt-2 md:pt-4 text-left transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+                        <div className="text-[11px] md:text-sm text-white/95 font-sans leading-relaxed mt-1 md:mt-2 bg-black/40 p-3 md:p-4 rounded-lg border border-white/10 backdrop-blur-md shadow-xl overflow-y-auto max-h-[170px] md:max-h-[220px] custom-scrollbar">
+                          <span className="font-bold text-orange-400 uppercase text-[9px] md:text-[11px] tracking-widest block mb-1 md:mb-2">ABSTRACT</span>
                           {domain.description}
                         </div>
                       </div>
                     </div>
 
                     {/* Bottom Area */}
-                    <div className="flex flex-col justify-end h-full w-full pb-2">
-                      <div className="flex justify-between items-end mb-3">
+                    <div className="flex flex-col justify-end h-full w-full pb-1 md:pb-2">
+                      <div className="flex justify-between items-end mb-2 md:mb-3">
                         {/* Feature badge */}
                         <div className={`border text-[7px] md:text-[9px] font-sans px-2.5 py-1 rounded-sm uppercase tracking-widest backdrop-blur-md transition-colors duration-500 ${isExpanded ? 'bg-orange-500/20 border-orange-500/50 text-orange-300' : 'bg-[#111]/80 border-orange-500/30 text-orange-400'}`}>
                           {isExpanded ? 'Full Abstract' : 'Featured Issue'}
