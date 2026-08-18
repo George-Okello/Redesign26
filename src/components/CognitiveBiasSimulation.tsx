@@ -454,9 +454,15 @@ export function CognitiveBiasSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let cssWidth = canvas.offsetWidth;
+    let cssHeight = canvas.offsetHeight;
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      cssWidth = canvas.offsetWidth;
+      cssHeight = canvas.offsetHeight;
+      canvas.width = cssWidth * dpr;
+      canvas.height = cssHeight * dpr;
+      ctx.scale(dpr, dpr);
     };
     resize();
     
@@ -492,10 +498,10 @@ export function CognitiveBiasSimulation() {
     }> = [];
 
     const drawLine = (ctx: CanvasRenderingContext2D, n1: Node, n2: Node, isInput: boolean) => {
-      const x1 = (n1.x / 100) * canvas.width;
-      const y1 = (n1.y / 100) * canvas.height;
-      const x2 = (n2.x / 100) * canvas.width;
-      const y2 = (n2.y / 100) * canvas.height;
+      const x1 = (n1.x / 100) * cssWidth;
+      const y1 = (n1.y / 100) * cssHeight;
+      const x2 = (n2.x / 100) * cssWidth;
+      const y2 = (n2.y / 100) * cssHeight;
 
       const cp1x = x1 + (x2 - x1) * 0.45;
       const cp1y = y1;
@@ -540,7 +546,7 @@ export function CognitiveBiasSimulation() {
 
     const draw = () => {
       if (!isVisible) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
       frame++;
 
       if (activeBias === 'cooperative_networks') {
@@ -552,10 +558,10 @@ export function CognitiveBiasSimulation() {
           for (let idx = 0; idx < path.length - 1; idx++) {
             const pt1 = path[idx];
             const pt2 = path[idx+1];
-            const x1 = (pt1.x / 100) * canvas.width;
-            const y1 = (pt1.y / 100) * canvas.height;
-            const x2 = (pt2.x / 100) * canvas.width;
-            const y2 = (pt2.y / 100) * canvas.height;
+            const x1 = (pt1.x / 100) * cssWidth;
+            const y1 = (pt1.y / 100) * cssHeight;
+            const x2 = (pt2.x / 100) * cssWidth;
+            const y2 = (pt2.y / 100) * cssHeight;
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
           }
@@ -574,8 +580,8 @@ export function CognitiveBiasSimulation() {
           { x: 68, y: 60 }
         ];
         auxNodes.forEach(node => {
-          const nx = (node.x / 100) * canvas.width;
-          const ny = (node.y / 100) * canvas.height;
+          const nx = (node.x / 100) * cssWidth;
+          const ny = (node.y / 100) * cssHeight;
           ctx.beginPath();
           ctx.arc(nx, ny, 3.5, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
@@ -607,8 +613,8 @@ export function CognitiveBiasSimulation() {
           }
 
           particles.push({
-            x: (selectedPath[0].x / 100) * canvas.width,
-            y: (selectedPath[0].y / 100) * canvas.height,
+            x: (selectedPath[0].x / 100) * cssWidth,
+            y: (selectedPath[0].y / 100) * cssHeight,
             path: selectedPath,
             currentSegment: 0,
             segmentProgress: 0,
@@ -637,10 +643,10 @@ export function CognitiveBiasSimulation() {
           const startNode = p.path[p.currentSegment];
           const endNode = p.path[p.currentSegment + 1];
           
-          const startX = (startNode.x / 100) * canvas.width;
-          const startY = (startNode.y / 100) * canvas.height;
-          const endX = (endNode.x / 100) * canvas.width;
-          const endY = (endNode.y / 100) * canvas.height;
+          const startX = (startNode.x / 100) * cssWidth;
+          const startY = (startNode.y / 100) * cssHeight;
+          const endX = (endNode.x / 100) * cssWidth;
+          const endY = (endNode.y / 100) * cssHeight;
           
           p.x = startX + (endX - startX) * p.segmentProgress;
           p.y = startY + (endY - startY) * p.segmentProgress;
@@ -697,24 +703,43 @@ export function CognitiveBiasSimulation() {
       if (animationId !== null) cancelAnimationFrame(animationId);
       observer.disconnect();
       intersectionObserver.disconnect();
+      observer.disconnect();
     };
   }, [currentModel]);
 
   // EEG Wave scope animation effect
   useEffect(() => {
     if (activeBias !== 'eeg_cognitive_load') return;
+    
     const canvas = eegCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let cssWidth = canvas.offsetWidth;
+    let cssHeight = canvas.offsetHeight;
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      cssWidth = canvas.offsetWidth;
+      cssHeight = canvas.offsetHeight;
+      canvas.width = cssWidth * dpr;
+      canvas.height = cssHeight * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    const observer = new ResizeObserver(() => {
+      resize();
+    });
+    observer.observe(canvas);
+
     let animId: number | null = null;
     let offset = 0;
     let isVisible = true;
 
+
     const drawWave = () => {
       if (!isVisible || !canvas || !ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 1.8;
       ctx.beginPath();
@@ -723,13 +748,13 @@ export function CognitiveBiasSimulation() {
       const betaAmp = inputs.betaWave * 0.12;
       const complexity = inputs.taskComplexity;
 
-      for (let x = 0; x < canvas.width; x++) {
+      for (let x = 0; x < cssWidth; x++) {
         // Superimpose Alpha (slow, resting state) and Beta (fast, alert processing)
         const yAlpha = Math.sin(x * 0.035 - offset * 0.04) * alphaAmp;
         const yBeta = Math.sin(x * 0.22 + offset * 0.25) * betaAmp * (0.4 + complexity / 100);
         const jitter = (Math.random() - 0.5) * (complexity * 0.08);
 
-        const y = (canvas.height / 2) + yAlpha + yBeta + jitter;
+        const y = (cssHeight / 2) + yAlpha + yBeta + jitter;
 
         if (x === 0) {
           ctx.moveTo(x, y);
@@ -743,20 +768,20 @@ export function CognitiveBiasSimulation() {
       ctx.strokeStyle = 'rgba(16, 185, 129, 0.06)';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(0, canvas.height * 0.25);
-      ctx.lineTo(canvas.width, canvas.height * 0.25);
-      ctx.moveTo(0, canvas.height * 0.5);
-      ctx.lineTo(canvas.width, canvas.height * 0.5);
-      ctx.moveTo(0, canvas.height * 0.75);
-      ctx.lineTo(canvas.width, canvas.height * 0.75);
+      ctx.moveTo(0, cssHeight * 0.25);
+      ctx.lineTo(cssWidth, cssHeight * 0.25);
+      ctx.moveTo(0, cssHeight * 0.5);
+      ctx.lineTo(cssWidth, cssHeight * 0.5);
+      ctx.moveTo(0, cssHeight * 0.75);
+      ctx.lineTo(cssWidth, cssHeight * 0.75);
       ctx.stroke();
 
       // Animated green laser scan pointer
-      const scanX = (offset * 1.5) % canvas.width;
+      const scanX = (offset * 1.5) % cssWidth;
       ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
-      ctx.fillRect(scanX - 15, 0, 15, canvas.height);
+      ctx.fillRect(scanX - 15, 0, 15, cssHeight);
       ctx.fillStyle = '#10b981';
-      ctx.fillRect(scanX, 0, 2, canvas.height);
+      ctx.fillRect(scanX, 0, 2, cssHeight);
 
       offset++;
       animId = requestAnimationFrame(drawWave);
@@ -782,6 +807,7 @@ export function CognitiveBiasSimulation() {
     return () => {
       if (animId !== null) cancelAnimationFrame(animId);
       intersectionObserver.disconnect();
+      observer.disconnect();
     };
   }, [activeBias, inputs.alphaWave, inputs.betaWave, inputs.taskComplexity]);
 

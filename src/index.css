@@ -164,3 +164,8 @@ h1, h2, h3, h4, h5, h6 {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
 }
+
+body.nav-open .scroll-to-top-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -80,13 +80,16 @@ function Header({ onActivateTerminal }: HeaderProps) {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.touchAction = 'none'; // Lock scroll on touch devices
+      document.body.classList.add('nav-open');
     } else {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
+      document.body.classList.remove('nav-open');
     }
     return () => {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
+      document.body.classList.remove('nav-open');
     };
   }, [isOpen]);
 
@@ -257,7 +260,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
                         href={link.href}
                         onClick={() => setIsOpen(false)}
                         data-sound="subtle"
-                        className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
+                        className="text-xl sm:text-2xl md:text-4xl font-display uppercase tracking-widest sm:tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
                       >
                         <span className="relative">
                           {link.label}
@@ -287,6 +290,35 @@ function Header({ onActivateTerminal }: HeaderProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Translucent Floating Terminal CLI Button */}
+      <div className={`fixed bottom-8 left-6 md:left-8 z-30 flex items-center gap-4 ${isOpen ? 'hidden md:flex' : ''}`}>
+        <MagneticWrapper strength={0.3}>
+          <motion.button
+            onClick={onActivateTerminal}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white w-12 h-12 md:w-auto md:h-auto md:px-5 md:py-3.5 md:min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group magnetic-interactive"
+            aria-label="Open Terminal CLI"
+          >
+            <Terminal className="w-4 h-4 md:w-3.5 md:h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
+            <span className="font-bold hidden md:inline">[_terminal_cli]</span>
+          </motion.button>
+        </MagneticWrapper>
+        
+        <motion.div 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1 }}
+          className="hidden md:flex items-center gap-1.5 font-mono text-[9px] text-[#8a817c]/50 uppercase tracking-widest select-none pointer-events-none"
+        >
+          <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">CMD</span>
+          <span>+</span>
+          <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">K</span>
+        </motion.div>
+      </div>
     </>
   );
 }
@@ -758,35 +790,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Translucent Floating Terminal CLI Button */}
-        <div className="fixed bottom-8 left-6 md:left-8 z-40 flex items-center gap-4">
-          <MagneticWrapper strength={0.3}>
-            <motion.button
-              onClick={() => setIsTerminalActive(true)}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white px-5 py-3.5 min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group magnetic-interactive"
-              aria-label="Open Terminal CLI"
-            >
-              <Terminal className="w-3.5 h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
-              <span className="font-bold">[_terminal_cli]</span>
-            </motion.button>
-          </MagneticWrapper>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1 }}
-            className="hidden md:flex items-center gap-1.5 font-mono text-[9px] text-[#8a817c]/50 uppercase tracking-widest select-none pointer-events-none"
-          >
-            <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">CMD</span>
-            <span>+</span>
-            <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">K</span>
-          </motion.div>
-        </div>
       </motion.div>
     </div>
   );
