@@ -240,7 +240,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
           >
             {/* Ambient Background Watermark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none select-none z-0">
-              <span className="font-serif italic text-[18vw]">Okello</span>
+              <span className="font-display font-bold uppercase tracking-tighter text-[18vw]">Okello</span>
             </div>
 
             <div className="relative z-10 flex flex-col justify-center flex-grow max-w-lg mx-auto w-full">
@@ -257,7 +257,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
                         href={link.href}
                         onClick={() => setIsOpen(false)}
                         data-sound="subtle"
-                        className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
+                        className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] hover:text-orange-highlight active:text-orange-highlight active:scale-[0.98] transition-all flex items-center justify-between group py-2"
                       >
                         <span className="relative">
                           {link.label}

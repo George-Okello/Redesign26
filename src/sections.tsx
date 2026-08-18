@@ -362,7 +362,7 @@ export function About() {
         <motion.div variants={fadeUp} className="flex flex-col md:flex-row gap-4 md:gap-8 group">
           <div className="md:w-1/4 text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] pt-2 transition-colors group-hover:text-[#1a1a1a]">Principle I</div>
           <div className="md:w-3/4 text-[#1a1a1a]">
-            <h3 className="text-2xl font-serif italic mb-3">Intelligence is Collective</h3>
+            <h3 className="text-2xl font-display uppercase tracking-widest font-bold mb-3">Intelligence is Collective</h3>
             <p className="text-sm text-[#4a4a4a] leading-relaxed">Cognition does not exist in a vacuum. It is fundamentally networked, emerging from the dynamic interplay between agents, environments, and information streams.</p>
           </div>
         </motion.div>
@@ -370,7 +370,7 @@ export function About() {
         <motion.div variants={fadeUp} className="flex flex-col md:flex-row gap-4 md:gap-8 group">
           <div className="md:w-1/4 text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] pt-2 transition-colors group-hover:text-[#1a1a1a]">Principle II</div>
           <div className="md:w-3/4 text-[#1a1a1a]">
-            <h3 className="text-2xl font-serif italic mb-3">Complexity from Simplicity</h3>
+            <h3 className="text-2xl font-display uppercase tracking-widest font-bold mb-3">Complexity from Simplicity</h3>
             <p className="text-sm text-[#4a4a4a] leading-relaxed">Rather than top-down control, robust systems emerge from simple, localized rules. By understanding these micro-interactions, we can predict and model macro-level phenomena.</p>
           </div>
         </motion.div>
@@ -378,7 +378,7 @@ export function About() {
         <motion.div variants={fadeUp} className="flex flex-col md:flex-row gap-4 md:gap-8 group">
           <div className="md:w-1/4 text-[10px] uppercase tracking-[0.2em] font-bold text-[#8a817c] pt-2 transition-colors group-hover:text-[#1a1a1a]">Principle III</div>
           <div className="md:w-3/4 text-[#1a1a1a]">
-            <h3 className="text-2xl font-serif italic mb-3">Constraints Breed Robustness</h3>
+            <h3 className="text-2xl font-display uppercase tracking-widest font-bold mb-3">Constraints Breed Robustness</h3>
             <p className="text-sm text-[#4a4a4a] leading-relaxed">Whether in resource-constrained federated learning networks or the human brain under cognitive load, limitation is the primary catalyst for adaptive, intelligent behavior.</p>
           </div>
         </motion.div>
@@ -421,7 +421,7 @@ export function InteractiveLab() {
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
           <ScrambleText text="04 / Interactive Lab" />
         </h2>
-        <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
+        <h3 className="text-3xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Cognitive Architecture Sandbox" delay={0.1} />
         </h3>
         <p className="text-sm text-[#4a4a4a] leading-relaxed max-w-2xl">
@@ -452,7 +452,7 @@ export function SwarmSection() {
         <h2 className="text-[10px] font-bold text-[#1a1a1a] mb-4 uppercase tracking-[0.3em]">
           <ScrambleText text="05 / Current Obsession" />
         </h2>
-        <h3 className="text-3xl font-serif italic text-[#1a1a1a] mb-4">
+        <h3 className="text-3xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] mb-4">
           <SuperTextReveal text="Swarm Intelligence Flocking Simulation" delay={0.1} />
         </h3>
         <p className="text-sm text-[#4a4a4a] max-w-2xl leading-relaxed">
@@ -516,7 +516,7 @@ export function Publications() {
                 className="cursor-pointer"
                 onClick={() => toggleExpand(i)}
               >
-                <h3 className="text-3xl md:text-4xl font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300 leading-tight">
+                <h3 className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300 leading-tight">
                   {pub.hookQuestion}
                 </h3>
                 <div className="flex items-center gap-3 mt-5 mb-4">
@@ -870,7 +870,7 @@ export function Projects() {
                 <span className="inline-block text-[10px] uppercase tracking-widest font-extrabold text-orange-highlight mb-2">
                   {activeProject.organization}
                 </span>
-                <h3 className="text-2xl md:text-3xl font-serif italic text-[#1a1a1a] tracking-tight">
+                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] tracking-tight">
                   {activeProject.title}
                 </h3>
               </div>
@@ -992,7 +992,7 @@ export function KaggleSection() {
               </div>
             </div>
 
-            <h3 className="text-3xl md:text-4xl font-serif italic text-[#fcfaf7] mb-4 tracking-tight">
+            <h3 className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold text-[#fcfaf7] mb-4 tracking-tight">
               <SuperTextReveal text="Data Science & Competitions" />
             </h3>
             
@@ -1035,7 +1035,7 @@ export function Notes() {
            <span className="text-[10px] uppercase tracking-[0.2em] text-[#1a1a1a] mb-4 font-bold border-b border-[#1a1a1a]/10 pb-2 w-fit">
              <SuperTextReveal text="Research Compendium" />
            </span>
-           <h3 className="text-3xl md:text-4xl font-serif italic mb-6 leading-tight text-[#1a1a1a]">
+           <h3 className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold mb-6 leading-tight text-[#1a1a1a]">
              <SuperTextReveal text="Mini Research Reports, Issue No. 1" delay={0.1} />
            </h3>
            <p className="text-[#4a4a4a] text-sm leading-relaxed mb-8">
@@ -1053,7 +1053,7 @@ export function Notes() {
         </div>
         <div className="lg:col-span-8 bg-[#f5f2ed] border border-[#1a1a1a]/10 p-2 md:p-6 aspect-[4/3] lg:aspect-auto lg:h-[650px] shadow-sm relative overflow-hidden flex flex-col items-center justify-center">
            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-              <span className="font-serif italic text-9xl">No. 1</span>
+              <span className="font-display uppercase tracking-widest font-bold text-9xl">No. 1</span>
            </div>
            <iframe 
              allow="clipboard-write" 
@@ -1107,7 +1107,7 @@ export function ArchivedFieldNotes() {
               <div className="absolute inset-0 bg-[#1a1a1a]/[0.03] -m-4 p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-serif italic text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
+                  <h4 className="text-lg font-display uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
                     {note.title}
                   </h4>
                 </div>
@@ -1553,7 +1553,7 @@ export function GrantsAndAwards() {
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#1a1a1a] font-bold block mb-3">
             <SuperTextReveal text="Institutional Recognition" />
           </span>
-          <h2 className="text-4xl md:text-5xl font-serif italic text-[#1a1a1a] tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] tracking-tight">
             <SuperTextReveal text="Grants & Awards" delay={0.1} />
           </h2>
         </div>
@@ -1604,7 +1604,7 @@ export function GrantsAndAwards() {
                         </span>
                       )}
                     </span>
-                    <h3 className={`text-xl font-serif italic transition-colors duration-300 ${
+                    <h3 className={`text-xl font-display uppercase tracking-widest font-bold transition-colors duration-300 ${
                       isActive ? 'text-orange-highlight' : 'text-[#1a1a1a] group-hover:text-orange-highlight'
                     }`}>
                       {award.title}
@@ -1699,7 +1699,7 @@ export function GrantsAndAwards() {
                     Research Context Hub
                   </span>
                 </div>
-                <h3 className="text-2xl font-serif italic text-[#1a1a1a] leading-tight">
+                <h3 className="text-2xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] leading-tight">
                   {activeAward.title}
                 </h3>
                 <p className="text-xs text-[#8a817c] font-sans mt-1">
@@ -1801,7 +1801,7 @@ export function Contact() {
       <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#1a1a1a] mb-8">
         <ScrambleText text="Contact" />
       </h2>
-      <h2 className="text-4xl md:text-5xl font-serif italic font-light tracking-tight text-[#1a1a1a] mb-8">
+      <h2 className="text-4xl md:text-5xl font-display uppercase tracking-widest font-bold font-light tracking-tight text-[#1a1a1a] mb-8">
         <SuperTextReveal text="Let's explore questions together." delay={0.1} />
       </h2>
       <p className="text-sm text-[#4a4a4a] leading-relaxed mb-8">

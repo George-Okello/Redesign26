@@ -99,7 +99,7 @@ export function ResearchFocus() {
             <h2 className="text-sm font-mono tracking-[0.2em] text-[#8a817c] uppercase mb-4">
               <SuperTextReveal text="03 / Core Domains" />
             </h2>
-            <h3 className="text-3xl md:text-5xl font-serif italic text-[#1a1a1a] max-w-2xl">
+            <h3 className="text-3xl md:text-5xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] max-w-2xl">
               <SuperTextReveal text="Research Focus & Directions" delay={0.1} />
             </h3>
           </div>
