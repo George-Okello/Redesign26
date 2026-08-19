@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring, useInView } from 'motion/react';
 import confetti from 'canvas-confetti';
-import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, ArrowDown, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp, Globe, Cpu, Layers, Wifi, BookOpen, Palette } from 'lucide-react';
+import { ArrowUpRight, Github, Linkedin, Mail, Database, ArrowRight, ArrowDown, GraduationCap, Award, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Target, Lightbulb, HelpCircle, ArrowUp, Globe, Cpu, Layers, Wifi, BookOpen, Palette, MapPin, Zap } from 'lucide-react';
 import { publications, industryProjects, awards, AwardItem } from './data';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import { SwarmSimulation } from './components/SwarmSimulation';
@@ -519,11 +519,22 @@ export function Publications() {
                 <h3 className="text-3xl md:text-4xl font-display uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300 leading-tight">
                   {pub.hookQuestion}
                 </h3>
-                <div className="flex items-center gap-3 mt-5 mb-4">
+                <div className="flex items-center gap-3 mt-5 mb-4 flex-wrap">
                   <div className="w-8 h-[1px] bg-orange-highlight/50"></div>
                   <p className="text-[10px] uppercase tracking-widest text-[#8a817c] font-bold">
                     By {pub.authors} • {pub.year}
                   </p>
+                  {pub.presentation && (
+                    <div className="flex items-center gap-3 ml-auto group/badge py-1.5 px-3 hover:bg-white/80 rounded border border-transparent hover:border-[#1a1a1a]/10 hover:shadow-sm transition-all duration-500">
+                      <div className="hidden sm:block w-8 h-[1px] bg-gradient-to-r from-transparent to-[#1a1a1a]/20 group-hover/badge:to-orange-highlight/50 transition-colors duration-500" />
+                      <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] text-[#8a817c] group-hover/badge:text-[#1a1a1a] transition-colors duration-500">
+                        Presented at <span className="font-bold text-[#1a1a1a] group-hover/badge:text-orange-highlight transition-colors duration-300">{pub.presentation}</span>
+                      </span>
+                      <div className="w-2 h-2 border border-orange-highlight/60 flex items-center justify-center transform rotate-45 group-hover/badge:rotate-180 group-hover/badge:bg-orange-highlight group-hover/badge:border-orange-highlight transition-all duration-700 ease-in-out">
+                        <div className="w-[1.5px] h-[1.5px] bg-orange-highlight group-hover/badge:bg-white transition-colors duration-300" />
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <p className="text-base md:text-lg text-[#4a4a4a] leading-relaxed font-serif">
                   {pub.summary}
@@ -1105,16 +1116,16 @@ export function ArchivedFieldNotes() {
               className="border-t border-[#1a1a1a]/10 pt-6 group relative h-full"
             >
               <div className="absolute inset-0 bg-[#1a1a1a]/[0.03] -m-4 p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-4">
                   <h4 className="text-lg font-display uppercase tracking-widest font-bold text-[#1a1a1a] group-hover:text-orange-highlight transition-colors duration-300">
                     {note.title}
                   </h4>
                 </div>
-                <p className="text-sm text-[#4a4a4a] leading-relaxed mb-6">
+                <p className="text-sm text-[#4a4a4a] leading-relaxed mb-6 flex-grow">
                   {note.content}
                 </p>
-                <p className="text-[10px] uppercase tracking-widest font-bold text-[#8a817c]">
+                                <p className="text-[10px] uppercase tracking-widest font-bold text-[#8a817c]">
                   {note.date}
                 </p>
               </div>
@@ -1127,365 +1138,60 @@ export function ArchivedFieldNotes() {
 }
 
 function AgriIoTTokenVisualizer() {
-  const iotNode = { x: 50, y: 100 };
-  const llmAdvisor = { x: 150, y: 100 };
-  const farmerWallet = { x: 250, y: 100 };
-
   return (
-    <svg className="w-full h-full max-w-[300px]" viewBox="0 0 300 200">
-      {/* Dashed connector lines */}
-      <line
-        x1={iotNode.x}
-        y1={iotNode.y}
-        x2={llmAdvisor.x}
-        y2={llmAdvisor.y}
-        stroke="#1a1a1a"
-        strokeWidth="1"
-        strokeOpacity="0.15"
-        strokeDasharray="4 4"
-      />
-      <line
-        x1={llmAdvisor.x}
-        y1={llmAdvisor.y}
-        x2={farmerWallet.x}
-        y2={farmerWallet.y}
-        stroke="#1a1a1a"
-        strokeWidth="1"
-        strokeOpacity="0.15"
-        strokeDasharray="4 4"
-      />
+    <svg viewBox="0 0 200 150" className="w-full h-full">
+      <defs>
+        <linearGradient id="tokenGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#10b981" />
+          <stop offset="100%" stopColor="#059669" />
+        </linearGradient>
+      </defs>
+      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+        <circle cx="50" cy="75" r="20" fill="none" stroke="#1a1a1a" strokeWidth="2" strokeDasharray="4 4" />
+        <motion.circle cx="50" cy="75" r="5" fill="#ff5a09" 
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }} />
+        <text x="50" y="110" textAnchor="middle" className="text-[7.5px] font-mono uppercase font-bold fill-[#1a1a1a]">IoT Node</text>
 
-      {/* IoT Soil Telemetry Pulse (Left -> Center) */}
-      <motion.circle
-        r="3.5"
-        fill="#39ff14"
-        initial={{ cx: iotNode.x, cy: iotNode.y }}
-        animate={{
-          cx: [iotNode.x, llmAdvisor.x],
-          cy: [iotNode.y, llmAdvisor.y],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+        <circle cx="150" cy="75" r="20" fill="url(#tokenGrad)" />
+        <text x="150" y="78" textAnchor="middle" className="text-[10px] font-mono font-bold fill-white">TKN</text>
+        <text x="150" y="110" textAnchor="middle" className="text-[7.5px] font-mono uppercase font-bold fill-[#1a1a1a]">Reward Pool</text>
 
-      {/* LLM Advisory Pulse (Center -> Right) */}
-      <motion.circle
-        r="3"
-        fill="#ff5a09"
-        initial={{ cx: llmAdvisor.x, cy: llmAdvisor.y }}
-        animate={{
-          cx: [llmAdvisor.x, farmerWallet.x],
-          cy: [llmAdvisor.y, farmerWallet.y],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: 1.5,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Reward Tokens floating (Center -> Right, curved/bouncy float) */}
-      <motion.circle
-        r="4.5"
-        fill="#ffea00"
-        stroke="#ff5a09"
-        strokeWidth="0.5"
-        initial={{ cx: llmAdvisor.x, cy: llmAdvisor.y }}
-        animate={{
-          cx: [llmAdvisor.x, (llmAdvisor.x + farmerWallet.x) / 2, farmerWallet.x],
-          cy: [llmAdvisor.y, llmAdvisor.y - 30, farmerWallet.y],
-          scale: [0.5, 1.2, 0.8],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: 2.2,
-          ease: "easeOut"
-        }}
-      />
-      <motion.circle
-        r="3"
-        fill="#ffea00"
-        stroke="#ff5a09"
-        strokeWidth="0.5"
-        initial={{ cx: llmAdvisor.x, cy: llmAdvisor.y }}
-        animate={{
-          cx: [llmAdvisor.x, (llmAdvisor.x + farmerWallet.x) / 2, farmerWallet.x],
-          cy: [llmAdvisor.y, llmAdvisor.y + 20, farmerWallet.y],
-          scale: [0.5, 1, 0.6],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: 2.4,
-          ease: "easeOut"
-        }}
-      />
-
-      {/* IoT Sensor Node (Left) */}
-      <g>
-        <motion.circle
-          cx={iotNode.x}
-          cy={iotNode.y}
-          r="10"
-          fill="#fff"
-          stroke="#1a1a1a"
-          strokeWidth="1.5"
-          whileHover={{ scale: 1.15 }}
-        />
-        {/* Tiny solar panel on top */}
-        <rect x={iotNode.x - 7} y={iotNode.y - 14} width="14" height="4" fill="#1a1a1a" rx="1" />
-        <line x1={iotNode.x} y1={iotNode.y - 10} x2={iotNode.x} y2={iotNode.y} stroke="#1a1a1a" strokeWidth="1" />
-        <circle cx={iotNode.x} cy={iotNode.y} r="3" fill="#39ff14" />
-        {/* Radiating wave */}
-        <motion.circle
-          cx={iotNode.x}
-          cy={iotNode.y}
-          r="16"
-          fill="none"
-          stroke="#39ff14"
-          strokeWidth="0.5"
-          initial={{ opacity: 0.6, scale: 0.6 }}
-          animate={{ opacity: 0, scale: 1.4 }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeOut"
-          }}
-        />
-      </g>
-
-      {/* LLM Advisory Core Node (Center) */}
-      <g>
-        <motion.rect
-          x={llmAdvisor.x - 15}
-          y={llmAdvisor.y - 15}
-          width="30"
-          height="30"
-          rx="6"
-          fill="#1a1a1a"
-          stroke="#ff5a09"
-          strokeWidth="1.5"
-          animate={{
-            strokeWidth: [1.5, 2.5, 1.5],
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <text x={llmAdvisor.x} y={llmAdvisor.y + 3} textAnchor="middle" className="text-[7px] font-mono font-bold fill-white">
-          AGRI-LLM
-        </text>
-      </g>
-
-      {/* Farmer Wallet/App Node (Right) */}
-      <g>
-        <motion.circle
-          cx={farmerWallet.x}
-          cy={farmerWallet.y}
-          r="12"
-          fill="#fff"
-          stroke="#1a1a1a"
-          strokeWidth="1.5"
-          whileHover={{ scale: 1.15 }}
-        />
-        {/* Draw tiny mobile device inside */}
-        <rect x={farmerWallet.x - 4} y={farmerWallet.y - 7} width="8" height="14" rx="1" fill="#1a1a1a" />
-        <rect x={farmerWallet.x - 3} y={farmerWallet.y - 5} width="6" height="10" fill="#fff" />
-        {/* Tiny golden token on device */}
-        <circle cx={farmerWallet.x} cy={farmerWallet.y} r="2" fill="#ffea00" stroke="#ff5a09" strokeWidth="0.5" />
-      </g>
-
-      {/* Labels */}
-      <text x={iotNode.x} y={iotNode.y + 26} textAnchor="middle" className="text-[7px] font-mono font-bold uppercase tracking-wider fill-[#1a1a1a]">
-        IoT Solar Sensor
-      </text>
-      <text x={iotNode.x} y={iotNode.y + 34} textAnchor="middle" className="text-[5.5px] font-mono fill-[#8a817c]">
-        Soil, NPK, H2O
-      </text>
-
-      <text x={llmAdvisor.x} y={llmAdvisor.y - 22} textAnchor="middle" className="text-[7px] font-mono font-bold uppercase tracking-wider fill-[#1a1a1a]">
-        Cognitive Advisory
-      </text>
-      <text x={llmAdvisor.x} y={llmAdvisor.y + 26} textAnchor="middle" className="text-[5.5px] font-mono fill-[#8a817c]">
-        Prompt-to-Action
-      </text>
-
-      <text x={farmerWallet.x} y={farmerWallet.y + 26} textAnchor="middle" className="text-[7px] font-mono font-bold uppercase tracking-wider fill-[#1a1a1a]">
-        Farmer Wallet App
-      </text>
-      <text x={farmerWallet.x} y={farmerWallet.y + 34} textAnchor="middle" className="text-[5.5px] font-mono fill-emerald-600 font-bold">
-        +AgriTokens Earned
-      </text>
+        <motion.path d="M 75 75 L 125 75" stroke="#1a1a1a" strokeWidth="1.5" strokeDasharray="4 4" 
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, repeat: Infinity }} />
+      </motion.g>
     </svg>
   );
 }
 
 function AgriDecisionVisualizer() {
-  const satellite = { x: 40, y: 100 };
-  const engine = { x: 150, y: 100 };
-  const gate = { x: 260, y: 100 };
+  const satellite = {x: 40, y: 70};
+  const engine = {x: 100, y: 70};
+  const gate = {x: 160, y: 70};
 
   return (
-    <svg className="w-full h-full max-w-[300px]" viewBox="0 0 300 200">
-      {/* Background connection paths */}
-      <path
-        d={`M ${satellite.x} ${satellite.y} L ${engine.x} ${engine.y} L ${gate.x} ${gate.y}`}
-        fill="none"
-        stroke="#1a1a1a"
-        strokeWidth="1.2"
-        strokeOpacity="0.1"
-      />
+    <svg viewBox="0 0 200 150" className="w-full h-full">
+      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+        {/* Nodes */}
+        <circle cx={satellite.x} cy={satellite.y} r="10" fill="#fff" stroke="#1a1a1a" strokeWidth="1.5" />
+        <rect x={satellite.x - 14} y={satellite.y - 2} width="4" height="4" fill="#ff5a09" stroke="#1a1a1a" strokeWidth="0.5" />
+        <rect x={satellite.x + 10} y={satellite.y - 2} width="4" height="4" fill="#ff5a09" stroke="#1a1a1a" strokeWidth="0.5" />
 
-      {/* Atmospheric climatology data waves */}
-      <motion.path
-        d="M 10 70 Q 25 80 40 70 T 70 70"
-        fill="none"
-        stroke="#ff5a09"
-        strokeWidth="1"
-        strokeOpacity="0.4"
-        animate={{
-          d: [
-            "M 10 70 Q 25 80 40 70 T 70 70",
-            "M 10 80 Q 25 70 40 80 T 70 80",
-            "M 10 70 Q 25 80 40 70 T 70 70"
-          ]
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.path
-        d="M 10 130 Q 25 140 40 130 T 70 130"
-        fill="none"
-        stroke="#ff5a09"
-        strokeWidth="1"
-        strokeOpacity="0.4"
-        animate={{
-          d: [
-            "M 10 130 Q 25 140 40 130 T 70 130",
-            "M 10 120 Q 25 130 40 120 T 70 120",
-            "M 10 130 Q 25 140 40 130 T 70 130"
-          ]
-        }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-      />
-
-      {/* Climatology Data packet flowing (Satellite -> NLP Engine) */}
-      <motion.circle
-        r="4"
-        fill="#ff5a09"
-        initial={{ cx: satellite.x, cy: satellite.y }}
-        animate={{
-          cx: [satellite.x, engine.x],
-          cy: [satellite.y, engine.y],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeIn"
-        }}
-      />
-
-      {/* SMS Packet flowing (NLP Engine -> SMS Gateway) */}
-      <motion.circle
-        r="3"
-        fill="#1a1a1a"
-        initial={{ cx: engine.x, cy: engine.y }}
-        animate={{
-          cx: [engine.x, gate.x],
-          cy: [engine.y, gate.y],
-          opacity: [0, 1, 1, 0]
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          delay: 1.25,
-          ease: "easeOut"
-        }}
-      />
-
-      {/* Wireless signal expansion from SMS Gateway */}
-      <motion.circle
-        cx={gate.x}
-        cy={gate.y}
-        r="6"
-        fill="none"
-        stroke="#ff5a09"
-        strokeWidth="0.5"
-        initial={{ scale: 0.8, opacity: 0.8 }}
-        animate={{ scale: 3.5, opacity: 0 }}
-        transition={{
-          duration: 2.0,
-          repeat: Infinity,
-          ease: "easeOut"
-        }}
-      />
-      <motion.circle
-        cx={gate.x}
-        cy={gate.y}
-        r="6"
-        fill="none"
-        stroke="#ff5a09"
-        strokeWidth="0.5"
-        initial={{ scale: 0.8, opacity: 0.8 }}
-        animate={{ scale: 3.5, opacity: 0 }}
-        transition={{
-          duration: 2.0,
-          repeat: Infinity,
-          delay: 0.66,
-          ease: "easeOut"
-        }}
-      />
-
-      {/* Satellite Node */}
-      <g transform={`translate(${satellite.x}, ${satellite.y})`}>
-        <circle cx="0" cy="0" r="10" fill="#fff" stroke="#1a1a1a" strokeWidth="1.5" />
-        {/* Draw custom little satellite panel representation */}
-        <rect x="-14" y="-2" width="4" height="4" fill="#ff5a09" stroke="#1a1a1a" strokeWidth="0.5" />
-        <rect x="10" y="-2" width="4" height="4" fill="#ff5a09" stroke="#1a1a1a" strokeWidth="0.5" />
-      </g>
-
-      {/* NLP Translation Engine Node */}
-      <g>
         <rect x={engine.x - 14} y={engine.y - 14} width="28" height="28" rx="6" fill="#1a1a1a" stroke="#ff5a09" strokeWidth="1.5" />
-        <text x={engine.x} y={engine.y + 3} textAnchor="middle" className="text-[7px] font-mono font-bold fill-white">
-          NLP
-        </text>
-        {/* Neural nodes connections around the engine */}
-        <circle cx={engine.x - 22} cy={engine.y} r="2" fill="#ff5a09" />
-        <circle cx={engine.x + 22} cy={engine.y} r="2" fill="#ff5a09" />
-      </g>
+        <text x={engine.x} y={engine.y + 3} textAnchor="middle" className="text-[7px] font-mono font-bold fill-white">NLP</text>
 
-      {/* SMS Broadcast Tower Node */}
-      <g>
         <circle cx={gate.x} cy={gate.y} r="10" fill="#fff" stroke="#1a1a1a" strokeWidth="1.5" />
-        {/* Simple tower representation lines */}
-        <line x1={gate.x} y1={gate.y - 6} x2={gate.x - 4} y2={gate.y + 6} stroke="#1a1a1a" strokeWidth="1" />
-        <line x1={gate.x} y1={gate.y - 6} x2={gate.x + 4} y2={gate.y + 6} stroke="#1a1a1a" strokeWidth="1" />
-        <line x1={gate.x - 3} y1={gate.y + 2} x2={gate.x + 3} y2={gate.y + 2} stroke="#1a1a1a" strokeWidth="0.7" />
-        <circle cx={gate.x} cy={gate.y - 6} r="2" fill="#ff5a09" />
-      </g>
+        
+        {/* Connections */}
+        <motion.line x1={satellite.x+15} y1={satellite.y} x2={engine.x-15} y2={engine.y} stroke="#1a1a1a" strokeWidth="1" strokeDasharray="2 2"
+          animate={{ strokeDashoffset: [-10, 0] }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} />
+        <motion.line x1={engine.x+15} y1={engine.y} x2={gate.x-15} y2={gate.y} stroke="#1a1a1a" strokeWidth="1" strokeDasharray="2 2"
+          animate={{ strokeDashoffset: [-10, 0] }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} />
 
-      {/* Node Labels */}
-      <text x={satellite.x} y={satellite.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">
-        Meteorological Core
-      </text>
-      <text x={engine.x} y={engine.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">
-        Socio-Translation Engine
-      </text>
-      <text x={gate.x} y={gate.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">
-        Cell Broadcast Node
-      </text>
+        {/* Labels */}
+        <text x={satellite.x} y={satellite.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">Meteorological Core</text>
+        <text x={engine.x} y={engine.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">Socio-Translation</text>
+        <text x={gate.x} y={gate.y + 26} textAnchor="middle" className="text-[7.5px] font-mono font-bold tracking-wider uppercase fill-[#1a1a1a]">Cell Broadcast</text>
+      </motion.g>
     </svg>
   );
 }

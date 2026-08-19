@@ -292,7 +292,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
       </AnimatePresence>
 
       {/* Translucent Floating Terminal CLI Button */}
-      <div className={`fixed bottom-8 left-6 md:left-8 z-30 flex items-center gap-4 ${isOpen ? 'hidden md:flex' : ''}`}>
+      <div className={`fixed bottom-8 left-6 md:left-8 z-30 flex items-center gap-4 ${isOpen ? 'hidden lg:flex' : ''}`}>
         <MagneticWrapper strength={0.3}>
           <motion.button
             onClick={onActivateTerminal}
@@ -300,11 +300,11 @@ function Header({ onActivateTerminal }: HeaderProps) {
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white w-12 h-12 md:w-auto md:h-auto md:px-5 md:py-3.5 md:min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group magnetic-interactive"
+            className="font-mono text-[9px] uppercase tracking-[0.2em] bg-white/70 hover:bg-[#ff5a09] active:bg-[#ff5a09] text-[#1a1a1a] hover:text-white active:text-white w-12 h-12 lg:w-auto lg:h-auto lg:px-5 lg:py-3.5 lg:min-h-[44px] border border-[#1a1a1a]/10 hover:border-[#ff5a09]/20 active:border-[#ff5a09]/20 rounded-full transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(255,90,9,0.15)] group magnetic-interactive"
             aria-label="Open Terminal CLI"
           >
-            <Terminal className="w-4 h-4 md:w-3.5 md:h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
-            <span className="font-bold hidden md:inline">[_terminal_cli]</span>
+            <Terminal className="w-4 h-4 lg:w-3.5 lg:h-3.5 text-orange-highlight group-hover:text-white transition-colors duration-300 animate-pulse" />
+            <span className="font-bold hidden lg:inline">[_terminal_cli]</span>
           </motion.button>
         </MagneticWrapper>
         
@@ -312,7 +312,7 @@ function Header({ onActivateTerminal }: HeaderProps) {
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1 }}
-          className="hidden md:flex items-center gap-1.5 font-mono text-[9px] text-[#8a817c]/50 uppercase tracking-widest select-none pointer-events-none"
+          className="hidden lg:flex items-center gap-1.5 font-mono text-[9px] text-[#8a817c]/50 uppercase tracking-widest select-none pointer-events-none"
         >
           <span className="bg-[#1a1a1a]/5 px-1.5 py-0.5 rounded border border-[#1a1a1a]/10">CMD</span>
           <span>+</span>
@@ -599,7 +599,7 @@ export default function App() {
 
         <footer className="relative z-10 border-t border-[#1a1a1a]/10 py-16 bg-[#1a1a1a] text-[#fcfaf7] px-6 md:px-12 text-[9px] uppercase tracking-[0.3em] mt-24 overflow-hidden">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left relative">
-            <div className="flex flex-col md:flex-row items-center gap-12 z-10 w-full md:w-auto">
+            <div className="flex flex-col md:flex-row items-center gap-12 z-10 w-full lg:w-auto">
               <div className="-my-12">
                 <FooterGlobe />
               </div>
@@ -613,7 +613,7 @@ export default function App() {
                     >
                       {showCredentials ? '[close_baselines.log]' : '[query_baselines.log]'}
                     </button>
-                    <span className="text-[#8a817c]/20 select-none hidden md:inline">•</span>
+                    <span className="text-[#8a817c]/20 select-none hidden lg:inline">•</span>
                     <button 
                       onClick={() => setShowHUD(!showHUD)}
                       className="hover:text-orange-highlight active:text-orange-highlight active:opacity-50 transition-colors font-bold tracking-wider cursor-pointer uppercase text-[7px] p-2 -m-2"

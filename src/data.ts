@@ -96,6 +96,7 @@ export interface Publication {
   authors: string;
   status: string;
   year: string;
+  presentation?: string;
   summary: string;
   hookQuestion: string;
   behindThePaper: string;
@@ -125,6 +126,7 @@ export const publications: Publication[] = [
     authors: "Betsy Muriithi, Alvin Mugwe, George O. Ouma",
     status: "Under Review",
     year: "2026",
+    presentation: "DEEP LEARNING INDABA 2026",
     summary: "A framework for improving asynchronous federated learning in resource-constrained healthcare environments.",
     hookQuestion: "What happens to federated learning when the power grid fails?",
     behindThePaper: "I still remember the nights spent simulating loadshedding patterns based on actual data from rural Kenyan health posts. It felt crucial to ensure that the AI model wasn't just working in an ideal lab environment, but was actually robust enough to serve the clinics facing the most difficult conditions.",
